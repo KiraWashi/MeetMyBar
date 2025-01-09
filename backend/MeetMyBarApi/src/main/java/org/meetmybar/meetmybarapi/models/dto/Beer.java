@@ -1,4 +1,4 @@
-package org.meetmybar.meetmybarapi.models;
+package org.meetmybar.meetmybarapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
