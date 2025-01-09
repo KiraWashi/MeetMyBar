@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -26,6 +29,7 @@ fun SplashScreenBeer(navHostController: NavHostController) {
     val raw = R.raw.biere
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(raw))
     val progress by animateLottieCompositionAsState(composition = composition)
+    var isPlaying by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -41,5 +45,10 @@ fun SplashScreenBeer(navHostController: NavHostController) {
             modifier = Modifier.size(200.dp) // Taille personnalisée
         )
         Text("MeetMyBar",fontSize = 30.sp, fontStyle = FontStyle.Italic,fontWeight = FontWeight.Bold)
+    }
+
+    if (progress == 1f) {
+        isPlaying = false
+        navHostController.navigate("PageBar")
     }
 }
