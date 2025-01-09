@@ -1,0 +1,283 @@
+openapi: 3.1.0
+x-stoplight:
+  id: pix187dc4bd47
+info:
+  title: meetMyBarSwagger
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8080'
+    description: ''
+paths:
+  '/bar/{barName}':
+    parameters:
+      - schema:
+          type: string
+        name: barName
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-bar-barId
+      x-stoplight:
+        id: s3d2zezptq514
+  '/bar/address/{barAddress}':
+    parameters:
+      - schema:
+          type: string
+        name: barAddress
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-bar-address-barAddress
+      x-stoplight:
+        id: qq3i0jznb6fuh
+  /bar:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bar'
+                  x-stoplight:
+                    id: bnm754kk8srae
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-bar
+      x-stoplight:
+        id: 0upzwgd4i0pp2
+    post:
+      summary: Your POST endpoint
+      tags: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: post-bar
+      x-stoplight:
+        id: pgz3nkb1kwpiv
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bar'
+    patch:
+      summary: Your PATCH endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: patch-bar
+      x-stoplight:
+        id: w6ypycukj2i37
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bar'
+    delete:
+      summary: Your DELETE endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: delete-bar
+      x-stoplight:
+        id: 3mm21fwnyhf3j
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bar'
+components:
+  schemas:
+    Bar:
+      title: Bar
+      type: object
+      examples:
+        - id: 142
+          address: 6 Route Du Chef
+          name: Shark
+          capacity: 25
+      x-stoplight:
+        id: z076sc40zdbdt
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given bar.
+          x-stoplight:
+            id: wonyzzti5q0ss
+        address:
+          type: string
+          x-stoplight:
+            id: 4k4461y58okcd
+        name:
+          type: string
+          x-stoplight:
+            id: 5mh5bgchto6fy
+        capacity:
+          type: integer
+          x-stoplight:
+            id: yejdq4vn0v3np
+        beers:
+          type: array
+          x-stoplight:
+            id: obkbbdzvowldn
+          items:
+            $ref: '#/components/schemas/Beer'
+            x-stoplight:
+              id: afrjk37mforve
+        planning:
+          type: array
+          x-stoplight:
+            id: ekwtg1qiijrc6
+          items:
+            $ref: '#/components/schemas/ScheduleDay'
+            x-stoplight:
+              id: u3lwe13hr1wh4
+      description: ''
+      x-tags:
+        - Bar
+    Beer:
+      title: Beer
+      x-stoplight:
+        id: sgpqj4r6lfb75
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          x-stoplight:
+            id: 0av3dcnadccfo
+        alcohol_degree:
+          type: number
+          x-stoplight:
+            id: wbg1e7uw78w95
+        name:
+          type: string
+          x-stoplight:
+            id: hj2pc69610sz3
+        brand:
+          type: string
+          x-stoplight:
+            id: drvto8xezd3ea
+    ScheduleDay:
+      title: ScheduleDay
+      x-stoplight:
+        id: ytqkoxbmqj72p
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          x-stoplight:
+            id: 6mjqgysu9blaw
+        opening:
+          type: string
+          x-stoplight:
+            id: r4634yg0zvq33
+          format: time
+        closing:
+          type: string
+          x-stoplight:
+            id: 43z3lkomwtfef
+          format: time
+        day:
+          type: string
+          x-stoplight:
+            id: 8782w7jjdne9q
