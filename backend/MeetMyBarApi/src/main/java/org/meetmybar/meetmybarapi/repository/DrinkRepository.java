@@ -18,6 +18,9 @@ public class DrinkRepository {
     private static final String SQL_GET_DRINK_BY_NAME =
             "SELECT id, name, brand, degree FROM DRINK WHERE name = :=name";
 
+    private static final String SQL_GET_DRINK_BY_ID =
+            "SELECT id, name, brand, degree FROM DRINK WHERE id = :id";
+
     @Inject
     private NamedParameterJdbcTemplate drinkTemplate;
 
@@ -39,8 +42,29 @@ public class DrinkRepository {
     }
 
     public Drink getDrinkByName(String drinkName){
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("name", drinkName);
-        return drinkTemplate.queryForObject(SQL_GET_DRINK_BY_NAME, map, Drink.class);
+        // TODO
+        return null;
+    }
+
+    public Drink getDrinkById(int drinkId) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", drinkId);
+
+            return drinkTemplate.queryForObject(
+                    SQL_GET_DRINK_BY_ID,
+                    params,
+                    (rs, rowNum) -> {
+                        Drink drink = new Drink();
+                        drink.setId(rs.getInt("id"));
+                        drink.setName(rs.getString("name"));
+                        drink.setBrand(rs.getString("brand"));
+                        drink.setAlcoholDegree(rs.getDouble("degree"));
+                        return drink;
+                    }
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching drink with id " + drinkId + ": " + e.getMessage(), e);
+        }
     }
 }

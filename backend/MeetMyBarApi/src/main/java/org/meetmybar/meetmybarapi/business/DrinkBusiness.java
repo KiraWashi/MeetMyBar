@@ -23,6 +23,15 @@ public interface DrinkBusiness {
     Drink getDrinkByName(String drinkName);
 
     /**
+     * getDrinkByName
+     * Récupère une boisson par son id
+     *
+     * @param drinkId id de la boisson
+     * @return Drink
+     */
+    Drink getDrinkById(int drinkId);
+
+    /**
      * createDrink
      * Crée une nouvelle boisson
      *

@@ -29,6 +29,11 @@ public class DrinkBusinessImpl implements DrinkBusiness {
     }
 
     @Override
+    public Drink getDrinkById(int drinkId) {
+        return this.drinkRepository.getDrinkById(drinkId);
+    }
+
+    @Override
     public Drink createDrink(Drink drink) {
         // TODO: Implement avec le repository
         return null;

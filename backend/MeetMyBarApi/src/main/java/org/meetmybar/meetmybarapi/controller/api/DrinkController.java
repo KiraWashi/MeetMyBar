@@ -148,7 +148,7 @@ public interface DrinkController {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-            operationId = "getDrinkDrinkName",
+            operationId = "getDrinkByDrinkId",
             summary = "Your GET endpoint",
             tags = {  },
             responses = {
@@ -168,7 +168,7 @@ public interface DrinkController {
             produces = { "application/json" }
     )
     default ResponseEntity<Drink> getDrinkByDrinkId(
-            @Parameter(name = "drinkId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("drinkId") String drinkId
+            @Parameter(name = "drinkId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("drinkId") int drinkId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -196,7 +196,7 @@ public interface DrinkController {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-            operationId = "getDrinkNameDrinkName",
+            operationId = "getDrinkByDrinkName",
             summary = "Your GET endpoint",
             tags = {  },
             responses = {
