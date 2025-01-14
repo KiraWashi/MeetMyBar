@@ -27,9 +27,21 @@ dependencies {
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("io.swagger.core.v3:swagger-annotations:2.2.15")
 	implementation("org.mariadb.jdbc:mariadb-java-client:2.1.2")
+	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-jersey:3.3.4")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.4")
+	implementation("com.h2database:h2:2.3.232")
+	implementation("com.squareup.okhttp3:okhttp:4.12.0")
+	implementation("org.springframework.boot:spring-boot-starter-cache:3.3.5")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis:3.3.5")
+	compileOnly("org.projectlombok:lombok:1.18.34")
+	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.2.0")
+	implementation("io.github.resilience4j:resilience4j-feign:2.2.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("io.rest-assured:rest-assured:5.5.0")
+	testImplementation("io.rest-assured:json-path:5.5.0")
 }
 
 val spec = File(projectDir, "src/main/resources/swagger/meetMyBarSwagger.yaml")

@@ -1,13 +1,24 @@
 package org.meetmybar.meetmybarapi.models.entity;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "bar")
 public class BarEntity {
 
+  @Column
   private String name;
-  private String id;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
+  @Column
   private long capacity;
+  @Column
   private String address;
+  @Column
   private String city;
+  @Column(name = "postal_code")
   private long postalCode;
 
 
@@ -20,11 +31,11 @@ public class BarEntity {
   }
 
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -63,5 +74,6 @@ public class BarEntity {
   public void setPostalCode(long postalCode) {
     this.postalCode = postalCode;
   }
+
 
 }

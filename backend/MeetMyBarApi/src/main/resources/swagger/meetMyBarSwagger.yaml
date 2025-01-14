@@ -4,6 +4,10 @@ x-stoplight:
 info:
   title: meetMyBarSwagger
   version: '1.0'
+  summary: Meet my bar
+  description: "Meet My Bar est une application mobile Android qui permet de repérer les bars autour de soi et d'avoir des informations pratiques comme le prix de la bière la moins chère. Il sera possible de rechercher un bar par son nom, par un type de bière ou par tranche de prix pour les bières. Il est possible de se connecter  et de remplir ses infos personnelles et d’ajouter des amis sur l’application. Ajouter des amis permet d’avoir accès à leur favori et d’être ajouté à des événements créés pour une sortie dans un des bars présents. Les bars possèdent des évènements où l’utilisateur peut choisir si l'événement est visible par tous ou seulement pas ses invités ( au sein de ses amis ). Un événement est propre à un bar et à une date et heure précise. L’application est renseignée par ses utilisateurs, chaque user peut créer un bar et renseigner les informations qui lui correspondent, il est ensuite disponible pour les autres utilisateurs.\r\nIl peut également mettre à jour les données du bar avec le nouveaux prix de la bière, ses horaires d’ouverture/fermeture.\r\n"
+  contact:
+    name: ''
 servers:
   - url: 'http://localhost:8080'
     description: ''
@@ -192,6 +196,8 @@ components:
           capacity: 25
       x-stoplight:
         id: z076sc40zdbdt
+      x-tags:
+        - Bar
       required:
         - id
       properties:
@@ -212,12 +218,12 @@ components:
           type: integer
           x-stoplight:
             id: yejdq4vn0v3np
-        beers:
+        drinks:
           type: array
           x-stoplight:
             id: obkbbdzvowldn
           items:
-            $ref: '#/components/schemas/Beer'
+            $ref: '#/components/schemas/Drink'
             x-stoplight:
               id: afrjk37mforve
         planning:
@@ -228,11 +234,16 @@ components:
             $ref: '#/components/schemas/ScheduleDay'
             x-stoplight:
               id: u3lwe13hr1wh4
-      description: ''
-      x-tags:
-        - Bar
-    Beer:
-      title: Beer
+        city:
+          type: string
+          x-stoplight:
+            id: lz18rr0nola3j
+        postal_code:
+          type: string
+          x-stoplight:
+            id: 7w948nf8g5gtg
+    Drink:
+      title: Drink
       x-stoplight:
         id: sgpqj4r6lfb75
       type: object

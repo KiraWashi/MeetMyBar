@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import org.meetmybar.api.controller.ApiUtil;
-import org.meetmybar.api.model.Bar;
+import org.meetmybar.meetmybarapi.models.dto.Bar;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
