@@ -1,6 +1,6 @@
 /build
 .gradle/
-local.properties
+../local.properties
 .idea/compiler.xml
 .idea/misc.xml
 ../../.DS_Store
