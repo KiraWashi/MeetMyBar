@@ -32,6 +32,9 @@ public class BarRepository {
                 bar.setCity(r.getString("city"));
                 bar.setPostalCode(r.getString("postal_code"));
 
+
+                //TODO (Avec les bonnes données)
+
                 // Ajout d'une boisson d'exemple
                 var drink = new Drink()
                         .alcoholDegree(7.5)
@@ -42,7 +45,7 @@ public class BarRepository {
                 drinks.add(drink);
                 bar.setDrinks(drinks);
 
-                // Ajout des horaires
+                // Ajout des horaires exemple
                 List<ScheduleDay> planning = new ArrayList<>();
                 planning.add(new ScheduleDay().day("Lundi").id(1).opening("18h").closing("1h"));
                 planning.add(new ScheduleDay().day("Mardi").id(2).opening("18h").closing("2h"));
