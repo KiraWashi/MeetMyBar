@@ -33,10 +33,18 @@ fun SetupNavGraph(
                 navHostController = navHostController
             )
         }
+        composable(
+            route = Screen.PageBar.route
+        ) {
+            HomeScreen(
+                modifier = modifier
+            )
+        }
     }
 }
 
 sealed class Screen(val route: String) {
     object SplachScreenBeer : Screen("SplashScreenBeer")
     object PageBar : Screen("PageBar")
+    object HomeScreen : Screen("HomeScreen")
 }

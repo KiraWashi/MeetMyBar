@@ -14,6 +14,7 @@ secrets = "2.0.1"
 navigationCompose = "2.8.5"
 recyclerview = "1.3.2"
 appcompat = "1.7.0"
+gamesActivity = "3.0.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +38,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 #map
 play-service-map = { module = "com.google.android.gms:play-services-maps", version.ref = "play-service-map" }
 compose-map = { module = "com.google.maps.android:maps-compose", version.ref = "map-compose" }
+androidx-games-activity = { group = "androidx.games", name = "games-activity", version.ref = "gamesActivity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
