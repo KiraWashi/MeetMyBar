@@ -34,7 +34,7 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.PageBar.route
+            route = Screen.HomeScreen.route
         ) {
             HomeScreen(
                 modifier = modifier

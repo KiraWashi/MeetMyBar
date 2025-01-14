@@ -73,12 +73,9 @@ fun HomeScreen(
             )
         },
     ) { innerPadding ->
-        HomeScreen(
-            modifier = Modifier.padding(innerPadding)
-        )
         Box(
             modifier = modifier
-                .fillMaxSize(),
+                .padding(innerPadding),
             contentAlignment = Alignment.TopCenter,
         ) {
             GoogleMap(
