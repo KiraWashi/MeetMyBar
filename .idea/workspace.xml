@@ -4,23 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff82036a-955b-4f56-84dc-765d5693e9bb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/mapper/PhotoMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/exception/ImageProcessingException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/exception/ImageStorageException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/exception/InvalidImageFileException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/exception/PhotoFileNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/exception/PhotoNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/dto/Photo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/util/ImageCompressor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ff82036a-955b-4f56-84dc-765d5693e9bb" name="Changes" comment="Photo start">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/entity/PhotoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/entity/PhotoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +42,25 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="MeetMyBarApi" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="application" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MeetMyBarApi" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MeetMyBarApi" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MeetMyBarApi" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -106,10 +112,15 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.Build MeetMyBarApi.executor": "Run",
+    "Gradle.MeetMyBarApi [bootRun].executor": "Run",
     "Gradle.MeetMyBarApi [build].executor": "Run",
+    "Gradle.MeetMyBarApi [compileTestJava].executor": "Run",
+    "Gradle.MeetMyBarApi [test].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.MeetMyBarApiApplication.executor": "Run",
     "git-widget-placeholder": "feature/photo",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/ACours/Brest/Master_TILL-A/semestre9/ProgrammationGenerative/java_reflect_examples",
@@ -126,7 +137,29 @@
       <recent name="org.meetmybar.meetmybarapi.repository" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.MeetMyBarApi [build]">
+  <component name="RunManager" selected="Gradle.MeetMyBarApi [bootRun]">
+    <configuration name="MeetMyBarApi [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend/MeetMyBarApi" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootRun" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="MeetMyBarApi [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -149,6 +182,50 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="MeetMyBarApi [compileTestJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend/MeetMyBarApi" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="compileTestJava" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="MeetMyBarApi [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend/MeetMyBarApi" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="MeetMyBarApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="MeetMyBarApi.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.meetmybar.meetmybarapi.MeetMyBarApiApplication" />
@@ -158,7 +235,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.MeetMyBarApi [bootRun]" />
         <item itemvalue="Gradle.MeetMyBarApi [build]" />
+        <item itemvalue="Gradle.MeetMyBarApi [test]" />
+        <item itemvalue="Gradle.MeetMyBarApi [compileTestJava]" />
       </list>
     </recent_temporary>
   </component>
@@ -182,11 +262,24 @@
       <workItem from="1736436269773" duration="3108000" />
       <workItem from="1736763397878" duration="367000" />
       <workItem from="1736846962372" duration="2068000" />
-      <workItem from="1736858164885" duration="6999000" />
+      <workItem from="1736858164885" duration="9983000" />
     </task>
+    <task id="LOCAL-00001" summary="Photo start">
+      <option name="closed" value="true" />
+      <created>1736865389621</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1736865389621</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Photo start" />
+    <option name="LAST_COMMIT_MESSAGE" value="Photo start" />
   </component>
 </project>

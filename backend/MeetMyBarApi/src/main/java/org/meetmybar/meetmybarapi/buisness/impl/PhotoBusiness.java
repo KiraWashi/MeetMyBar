@@ -26,34 +26,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
-@Transactional
+
 public class PhotoBusiness {
     private static final String uploadPath="./Upload/";
     private final PhotoRepository photoRepository;
-    private final PhotoMapper photoMapper;
 
-    @Autowired
-    public PhotoBusiness( PhotoRepository photoRepository, PhotoMapper photoMapper) {
+
+    public PhotoBusiness(PhotoRepository photoRepository) {
         this.photoRepository = photoRepository;
-        this.photoMapper = photoMapper;
+
     }
 
 
-    public Photo savePhoto(MultipartFile file, Photo photoDTO) {
-        validateImageFile(file);
+    //public Photo savePhoto(MultipartFile file, Photo photoDTO) {
+    //    validateImageFile(file);
 
-        if (photoDTO.isMainPhoto()) {
-            updateExistingMainPhotos();
-        }
+        //if (photoDTO.isMainPhoto()) {
+        //    updateExistingMainPhotos();
+        //}
 
-        String fileName = photoDTO.getId() + generateFileName(file);
-        BufferedImage compressedImage = compressImage(file);
-        saveImageToFileSystem(compressedImage, fileName);
+    //    String fileName = photoDTO.getId() + generateFileName(file);
+    //    BufferedImage compressedImage = compressImage(file);
+    //    saveImageToFileSystem(compressedImage, fileName);
 
-        PhotoEntity photo = createPhotoEntity(photoDTO, fileName);
-        return photoMapper.toDto(photoRepository.save(photo));
-    }
+    //    PhotoEntity photo = createPhotoEntity(photoDTO, fileName);
+    //    return photoMapper.toDto(photoRepository.save(photo));
+    // }
 
     private String generateFileName(MultipartFile file) {
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
@@ -81,24 +79,24 @@ public class PhotoBusiness {
         return loadPhotoResource(photo.getUrlFile());
     }
 
-    public Photo updatePhoto(int id, Photo updateDto) {
-        Photo photo = photoRepository.findById(id);
-        if(photo==null){
-            throw new PhotoNotFoundException(id);
-        }
-        updatePhotoEntity(photo, updateDto);
-        return photoMapper.toDto(photoRepository.save(photoMapper.toEntity(photo)));
-    }
+    // public Photo updatePhoto(int id, Photo updateDto) {
+    //   Photo photo = photoRepository.findById(id);
+    //   if(photo==null){
+    //       throw new PhotoNotFoundException(id);
+    //   }
+    //    updatePhotoEntity(photo, updateDto);
+    //    return photoMapper.toDto(photoRepository.save(photoMapper.toEntity(photo)));
+    // }
 
-    public void deletePhoto(int id) {
-        Photo photo = photoRepository.findById(id);
-        if(photo==null){
-            throw new PhotoNotFoundException(id);
-        }
+    //public void deletePhoto(int id) {
+    //     Photo photo = photoRepository.findById(id);
+    //     if(photo==null){
+    //        throw new PhotoNotFoundException(id);
+    //    }
 
-        deletePhotoFile(photo.getUrlFile());
-        photoRepository.delete(photo);
-    }
+    //   deletePhotoFile(photo.getUrlFile());
+    //   photoRepository.delete(photo);
+    //}
 
     // Méthodes privées utilitaires
     private void validateImageFile(MultipartFile file) {
@@ -108,15 +106,15 @@ public class PhotoBusiness {
         }
     }
 
-    private void updateExistingMainPhotos() {
-        if (photoRepository.existsByMainPhotoTrue()) {
-            photoRepository.findByMainPhotoTrue()
-                    .forEach(p -> {
-                        p.setMainPhoto(false);
-                        photoRepository.save(photoMapper.toEntity(p));
-                    });
-        }
-    }
+    //private void updateExistingMainPhotos() {
+    //   if (photoRepository.existsByMainPhotoTrue()) {
+    //       photoRepository.findByMainPhotoTrue()
+                    //               .forEach(p -> {
+    //                   p.setMainPhoto(false);
+    //                   photoRepository.save(photoMapper.toEntity(p));
+    //                });
+    //   }
+    // }
     
     private BufferedImage compressImage(MultipartFile file) {
         try {
@@ -151,7 +149,7 @@ public class PhotoBusiness {
         }
 
         if (updateDto.isMainPhoto() && !photo.isMainPhoto()) {
-            updateExistingMainPhotos();
+            //updateExistingMainPhotos();
             photo.setMainPhoto(true);
         } else {
             photo.setMainPhoto(updateDto.isMainPhoto());
@@ -177,7 +175,7 @@ public class PhotoBusiness {
             Path path = Paths.get(uploadPath, urlFile.substring("/photos/".length()));
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            log.error("Erreur lors de la suppression du fichier: {}", urlFile, e);
+            System.err.println("Erreur lors de la suppression du fichier: {"+ urlFile+ " , "+ e+"}");
             // On ne relance pas l'exception pour permettre la suppression de l'entité même si le fichier est introuvable
         }
     }

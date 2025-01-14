@@ -1,11 +1,8 @@
 package org.meetmybar.meetmybarapi.repository;
 
-import jakarta.inject.Inject;
-import org.meetmybar.meetmybarapi.models.dto.Bar;
-import org.meetmybar.meetmybarapi.models.dto.Drink;
+
 import org.meetmybar.meetmybarapi.models.dto.Photo;
-import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
-import org.meetmybar.meetmybarapi.models.entity.PhotoEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,17 +11,17 @@ import java.util.*;
 @Repository
 public class PhotoRepository {
 
-    private static final String SQL_GET_PHOTO =
-            "SELECT id, name, capacity, address, city, postal_code FROM BAR";
+    private static final String SQL_GET_PHOTO_BY_ID =
+            "SELECT id,description, url_file, main_photo FROM PHOTO WHERE id = :id";
 
-    @Inject
+    @Autowired
     private NamedParameterJdbcTemplate photoTemplate;
 
     public Photo findById(int id) {
         try {
             HashMap<String, Object> map = new HashMap<>();
-
-            return photoTemplate.queryForObject(SQL_GET_PHOTO, map, (r, s) -> {
+            map.put("id", id);
+            return photoTemplate.queryForObject(SQL_GET_PHOTO_BY_ID, map, (r, s) -> {
 
                 return new Photo(
                         r.getInt("id"),
@@ -39,18 +36,6 @@ public class PhotoRepository {
     }
 
 
-
-    public PhotoEntity save(PhotoEntity photo) {
-
-    }
-
-
-    public void delete(Photo photo) {
-    }
-
-    public boolean existsByMainPhotoTrue() {
-    }
-
-    public Iterable<Photo> findByMainPhotoTrue() {
-    }
+    //public boolean existsByMainPhotoTrue() {
+    //}
 }
