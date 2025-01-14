@@ -35,7 +35,7 @@ import java.util.Optional;
 @Validated
 @Controller
 @Tag(name = "Default", description = "the Default API")
-public interface DefaultApi {
+public interface BarController {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();

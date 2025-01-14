@@ -1,4 +1,4 @@
-package org.meetmybar.meetmybarapi.buisness;
+package org.meetmybar.meetmybarapi.business;
 
 
 
@@ -6,7 +6,7 @@ import org.meetmybar.meetmybarapi.models.dto.Bar;
 
 import java.util.List;
 
-public interface BarBuissness {
+public interface BarBusiness {
 
     /**
      * getBar

@@ -1,7 +1,7 @@
 package org.meetmybar.meetmybarapi.controller.impl;
 
-import org.meetmybar.meetmybarapi.buisness.BarBuissness;
-import org.meetmybar.meetmybarapi.controller.api.DefaultApi;
+import org.meetmybar.meetmybarapi.business.BarBusiness;
+import org.meetmybar.meetmybarapi.controller.api.BarController;
 
 import org.meetmybar.meetmybarapi.models.dto.Bar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +10,19 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import java.util.List;
 
 
 @RestController
-public class BarController implements DefaultApi {
+public class BarControllerImpl implements BarController {
 
-    private final BarBuissness barBuissness;
+    private final BarBusiness barBusiness;
 
     @Autowired
-    public BarController(BarBuissness barBuissness) {
-        this.barBuissness = barBuissness;
+    public BarControllerImpl(BarBusiness barBusiness) {
+        this.barBusiness = barBusiness;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class BarController implements DefaultApi {
     @Override
     public ResponseEntity<List<Bar>> getBar() {
         try {
-            List<Bar> bars = this.barBuissness.getBar();
+            List<Bar> bars = this.barBusiness.getBar();
             return ResponseEntity.ok(bars);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
