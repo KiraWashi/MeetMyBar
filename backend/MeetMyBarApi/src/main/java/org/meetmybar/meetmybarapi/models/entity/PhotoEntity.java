@@ -3,16 +3,27 @@ package org.meetmybar.meetmybarapi.models.entity;
 
 public class PhotoEntity {
 
-  private String id;
+  private int id;
   private String description;
   private String urlFile;
+  private boolean mainPhoto;
 
+  public PhotoEntity(int id, String description, String urlFile, boolean mainPhoto) {
+    this.id = id;
+    this.description = description;
+    this.urlFile = urlFile;
+    this.mainPhoto = mainPhoto;
+  }
 
-  public String getId() {
+    public PhotoEntity() {
+
+    }
+
+    public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -34,4 +45,11 @@ public class PhotoEntity {
     this.urlFile = urlFile;
   }
 
+  public boolean isMainPhoto() {
+    return this.mainPhoto;
+  }
+
+  public void setMainPhoto(boolean mainPhoto) {
+    this.mainPhoto = mainPhoto;
+  }
 }
