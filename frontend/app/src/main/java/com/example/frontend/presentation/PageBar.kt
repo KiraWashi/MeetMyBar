@@ -24,19 +24,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.frontend.R
+import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
 fun PageBar(modifier: Modifier, navHostController: NavHostController) {
 
+    val darkMode = !isSystemInDarkTheme();
     val scrollState = rememberScrollState()
 
     val openingHours = listOf(
-        "Lundi" to "09:00 - 18:00",
-        "Mardi" to "09:00 - 18:00",
-        "Mercredi" to "09:00 - 18:00",
-        "Jeudi" to "09:00 - 18:00",
-        "Vendredi" to "09:00 - 18:00",
-        "Samedi" to "10:00 - 16:00",
+        "Lundi" to "09:00 - 22:00",
+        "Mardi" to "09:00 - 22:00",
+        "Mercredi" to "10:00 - 22:00",
+        "Jeudi" to "10:00 - 23:00",
+        "Vendredi" to "09:00 - 00:00",
+        "Samedi" to "10:00 - 00:00",
         "Dimanche" to "Fermé"
     )
 
@@ -60,7 +62,7 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
             text = "Shark Pool",
             style = TextStyle(
                 fontSize = 24.sp,
-                color = Color.Black
+                color = if (darkMode) Color.Black else Color.White
             ),
             modifier = Modifier.padding(10.dp).align(Alignment.Start)
         )
@@ -69,7 +71,7 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
             text = "Bar karaoké",
             style = TextStyle(
                 fontSize = 12.sp,
-                color = Color.Black
+                color = if (darkMode) Color.Black else Color.White
             ),
             modifier = Modifier.padding(bottom = 10.dp).align(Alignment.Start)
         )
@@ -89,7 +91,7 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
                         text = item.first,
                         style = TextStyle(
                             fontSize = 16.sp,
-                            color = Color.Gray
+                            color = if (darkMode) Color.Black else Color.White
                         )
                     )
                     // Affichage des horaires
@@ -97,12 +99,13 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
                         text = item.second,
                         style = TextStyle(
                             fontSize = 16.sp,
-                            color = Color.Gray
+                            color = if (darkMode) Color.Black else Color.White
                         )
                     )
                 }
             }
+            Caroussel()
         }
-
     }
+
 }
