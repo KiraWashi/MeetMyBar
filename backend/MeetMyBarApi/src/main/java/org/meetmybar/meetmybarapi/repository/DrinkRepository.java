@@ -15,6 +15,9 @@ public class DrinkRepository {
     private static final String SQL_GET_DRINKS =
             "SELECT id, name, brand, degree FROM DRINK";
 
+    private static final String SQL_GET_DRINK_BY_NAME =
+            "SELECT id, name, brand, degree FROM DRINK WHERE name = :=name";
+
     @Inject
     private NamedParameterJdbcTemplate drinkTemplate;
 
@@ -35,5 +38,9 @@ public class DrinkRepository {
         }
     }
 
-    // TODO: Ajouter les autres méthodes nécessaires
+    public Drink getDrinkByName(String drinkName){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("name", drinkName);
+        return drinkTemplate.queryForObject(SQL_GET_DRINK_BY_NAME, map, Drink.class);
+    }
 }

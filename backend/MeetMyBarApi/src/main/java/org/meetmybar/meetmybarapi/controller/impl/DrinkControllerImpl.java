@@ -43,9 +43,9 @@ public class DrinkControllerImpl implements DrinkController {
     }
 
     @Override
-    public ResponseEntity<Drink> getDrinkDrinkName(Object drinkName) {
+    public ResponseEntity<Drink> getDrinkByDrinkName(String drinkName) {
         try {
-            Drink drink = drinkBusiness.getDrinkByName(drinkName.toString());
+            Drink drink = drinkBusiness.getDrinkByName(drinkName);
             return ResponseEntity.ok(drink);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

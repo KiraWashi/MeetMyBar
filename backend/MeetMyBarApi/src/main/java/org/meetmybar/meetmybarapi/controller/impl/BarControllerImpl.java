@@ -26,7 +26,7 @@ public class BarControllerImpl implements BarController {
     }
 
     @Override
-    public ResponseEntity<Bar> getBarByName(@PathVariable("barName") Object barName) {
+    public ResponseEntity<Bar> getBarByName(@PathVariable("barName") String barName) {
         try {
             // TODO: Implement actual bar retrieval logic
             return ResponseEntity.ok().build();
@@ -46,7 +46,13 @@ public class BarControllerImpl implements BarController {
     }
 
     @Override
-    public ResponseEntity<Bar> getBarByAddress(Object barAddress) {
+    public ResponseEntity<Bar> getBarByAddress(String barAddress) {
+        // TODO: Implement get bar by address logic
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Bar> getBarById(String barAddress) {
         // TODO: Implement get bar by address logic
         return ResponseEntity.ok().build();
     }

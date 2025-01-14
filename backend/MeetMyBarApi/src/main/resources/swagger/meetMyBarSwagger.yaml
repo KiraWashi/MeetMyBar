@@ -12,11 +12,11 @@ servers:
   - url: 'http://localhost:8080'
     description: ''
 paths:
-  '/bar/{barName}':
+  '/bar/{barId}':
     parameters:
       - schema:
-          type: string
-        name: barName
+          type: integer
+        name: barId
         in: path
         required: true
     get:
@@ -296,7 +296,67 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Drink'
-  '/drink/{drinkName}':
+  '/drink/{drinkId}':
+    parameters:
+      - schema:
+          type: integer
+        name: drinkId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drink'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-drink.-drinkName
+      x-stoplight:
+        id: 6tyqiqc517buq
+  '/bar/name/{barName}':
+    parameters:
+      - schema:
+          type: string
+        name: barName
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-bar-name-barName
+      x-stoplight:
+        id: 5qva8tssmloqf
+  '/drink/name/{drinkName}':
     parameters:
       - schema:
           type: string
@@ -323,9 +383,9 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
-      operationId: get-drink.-drinkName
+      operationId: get-drink-name-drinkName
       x-stoplight:
-        id: 6tyqiqc517buq
+        id: hu39hretcrslt
 components:
   schemas:
     Bar:

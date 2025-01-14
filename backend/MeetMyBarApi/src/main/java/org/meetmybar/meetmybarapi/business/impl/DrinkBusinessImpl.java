@@ -24,8 +24,8 @@ public class DrinkBusinessImpl implements DrinkBusiness {
 
     @Override
     public Drink getDrinkByName(String drinkName) {
-        // TODO: Implement avec le repository
-        return null;
+
+        return this.drinkRepository.getDrinkByName(drinkName);
     }
 
     @Override

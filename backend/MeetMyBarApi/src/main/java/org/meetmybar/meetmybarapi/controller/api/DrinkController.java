@@ -136,11 +136,10 @@ public interface DrinkController {
 
     }
 
-
     /**
-     * GET /drink/{drinkName} : Your GET endpoint
+     * GET /drink/{drinkId} : Your GET endpoint
      *
-     * @param drinkName  (required)
+     * @param drinkId  (required)
      * @return OK (status code 200)
      *         or Bad Request (status code 400)
      *         or Unauthorized (status code 401)
@@ -154,7 +153,7 @@ public interface DrinkController {
             tags = {  },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = Drink.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Drink.class))
                     }),
                     @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -165,11 +164,59 @@ public interface DrinkController {
     )
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/drink/{drinkName}",
+            value = "/drink/{drinkId}",
             produces = { "application/json" }
     )
-    default ResponseEntity<Drink> getDrinkDrinkName(
-            @Parameter(name = "drinkName", description = "", required = true, in = ParameterIn.PATH) @PathVariable("drinkName") Object drinkName
+    default ResponseEntity<Drink> getDrinkByDrinkId(
+            @Parameter(name = "drinkId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("drinkId") String drinkId
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /drink/name/{drinkName} : Your GET endpoint
+     *
+     * @param drinkName  (required)
+     * @return OK (status code 200)
+     *         or Bad Request (status code 400)
+     *         or Unauthorized (status code 401)
+     *         or Forbidden (status code 403)
+     *         or Not Found (status code 404)
+     *         or Internal Server Error (status code 500)
+     */
+    @Operation(
+            operationId = "getDrinkNameDrinkName",
+            summary = "Your GET endpoint",
+            tags = {  },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Drink.class))
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/drink/name/{drinkName}",
+            produces = { "application/json" }
+    )
+    default ResponseEntity<Drink> getDrinkByDrinkName(
+            @Parameter(name = "drinkName", description = "", required = true, in = ParameterIn.PATH) @PathVariable("drinkName") String drinkName
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
