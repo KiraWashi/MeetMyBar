@@ -1,5 +1,7 @@
 package com.example.frontend.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -7,12 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,14 +28,14 @@ import com.example.frontend.R
 @Composable
 fun SplashScreenBeer(navHostController: NavHostController) {
     val raw = R.raw.biere
+    val darkMode = !isSystemInDarkTheme();
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(raw))
     val progress by animateLottieCompositionAsState(composition = composition)
-    var isPlaying by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .fillMaxHeight(),
+            .fillMaxHeight().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -44,11 +45,14 @@ fun SplashScreenBeer(navHostController: NavHostController) {
             progress = { progress },
             modifier = Modifier.size(200.dp) // Taille personnalisée
         )
-        Text("MeetMyBar",fontSize = 30.sp, fontStyle = FontStyle.Italic,fontWeight = FontWeight.Bold)
+        Text("MeetMyBar",fontSize = 30.sp,color =  Color.Black, fontStyle = FontStyle.Italic,fontWeight = FontWeight.Bold)
     }
 
     if (progress == 1f) {
-        isPlaying = false
-        navHostController.navigate("PageBar")
+        LaunchedEffect(Unit) {
+            navHostController.navigate("PageBar") {
+                popUpTo("SplashScreenBeer") { inclusive = true } // Supprime SplashScreen de l'historique
+            }
+        }
     }
 }
