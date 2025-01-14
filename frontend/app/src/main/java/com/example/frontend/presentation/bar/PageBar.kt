@@ -1,4 +1,4 @@
-package com.example.frontend.presentation
+package com.example.frontend.presentation.bar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.frontend.R
 import androidx.compose.foundation.isSystemInDarkTheme
+import com.example.frontend.presentation.components.Caroussel
 
 @Composable
 fun PageBar(modifier: Modifier, navHostController: NavHostController) {

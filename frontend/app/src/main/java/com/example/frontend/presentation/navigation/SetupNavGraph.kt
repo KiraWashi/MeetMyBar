@@ -1,4 +1,4 @@
-package com.example.frontend.presentation
+package com.example.frontend.presentation.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
@@ -7,6 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.frontend.presentation.splashscreen.SplashScreenBeer
+import com.example.frontend.presentation.bar.PageBar
+import com.example.frontend.presentation.home.HomeScreen
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
