@@ -43,7 +43,7 @@ fun HomeScreen(
     modifier: Modifier,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -74,7 +74,7 @@ fun HomeScreen(
         },
     ) { innerPadding ->
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .padding(innerPadding),
             contentAlignment = Alignment.TopCenter,
         ) {
