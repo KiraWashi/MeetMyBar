@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.frontend.presentation.splashscreen.SplashScreenBeer
 import com.example.frontend.presentation.bar.PageBar
+import com.example.frontend.presentation.biere.ListBiere
 import com.example.frontend.presentation.home.HomeScreen
 
 @ExperimentalAnimationApi
@@ -43,6 +44,14 @@ fun SetupNavGraph(
                 modifier = modifier
             )
         }
+        composable(
+            route = Screen.ListBiere.route
+        ) {
+            ListBiere(
+                navHostController = navHostController,
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -50,4 +59,5 @@ sealed class Screen(val route: String) {
     object SplachScreenBeer : Screen("SplashScreenBeer")
     object PageBar : Screen("PageBar")
     object HomeScreen : Screen("HomeScreen")
+    object ListBiere : Screen("ListBiere")
 }

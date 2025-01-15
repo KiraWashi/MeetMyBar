@@ -1,6 +1,7 @@
 package com.example.frontend.presentation.bar
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.frontend.R
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import com.example.frontend.presentation.navigation.Screen
 import com.example.frontend.presentation.components.Caroussel
 
 @Composable
@@ -52,12 +61,21 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.sharkpool), // Utilisez le nom sans extension
-            contentDescription = "Shark Pool Image",
-            contentScale = ContentScale.FillWidth, // Ajuste l'image
-            modifier = Modifier.fillMaxWidth()
-        )
+        Box(){
+            Image(
+                painter = painterResource(id = R.drawable.sharkpool), // Utilisez le nom sans extension
+                contentDescription = "Shark Pool Image",
+                contentScale = ContentScale.FillWidth, // Ajuste l'image
+                modifier = Modifier.fillMaxWidth()
+            )
+            IconButton(onClick = { navHostController.navigate(Screen.ListBiere.route) }) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Settings",
+                    tint = Color.White
+                )
+            }
+        }
 
         Text(
             text = "Shark Pool",
