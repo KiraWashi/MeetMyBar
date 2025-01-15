@@ -14,7 +14,7 @@ fun mapBeerColor(color: String): Color {
         "cuivrée" -> Color(0xFFB87333)
         "rubis" -> Color(0xFF9B111E)
         "ébène" -> Color(0xFF3B3B3B)
-        else -> Color.Gray // Par défaut, une couleur neutre
+        else -> Color.Green // Par défaut, une couleur neutre
     }
 }
 
@@ -33,5 +33,7 @@ fun mapFontOverBeer(color: String): Color {
         else -> Color.Gray // Par défaut, une couleur neutre
     }
 }
+
+
 
 

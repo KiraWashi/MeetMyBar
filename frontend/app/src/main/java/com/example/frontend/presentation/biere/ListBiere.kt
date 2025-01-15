@@ -13,10 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.frontend.presentation.navigation.Screen
 import com.example.frontend.ui.theme.SpritzClairColor
 
 data class Beer(
@@ -76,7 +74,7 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
                     Text("The Shark Pool")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = {navHostController.navigate(Screen.PageBar.route) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Retour"
@@ -84,7 +82,7 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = {navHostController.navigate(Screen.AddBiere.route)}) {
                         Icon(
                             imageVector = Icons.Filled.Add,
                             contentDescription = "Add a beer",
