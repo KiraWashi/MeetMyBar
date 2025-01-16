@@ -35,7 +35,7 @@ import java.util.Optional;
 @Validated
 @Controller
 @Tag(name = "Default", description = "the Default API")
-public interface DefaultApi {
+public interface BarController {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
@@ -89,6 +89,8 @@ public interface DefaultApi {
 
     }
 
+
+    ResponseEntity<Bar> getBarByName(@PathVariable("barName") String barName);
 
     /**
      * GET /bar : Your GET endpoint
@@ -149,32 +151,79 @@ public interface DefaultApi {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-        operationId = "getBarByAddress",
-        summary = "Your GET endpoint",
-        tags = {  },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Bar.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-        }
+            operationId = "getBarAddressBarAddress",
+            summary = "Your GET endpoint",
+            tags = {  },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Bar.class))
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/bar/address/{barAddress}",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/bar/address/{barAddress}",
+            produces = { "application/json" }
     )
-    default ResponseEntity<Bar> getBarByAddress(
-        @Parameter(name = "barAddress", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barAddress") Object barAddress
+    default ResponseEntity<Bar> getBarAddressBarAddress(
+            @Parameter(name = "barAddress", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barAddress") String barAddress
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"beers\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"capacity\" : 6 }";
+                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"city\" : \"city\", \"drinks\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"postal_code\" : \"postal_code\", \"capacity\" : 6 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+    /**
+     * GET /bar/{barId} : Your GET endpoint
+     *
+     * @param barId  (required)
+     * @return OK (status code 200)
+     *         or Bad Request (status code 400)
+     *         or Unauthorized (status code 401)
+     *         or Forbidden (status code 403)
+     *         or Not Found (status code 404)
+     *         or Internal Server Error (status code 500)
+     */
+    @Operation(
+            operationId = "getBarBarId",
+            summary = "Your GET endpoint",
+            tags = {  },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Bar.class))
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/bar/{barId}",
+            produces = { "application/json" }
+    )
+    default ResponseEntity<Bar> getBarById(
+            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") String barId
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"city\" : \"city\", \"drinks\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"postal_code\" : \"postal_code\", \"capacity\" : 6 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -186,7 +235,7 @@ public interface DefaultApi {
 
 
     /**
-     * GET /bar/{barName} : Your GET endpoint
+     * GET /bar/name/{barName} : Your GET endpoint
      *
      * @param barName  (required)
      * @return OK (status code 200)
@@ -197,32 +246,32 @@ public interface DefaultApi {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-        operationId = "getBarByName",
-        summary = "Your GET endpoint",
-        tags = {  },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Bar.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-        }
+            operationId = "getBarNameBarName",
+            summary = "Your GET endpoint",
+            tags = {  },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Bar.class))
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/bar/{barName}",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/bar/name/{barName}",
+            produces = { "application/json" }
     )
-    default ResponseEntity<Bar> getBarByName(
-        @Parameter(name = "barName", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barName") Object barName
+    default ResponseEntity<Bar> getBarNameBarName(
+            @Parameter(name = "barName", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barName") String barName
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"beers\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"capacity\" : 6 }";
+                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"city\" : \"city\", \"drinks\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"postal_code\" : \"postal_code\", \"capacity\" : 6 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -232,6 +281,8 @@ public interface DefaultApi {
 
     }
 
+
+    ResponseEntity<Bar> getBarByAddress(String barAddress);
 
     /**
      * PATCH /bar : Your PATCH endpoint

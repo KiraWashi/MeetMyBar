@@ -1,7 +1,7 @@
-package org.meetmybar.meetmybarapi.buisness.impl;
+package org.meetmybar.meetmybarapi.business.impl;
 
 
-import org.meetmybar.meetmybarapi.buisness.BarBuissness;
+import org.meetmybar.meetmybarapi.business.BarBusiness;
 import org.meetmybar.meetmybarapi.models.dto.Bar;
 import org.meetmybar.meetmybarapi.repository.BarRepository;
 import org.springframework.stereotype.Service;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BarBuissnessImpl implements BarBuissness {
+public class BarBusinessImpl implements BarBusiness {
 
     private BarRepository barRepository;
 
-    public BarBuissnessImpl(BarRepository barRepository) {
+    public BarBusinessImpl(BarRepository barRepository) {
         this.barRepository = barRepository;
     }
 
