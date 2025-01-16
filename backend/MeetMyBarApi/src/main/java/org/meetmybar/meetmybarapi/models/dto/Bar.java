@@ -1,4 +1,4 @@
-package org.meetmybar.meetmybarapi.models;
+package org.meetmybar.meetmybarapi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,16 +6,16 @@ import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * 
+ * Bar
  */
 
-@Schema(name = "Bar", description = "")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-09T15:34:47.595602900+01:00[Europe/Paris]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-14T10:35:53.154932700+01:00[Europe/Paris]")
 public class Bar {
 
   private Integer id;
@@ -27,10 +27,14 @@ public class Bar {
   private Integer capacity;
 
   @Valid
-  private List<@Valid Beer> beers;
+  private List<@Valid Drink> drinks;
 
   @Valid
   private List<@Valid ScheduleDay> planning;
+
+  private String city;
+
+  private String postalCode;
 
   public Bar() {
     super();
@@ -123,32 +127,32 @@ public class Bar {
     this.capacity = capacity;
   }
 
-  public Bar beers(List<@Valid Beer> beers) {
-    this.beers = beers;
+  public Bar drinks(List<@Valid Drink> drinks) {
+    this.drinks = drinks;
     return this;
   }
 
-  public Bar addBeersItem(Beer beersItem) {
-    if (this.beers == null) {
-      this.beers = new ArrayList<>();
+  public Bar addDrinksItem(Drink drinksItem) {
+    if (this.drinks == null) {
+      this.drinks = new ArrayList<>();
     }
-    this.beers.add(beersItem);
+    this.drinks.add(drinksItem);
     return this;
   }
 
   /**
-   * Get beers
-   * @return beers
+   * Get drinks
+   * @return drinks
   */
   @Valid 
-  @Schema(name = "beers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("beers")
-  public List<@Valid Beer> getBeers() {
-    return beers;
+  @Schema(name = "drinks", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("drinks")
+  public List<@Valid Drink> getDrinks() {
+    return drinks;
   }
 
-  public void setBeers(List<@Valid Beer> beers) {
-    this.beers = beers;
+  public void setDrinks(List<@Valid Drink> drinks) {
+    this.drinks = drinks;
   }
 
   public Bar planning(List<@Valid ScheduleDay> planning) {
@@ -179,6 +183,46 @@ public class Bar {
     this.planning = planning;
   }
 
+  public Bar city(String city) {
+    this.city = city;
+    return this;
+  }
+
+  /**
+   * Get city
+   * @return city
+  */
+  
+  @Schema(name = "city", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("city")
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public Bar postalCode(String postalCode) {
+    this.postalCode = postalCode;
+    return this;
+  }
+
+  /**
+   * Get postalCode
+   * @return postalCode
+  */
+  
+  @Schema(name = "postal_code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("postal_code")
+  public String getPostalCode() {
+    return postalCode;
+  }
+
+  public void setPostalCode(String postalCode) {
+    this.postalCode = postalCode;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -192,13 +236,15 @@ public class Bar {
         Objects.equals(this.address, bar.address) &&
         Objects.equals(this.name, bar.name) &&
         Objects.equals(this.capacity, bar.capacity) &&
-        Objects.equals(this.beers, bar.beers) &&
-        Objects.equals(this.planning, bar.planning);
+        Objects.equals(this.drinks, bar.drinks) &&
+        Objects.equals(this.planning, bar.planning) &&
+        Objects.equals(this.city, bar.city) &&
+        Objects.equals(this.postalCode, bar.postalCode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, address, name, capacity, beers, planning);
+    return Objects.hash(id, address, name, capacity, drinks, planning, city, postalCode);
   }
 
   @Override
@@ -209,8 +255,10 @@ public class Bar {
     sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    capacity: ").append(toIndentedString(capacity)).append("\n");
-    sb.append("    beers: ").append(toIndentedString(beers)).append("\n");
+    sb.append("    drinks: ").append(toIndentedString(drinks)).append("\n");
     sb.append("    planning: ").append(toIndentedString(planning)).append("\n");
+    sb.append("    city: ").append(toIndentedString(city)).append("\n");
+    sb.append("    postalCode: ").append(toIndentedString(postalCode)).append("\n");
     sb.append("}");
     return sb.toString();
   }

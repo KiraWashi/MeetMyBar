@@ -1,6 +1,8 @@
-package org.meetmybar.meetmybarapi.models;
+package org.meetmybar.meetmybarapi.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -10,32 +12,85 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * Beer
+ * Drink
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-09T15:34:47.595602900+01:00[Europe/Paris]")
-public class Beer {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-16T11:35:53.624161700+01:00[Europe/Paris]")
+public class Drink {
 
   private Integer id;
 
-  private BigDecimal alcoholDegree;
+  private double alcoholDegree;
 
   private String name;
 
   private String brand;
 
-  public Beer() {
+  /**
+   * Gets or Sets type
+   */
+  public enum TypeEnum {
+    BIERE_BLONDE("biere_blonde"),
+    
+    BIERE_ROUGE("biere_rouge"),
+    
+    BIERE_AMBRE("biere_ambre"),
+    
+    BIERE_NOIRE("biere_noire"),
+    
+    BIERE_BLANCHE("biere_blanche"),
+    
+    BIERE_BRUNE("biere_brune"),
+    
+    VIN_ROUGE("vin_rouge"),
+    
+    VIN_BLANC("vin_blanc"),
+    
+    VIN_ROSE("vin_rose"),
+    
+    NON_DEFINI("non_defini");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static Drink.TypeEnum fromValue(String value) {
+      for (Drink.TypeEnum type : Drink.TypeEnum.values()) {
+        if (type.getValue().equals(value)) {
+          return type;
+        }
+      }
+      return NON_DEFINI; // Valeur par défaut
+    }
+  }
+
+  private TypeEnum type;
+
+  public Drink() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public Beer(Integer id) {
+  public Drink(Integer id) {
     this.id = id;
   }
 
-  public Beer id(Integer id) {
+  public Drink id(Integer id) {
     this.id = id;
     return this;
   }
@@ -44,8 +99,7 @@ public class Beer {
    * Get id
    * @return id
   */
-  @NotNull 
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
     return id;
@@ -55,7 +109,7 @@ public class Beer {
     this.id = id;
   }
 
-  public Beer alcoholDegree(BigDecimal alcoholDegree) {
+  public Drink alcoholDegree(double alcoholDegree) {
     this.alcoholDegree = alcoholDegree;
     return this;
   }
@@ -67,15 +121,15 @@ public class Beer {
   @Valid 
   @Schema(name = "alcohol_degree", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("alcohol_degree")
-  public BigDecimal getAlcoholDegree() {
+  public double getAlcoholDegree() {
     return alcoholDegree;
   }
 
-  public void setAlcoholDegree(BigDecimal alcoholDegree) {
+  public void setAlcoholDegree(double alcoholDegree) {
     this.alcoholDegree = alcoholDegree;
   }
 
-  public Beer name(String name) {
+  public Drink name(String name) {
     this.name = name;
     return this;
   }
@@ -95,7 +149,7 @@ public class Beer {
     this.name = name;
   }
 
-  public Beer brand(String brand) {
+  public Drink brand(String brand) {
     this.brand = brand;
     return this;
   }
@@ -115,6 +169,26 @@ public class Beer {
     this.brand = brand;
   }
 
+  public Drink type(TypeEnum type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   * @return type
+  */
+  
+  @Schema(name = "type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("type")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -123,26 +197,28 @@ public class Beer {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Beer beer = (Beer) o;
-    return Objects.equals(this.id, beer.id) &&
-        Objects.equals(this.alcoholDegree, beer.alcoholDegree) &&
-        Objects.equals(this.name, beer.name) &&
-        Objects.equals(this.brand, beer.brand);
+    Drink drink = (Drink) o;
+    return Objects.equals(this.id, drink.id) &&
+        Objects.equals(this.alcoholDegree, drink.alcoholDegree) &&
+        Objects.equals(this.name, drink.name) &&
+        Objects.equals(this.brand, drink.brand) &&
+        Objects.equals(this.type, drink.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, alcoholDegree, name, brand);
+    return Objects.hash(id, alcoholDegree, name, brand, type);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Beer {\n");
+    sb.append("class Drink {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    alcoholDegree: ").append(toIndentedString(alcoholDegree)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    brand: ").append(toIndentedString(brand)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
   }
