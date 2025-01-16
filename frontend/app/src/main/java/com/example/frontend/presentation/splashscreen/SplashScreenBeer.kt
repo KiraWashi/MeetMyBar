@@ -51,7 +51,7 @@ fun SplashScreenBeer(navHostController: NavHostController) {
 
     if (progress == 1f) {
         LaunchedEffect(Unit) {
-            navHostController.navigate(Screen.HomeScreen.route) {
+            navHostController.navigate(Screen.PageBar.route) {
                 popUpTo("SplashScreenBeer") { inclusive = true } // Supprime SplashScreen de l'historique
             }
         }

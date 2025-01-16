@@ -13,10 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -24,10 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -93,13 +88,13 @@ fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier
             OutlinedTextField(
                 value = name,
                 onValueChange = setName,
-                label = { Text(text = "Nom de la bière", color = mapFontOverBeer(selectedColor)) },
+                label = { Text(text = "Nom de la bière") },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = degree,
                 onValueChange = setDegree,
-                label = { Text("Degré d'alcool", color = mapFontOverBeer(selectedColor)) },
+                label = { Text("Degré d'alcool") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -110,14 +105,14 @@ fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier
             OutlinedTextField(
                 value = quantity,
                 onValueChange = setQuantity,
-                label = { Text("Quantité (en litres)", color = mapFontOverBeer(selectedColor)) },
+                label = { Text("Quantité (en litres)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = prix,
                 onValueChange = setPrix,
-                label = { Text("Prix (€)", color = mapFontOverBeer(selectedColor)) },
+                label = { Text("Prix (€)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )

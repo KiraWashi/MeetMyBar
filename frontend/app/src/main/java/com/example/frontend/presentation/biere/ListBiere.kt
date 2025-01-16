@@ -51,7 +51,7 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
     // Ajouter des exemples de bières
     beerCollection[0] = Beer("Pale Ale", 5.2, "Dorée", 0.25,7.0)
     beerCollection[1] = Beer("Stout", 8.0, "Ambrée", 0.5,6.5)
-    beerCollection[3] = Beer("Pilsner", 4.8, "Jaune paille", 0.5,7.0)
+    beerCollection[3] = Beer("Pilsner", 4.8, "Blonde", 0.5,7.0)
     beerCollection[4] = Beer("Pale Ale", 5.2, "Blanche", 0.25,7.0)
     beerCollection[5] = Beer("Stout", 8.0, "Rousse", 0.5,6.5)
     beerCollection[6] = Beer("Pilsner", 4.8, "Brune", 0.5,7.0)

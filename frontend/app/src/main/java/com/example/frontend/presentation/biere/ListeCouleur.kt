@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 fun mapBeerColor(color: String): Color {
     return when (color.lowercase()) {
         "blanche" -> Color(0xFFF7F5E6)
-        "jaune paille" -> Color(0xFFFFFACD)
+        "blonde" -> Color(0xFFFFFACD)
         "dorée" -> Color(0xFFFFD700)
         "ambrée" -> Color(0xFFFFBF00)
         "rousse" -> Color(0xFFD2691E)
@@ -21,7 +21,7 @@ fun mapBeerColor(color: String): Color {
 fun mapFontOverBeer(color: String): Color {
     return when (color.lowercase()) {
         "blanche" -> Color(0xFF0E0E0E)
-        "jaune paille" -> Color(0xFF0E0E0E)
+        "blonde" -> Color(0xFF0E0E0E)
         "dorée" -> Color(0xFF0E0E0E)
         "ambrée" -> Color(0xFF4F4F4F)
         "rousse" -> Color(0xFF4F4F4F)

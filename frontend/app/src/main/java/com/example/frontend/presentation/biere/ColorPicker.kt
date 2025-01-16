@@ -17,7 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorPicker(selectedColor: String, onColorSelected: (String) -> Unit) {
-    val beerColors = listOf("Blanche", "Jaune paille", "Dorée",
+    val beerColors = listOf("Blanche", "Blonde", "Dorée",
         "Ambrée", "Rousse", "Brune", "Noire", "Cuivrée", "Rubis", "Ébène")
 
     var expanded by remember { mutableStateOf(false) }
