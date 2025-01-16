@@ -45,5 +45,4 @@ public class PhotoBusiness {
         }
         return photoRepository.findById(id);
     }
-
 }
