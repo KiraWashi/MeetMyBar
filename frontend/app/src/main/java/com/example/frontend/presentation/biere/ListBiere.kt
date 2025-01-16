@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -121,7 +122,16 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
                             Text(text = beer.value.name)
                             Text(text = beer.value.color)
                         }
-                        Text(text = beer.value.degree.toString() + "°")
+
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Filled.FavoriteBorder,
+                                contentDescription = "Add a beer",
+                                tint = mapFontOverBeer(beer.value.color),
+                                )
+                        }
+                        Text(text = beer.value.degree.toString() + "°", modifier = Modifier.padding(12.dp))
+
                         Column {
                             Text(text = beer.value.prix.toString() + " €")
                             Text(text = beer.value.quantity.toString() + "L")
