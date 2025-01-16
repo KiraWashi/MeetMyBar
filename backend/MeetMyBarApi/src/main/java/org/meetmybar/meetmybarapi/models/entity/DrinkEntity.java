@@ -12,6 +12,7 @@ import lombok.Setter;
 @Table(name = "DRINK")
 public class DrinkEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 

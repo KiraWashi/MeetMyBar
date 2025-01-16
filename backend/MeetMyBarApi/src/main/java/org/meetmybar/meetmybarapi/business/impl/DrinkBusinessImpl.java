@@ -35,8 +35,35 @@ public class DrinkBusinessImpl implements DrinkBusiness {
 
     @Override
     public Drink createDrink(Drink drink) {
-        // TODO: Implement avec le repository
-        return null;
+        // Validation des données
+        if (drink == null) {
+            throw new IllegalArgumentException("Drink cannot be null");
+        }
+        if (drink.getName() == null || drink.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Drink name cannot be null or empty");
+        }
+        if (drink.getBrand() == null || drink.getBrand().trim().isEmpty()) {
+            throw new IllegalArgumentException("Drink brand cannot be null or empty");
+        }
+        if (drink.getAlcoholDegree() < 0) {
+            throw new IllegalArgumentException("Alcohol degree cannot be negative");
+        }
+        if (drink.getType() == null) {
+            drink.setType(Drink.TypeEnum.NON_DEFINI);
+        }
+
+        // Vérifier si une boisson avec le même nom existe déjà
+        try {
+            Drink existingDrink = drinkRepository.getDrinkByName(drink.getName());
+            if (existingDrink != null) {
+                throw new IllegalArgumentException("A drink with this name already exists");
+            }
+        } catch (RuntimeException ignored) {
+            // Si getDrinkByName lance une exception, cela signifie que la boisson n'existe pas
+            // donc on peut continuer
+        }
+
+        return drinkRepository.createDrink(drink);
     }
 
     @Override
@@ -47,7 +74,9 @@ public class DrinkBusinessImpl implements DrinkBusiness {
 
     @Override
     public Drink deleteDrink(Drink drink) {
-        // TODO: Implement avec le repository
-        return null;
+        if (drink == null || drink.getId() == null) {
+            throw new IllegalArgumentException("Drink or drink ID cannot be null");
+        }
+        return drinkRepository.deleteDrink(drink);
     }
 }

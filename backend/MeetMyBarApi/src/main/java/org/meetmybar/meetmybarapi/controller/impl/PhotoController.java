@@ -48,7 +48,7 @@ public class PhotoController {
     //public ResponseEntity<Photo> updatePhoto(
     //       @PathVariable int id,
     //        @Valid @RequestBody Photo updateDto) {
-        //   return ResponseEntity.ok(photoBusiness.updatePhoto(id, updateDto));
+    //   return ResponseEntity.ok(photoBusiness.updatePhoto(id, updateDto));
     // }
 
     //@DeleteMapping("/{id}")
