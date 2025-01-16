@@ -2,6 +2,7 @@ package org.meetmybar.meetmybarapi.buisness.impl;
 
 import org.meetmybar.meetmybarapi.exception.*;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
+import org.meetmybar.meetmybarapi.models.entity.PhotoEntity;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
 import org.meetmybar.meetmybarapi.util.ImageCompressor;
 import org.springframework.core.io.Resource;
@@ -128,11 +129,12 @@ public class PhotoBusiness {
     }
 
     private PhotoEntity createPhotoEntity(Photo createDto, String fileName) {
-        PhotoEntity photo = new PhotoEntity();
+        /**PhotoEntity photo = new PhotoEntity();
         photo.setDescription(createDto.getDescription());
         photo.setUrlFile("/photos/" + fileName);
         photo.setMainPhoto(createDto.isMainPhoto());
-        return photo;
+        return photo;**/
+        return null;
     }
 
     private void updatePhotoEntity(Photo photo, Photo updateDto) {

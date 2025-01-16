@@ -8,18 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PhotoMapper {
     public Photo toDto(PhotoEntity photo) {
-        return new Photo(
-                photo.getId(),
-                photo.getDescription(),
-                photo.isMainPhoto()
-        );
+        return null;
     }
 
     public PhotoEntity toEntity(Photo photo) {
-        return new PhotoEntity(
-                photo.getId(),
-                photo.getDescription(),
-                photo.isMainPhoto()
-        );
+        return null;
     }
 }

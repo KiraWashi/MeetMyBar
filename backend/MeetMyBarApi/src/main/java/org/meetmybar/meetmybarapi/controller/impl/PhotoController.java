@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.meetmybar.meetmybarapi.buisness.BarBuissness;
 import org.meetmybar.meetmybarapi.buisness.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.springframework.beans.factory.annotation.Autowired;
