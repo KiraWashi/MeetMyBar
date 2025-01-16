@@ -1,79 +1,42 @@
 package org.meetmybar.meetmybarapi.models.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "bar")
+@Table(name = "BAR")
 public class BarEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-  @Column
-  private String name;
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-  @Column
-  private long capacity;
-  @Column
-  private String address;
-  @Column
-  private String city;
-  @Column(name = "postal_code")
-  private long postalCode;
+    @NotNull
+    @Column(name = "capacity", nullable = false)
+    private Integer capacity;
 
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "address", nullable = false)
+    private String address;
 
-  public String getName() {
-    return name;
-  }
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "city", nullable = false, length = 100)
+    private String city;
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-
-  public long getCapacity() {
-    return capacity;
-  }
-
-  public void setCapacity(long capacity) {
-    this.capacity = capacity;
-  }
-
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-
-  public long getPostalCode() {
-    return postalCode;
-  }
-
-  public void setPostalCode(long postalCode) {
-    this.postalCode = postalCode;
-  }
-
+    @NotNull
+    @Column(name = "postal_code", nullable = false)
+    private Integer postalCode;
 
 }

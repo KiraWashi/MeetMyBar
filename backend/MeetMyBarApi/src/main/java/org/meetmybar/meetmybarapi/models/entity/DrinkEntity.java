@@ -1,47 +1,37 @@
 package org.meetmybar.meetmybarapi.models.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Entity
+@Table(name = "DRINK")
 public class DrinkEntity {
+    @Id
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-  private String id;
-  private String name;
-  private String brand;
-  private double degree;
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
 
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "brand", nullable = false)
+    private String brand;
 
-  public String getId() {
-    return id;
-  }
+    @NotNull
+    @Column(name = "degree", nullable = false)
+    private Double degree;
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-
-  public String getBrand() {
-    return brand;
-  }
-
-  public void setBrand(String brand) {
-    this.brand = brand;
-  }
-
-
-  public double getDegree() {
-    return degree;
-  }
-
-  public void setDegree(double degree) {
-    this.degree = degree;
-  }
+    @NotNull
+    @Lob
+    @Column(name = "type", nullable = false)
+    private String type;
 
 }
