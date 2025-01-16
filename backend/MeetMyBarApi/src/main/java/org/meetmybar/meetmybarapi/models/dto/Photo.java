@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.Arrays;
 import java.util.Objects;
 
 @Data
 public class Photo {
     private int id;
     private String description;
-    private String urlFile;
+    private byte[] image_data;
     private boolean mainPhoto;
 
     /**
@@ -20,10 +22,10 @@ public class Photo {
         this.id = id;
     }
 
-    public Photo(int id, String description, String urlFile, boolean mainPhoto) {
+    public Photo(int id, String description, byte[] image_data, boolean mainPhoto) {
         this.id = id;
         this.description = description;
-        this.urlFile = urlFile;
+        this.image_data = image_data;
         this.mainPhoto = mainPhoto;
     }
 
@@ -60,13 +62,13 @@ public class Photo {
         Photo photo = (Photo) o;
         return Objects.equals(this.id, photo.id) &&
                 Objects.equals(this.description, photo.description) &&
-                Objects.equals(this.urlFile, photo.urlFile) &&
+                Arrays.equals(this.image_data, photo.image_data) &&
                 Objects.equals(this.mainPhoto, photo.mainPhoto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, this.description, this.mainPhoto, this.urlFile);
+        return Objects.hash(id, this.description, this.mainPhoto, Arrays.hashCode(this.image_data));
     }
 
     @Override
@@ -76,7 +78,7 @@ public class Photo {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    description: ").append(toIndentedString(this.description)).append("\n");
         sb.append("    mainPhoto: ").append(toIndentedString(this.mainPhoto)).append("\n");
-        sb.append("    urlFile: ").append(toIndentedString(this.urlFile)).append("\n");
+        sb.append("    image: ").append(toIndentedString(this.image_data)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -100,12 +102,12 @@ public class Photo {
         this.description = description;
     }
 
-    public String getUrlFile() {
-        return urlFile;
+    public byte[] getImageData() {
+        return image_data;
     }
 
-    public void setUrlFile(String urlFile) {
-        this.urlFile = urlFile;
+    public void setImageData(byte[] image_data) {
+        this.image_data = image_data;
     }
 
     public boolean isMainPhoto() {

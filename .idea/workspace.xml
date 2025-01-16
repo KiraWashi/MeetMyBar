@@ -5,10 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ff82036a-955b-4f56-84dc-765d5693e9bb" name="Changes" comment="Photo start">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/utils/ImageUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/business/impl/PhotoBusiness.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/mapper/PhotoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/dto/Photo.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/dto/Photo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/entity/PhotoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/entity/PhotoEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/util/ImageCompressor.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +78,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -121,7 +128,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.MeetMyBarApiApplication.executor": "Run",
-    "git-widget-placeholder": "feature/photo",
+    "git-widget-placeholder": "featureBack/photo",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/ACours/Brest/Master_TILL-A/semestre9/ProgrammationGenerative/java_reflect_examples",
     "node.js.detected.package.eslint": "true",
@@ -137,7 +144,7 @@
       <recent name="org.meetmybar.meetmybarapi.repository" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.MeetMyBarApi [bootRun]">
+  <component name="RunManager" selected="Gradle.MeetMyBarApi [build]">
     <configuration name="MeetMyBarApi [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -235,8 +242,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.MeetMyBarApi [bootRun]" />
         <item itemvalue="Gradle.MeetMyBarApi [build]" />
+        <item itemvalue="Gradle.MeetMyBarApi [bootRun]" />
         <item itemvalue="Gradle.MeetMyBarApi [test]" />
         <item itemvalue="Gradle.MeetMyBarApi [compileTestJava]" />
       </list>
