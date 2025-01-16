@@ -1,4 +1,4 @@
-package mapper;
+package org.meetmybar.meetmybarapi.mapper;
 
 
 import org.meetmybar.meetmybarapi.models.dto.Photo;
@@ -11,7 +11,6 @@ public class PhotoMapper {
         return new Photo(
                 photo.getId(),
                 photo.getDescription(),
-                photo.getUrlFile(),
                 photo.isMainPhoto()
         );
     }
@@ -20,7 +19,6 @@ public class PhotoMapper {
         return new PhotoEntity(
                 photo.getId(),
                 photo.getDescription(),
-                photo.getUrlFile(),
                 photo.isMainPhoto()
         );
     }

@@ -1,15 +1,9 @@
 package org.meetmybar.meetmybarapi.buisness.impl;
 
-import jakarta.transaction.Transactional;
-import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
-import mapper.PhotoMapper;
 import org.meetmybar.meetmybarapi.exception.*;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
-import org.meetmybar.meetmybarapi.models.entity.PhotoEntity;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
 import org.meetmybar.meetmybarapi.util.ImageCompressor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -22,8 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 

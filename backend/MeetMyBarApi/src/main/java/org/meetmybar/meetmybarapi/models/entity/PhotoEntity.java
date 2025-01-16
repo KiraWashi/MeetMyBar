@@ -1,55 +1,34 @@
 package org.meetmybar.meetmybarapi.models.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Entity
+@Table(name = "PHOTO")
 public class PhotoEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-  private int id;
-  private String description;
-  private String urlFile;
-  private boolean mainPhoto;
+    @Size(max = 255)
+    @Column(name = "description", nullable = true)
+    private String description;
 
-  public PhotoEntity(int id, String description, String urlFile, boolean mainPhoto) {
-    this.id = id;
-    this.description = description;
-    this.urlFile = urlFile;
-    this.mainPhoto = mainPhoto;
-  }
+    @NotNull
+    @Column(name = "main_photo", nullable = false)
+    private Boolean mainPhoto = false;
 
-    public PhotoEntity() {
+    @NotNull
+    @Column(name = "image_data", nullable = false)
+    private byte[] imageData;
 
+    public boolean isMainPhoto() {
+        return this.mainPhoto;
     }
-
-    public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-
-  public String getUrlFile() {
-    return urlFile;
-  }
-
-  public void setUrlFile(String urlFile) {
-    this.urlFile = urlFile;
-  }
-
-  public boolean isMainPhoto() {
-    return this.mainPhoto;
-  }
-
-  public void setMainPhoto(boolean mainPhoto) {
-    this.mainPhoto = mainPhoto;
-  }
 }
