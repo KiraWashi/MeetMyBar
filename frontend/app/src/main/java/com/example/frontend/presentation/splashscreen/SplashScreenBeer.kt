@@ -1,4 +1,4 @@
-package com.example.frontend.presentation
+package com.example.frontend.presentation.splashscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -24,6 +24,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.frontend.R
+import com.example.frontend.presentation.navigation.Screen
 
 @Composable
 fun SplashScreenBeer(navHostController: NavHostController) {

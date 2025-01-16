@@ -1,4 +1,4 @@
-package com.example.frontend.presentation
+package com.example.frontend.presentation.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image

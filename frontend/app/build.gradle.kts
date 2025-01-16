@@ -61,9 +61,19 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.play.service.map)
-    implementation(libs.compose.map)
+
     implementation("com.airbnb.android:lottie-compose:5.2.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
+
+    // Map Google
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation(libs.play.service.map)
+    implementation(libs.compose.map)
+
+    // Koin for Android
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.test)
+    implementation(libs.koin.androidx.compose)
 }
