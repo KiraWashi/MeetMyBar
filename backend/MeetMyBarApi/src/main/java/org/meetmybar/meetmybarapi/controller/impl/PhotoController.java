@@ -3,13 +3,12 @@ package org.meetmybar.meetmybarapi.controller.impl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.meetmybar.meetmybarapi.buisness.BarBuissness;
-import org.meetmybar.meetmybarapi.buisness.impl.PhotoBusiness;
+
+import org.meetmybar.meetmybarapi.business.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/photos")
@@ -32,19 +31,10 @@ public class PhotoController {
 
         this.photoBusiness = business;
     }
-    //@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    //@Operation(summary = "Uploader une nouvelle photo")
-    //public ResponseEntity<Photo> uploadPhoto(
-    //        @RequestParam("file") MultipartFile file,
-    //       @Valid Photo createDto) {
-    //    return ResponseEntity.ok(photoBusiness.savePhoto(file, createDto));
-    // }
-
-    //@GetMapping
-    //@Operation(summary = "Récupérer toutes les photos")
-    //public ResponseEntity<List<Photo>> getAllPhotos() {
-    //    return ResponseEntity.ok(photoBusiness.getAllPhotos());
-    //}
+    @PostMapping
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("photo") Photo photo  ) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(photoBusiness.savePhoto(file, photo));
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Récupérer une photo par son ID")
@@ -52,14 +42,6 @@ public class PhotoController {
         return ResponseEntity.ok(photoBusiness.getPhotoById(id));
     }
 
-    @GetMapping("/{id}/file")
-    @Operation(summary = "Récupérer le fichier d'une photo")
-    public ResponseEntity<Resource> getPhotoFile(@PathVariable int id) {
-        Resource resource = photoBusiness.getPhotoFile(id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(resource);
-    }
 
     //@PatchMapping("/{id}")
     //@Operation(summary = "Mettre à jour une photo")
