@@ -31,6 +31,10 @@ public class DrinkRepository {
 
     private static final String SQL_INSERT_DRINK =
             "INSERT INTO DRINK (name, brand, degree, type) VALUES (:name, :brand, :degree, :type)";
+
+    private static final String SQL_UPDATE_DRINK =
+            "UPDATE DRINK SET name = :name, brand = :brand, degree = :degree, type = :type WHERE id = :id";
+
     @Inject
     private NamedParameterJdbcTemplate drinkTemplate;
 
@@ -145,6 +149,32 @@ public class DrinkRepository {
         }
     }
 
+    public Drink updateDrink(Drink drink) {
+        try {
+            // Vérifie d'abord si la boisson existe
+            Drink existingDrink = getDrinkById(drink.getId());
+            if (existingDrink == null) {
+                throw new RuntimeException("Drink not found with id: " + drink.getId());
+            }
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", drink.getId());
+            params.put("name", drink.getName());
+            params.put("brand", drink.getBrand());
+            params.put("degree", drink.getAlcoholDegree());
+            params.put("type", drink.getType().getValue());
+
+            int rowsAffected = drinkTemplate.update(SQL_UPDATE_DRINK, params);
+
+            if (rowsAffected > 0) {
+                return drink;
+            } else {
+                throw new RuntimeException("Failed to update drink with id: " + drink.getId());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating drink: " + e.getMessage(), e);
+        }
+    }
 
 
 }

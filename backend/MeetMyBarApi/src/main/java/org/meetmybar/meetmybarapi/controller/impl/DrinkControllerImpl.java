@@ -77,11 +77,15 @@ public class DrinkControllerImpl implements DrinkController {
     }
 
     @Override
-    public ResponseEntity<Drink> patchDrink(Drink drink) {
+    public ResponseEntity<Drink> patchDrink(@Valid Drink drink) {
         try {
             Drink updatedDrink = drinkBusiness.updateDrink(drink);
             return ResponseEntity.ok(updatedDrink);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid drink data: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
+            logger.error("Error updating drink", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
