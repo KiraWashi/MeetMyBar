@@ -14,7 +14,7 @@ public class PhotoRepository{
     private static final String SQL_GET_PHOTO_BY_ID =
             "SELECT id,description, image_data, main_photo FROM PHOTO WHERE id = :id";
 
-    private static final String SQL_INSERT_PHOTO = "INSERT INTO photos (description, image_data, main_photo) VALUES (:description, :image_data, :main_photo)";
+    private static final String SQL_INSERT_PHOTO = "INSERT INTO PHOTO (description, image_data, main_photo) VALUES (:description, :image_data, :main_photo)";
 
     @Autowired
     private NamedParameterJdbcTemplate photoTemplate;

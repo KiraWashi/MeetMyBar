@@ -23,11 +23,16 @@ public class PhotoBusiness {
 
     }
 
-    public String savePhoto(MultipartFile imageFile, Photo photo) {
+    public String savePhoto(MultipartFile imageFile, String description, boolean mainData) {
         try {
             // Compression de l'image
             byte[] compressedImage = ImageUtils.compressImage(imageFile.getBytes());
+            Photo photo = new Photo();
+            photo.setMainPhoto(mainData);
             photo.setImageData(compressedImage);
+            if (description != null && !description.isEmpty()) {
+                photo.setDescription(description);
+            }
 
             // Sauvegarde dans le dépôt
             photoRepository.save(photo);

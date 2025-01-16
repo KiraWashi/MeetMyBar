@@ -32,8 +32,11 @@ public class PhotoController {
         this.photoBusiness = business;
     }
     @PostMapping
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("photo") Photo photo  ) throws IOException {
-        return ResponseEntity.status(HttpStatus.OK).body(photoBusiness.savePhoto(file, photo));
+    public ResponseEntity<?> uploadImage(
+            @RequestParam("image") MultipartFile file,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "main_photo", required = false) Boolean mainPhoto) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(photoBusiness.savePhoto(file, description, mainPhoto));
     }
 
     @GetMapping("/{id}")
