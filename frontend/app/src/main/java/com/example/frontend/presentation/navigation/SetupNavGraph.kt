@@ -40,7 +40,7 @@ fun SetupNavGraph(
             route = Screen.HomeScreen.route
         ) {
             HomeScreen(
-                modifier = modifier
+                navHostController = navHostController
             )
         }
     }
