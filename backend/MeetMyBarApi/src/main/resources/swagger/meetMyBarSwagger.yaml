@@ -449,6 +449,8 @@ components:
       x-stoplight:
         id: sgpqj4r6lfb75
       type: object
+      x-tags:
+        - drink
       required:
         - id
       properties:
@@ -468,8 +470,20 @@ components:
           type: string
           x-stoplight:
             id: drvto8xezd3ea
-      x-tags:
-        - drink
+        type:
+          x-stoplight:
+            id: j45cpny5ttlvr
+          enum:
+            - biere_blonde
+            - biere_rouge
+            - biere_ambre
+            - biere_noire
+            - biere_blanche
+            - biere_brune
+            - vin_rouge
+            - vin_blanc
+            - vin_rose
+            - non_defini
     ScheduleDay:
       title: ScheduleDay
       x-stoplight:

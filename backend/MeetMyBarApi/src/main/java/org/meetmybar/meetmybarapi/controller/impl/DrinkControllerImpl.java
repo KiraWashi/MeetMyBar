@@ -1,5 +1,6 @@
 package org.meetmybar.meetmybarapi.controller.impl;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.meetmybar.meetmybarapi.controller.api.DrinkController;
 
@@ -34,6 +35,8 @@ public class DrinkControllerImpl implements DrinkController {
         try {
             Drink deletedDrink = drinkBusiness.deleteDrink(drink);
             return ResponseEntity.ok(deletedDrink);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -74,21 +77,29 @@ public class DrinkControllerImpl implements DrinkController {
     }
 
     @Override
-    public ResponseEntity<Drink> patchDrink(Drink drink) {
+    public ResponseEntity<Drink> patchDrink(@Valid Drink drink) {
         try {
             Drink updatedDrink = drinkBusiness.updateDrink(drink);
             return ResponseEntity.ok(updatedDrink);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid drink data: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
+            logger.error("Error updating drink", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @Override
-    public ResponseEntity<Drink> postDrink(Drink drink) {
+    public ResponseEntity<Drink> postDrink(@Valid Drink drink) {
         try {
             Drink createdDrink = drinkBusiness.createDrink(drink);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDrink);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid drink data: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
+            logger.error("Error creating drink", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
