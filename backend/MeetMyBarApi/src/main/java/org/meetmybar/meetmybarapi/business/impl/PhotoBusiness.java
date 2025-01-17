@@ -5,6 +5,8 @@ import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
 
 import org.meetmybar.meetmybarapi.utils.ImageUtils;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -50,5 +52,14 @@ public class PhotoBusiness {
         }
         return photoRepository.findById(id);
     }
+
+    public ResponseEntity<ByteArrayResource> downloadPhotoById(int id) {
+        if(photoRepository.findById(id)==null){
+            throw new PhotoNotFoundException(id);
+        }
+        return photoRepository.downloadById(id);
+    }
+
+
 
 }
