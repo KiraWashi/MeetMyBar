@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff82036a-955b-4f56-84dc-765d5693e9bb" name="Changes" comment="Photo start">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/utils/ImageUtils.java" afterDir="false" />
+    <list default="true" id="ff82036a-955b-4f56-84dc-765d5693e9bb" name="Changes" comment="upload photo OK">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/buisness/impl/PhotoBusiness.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/business/impl/PhotoBusiness.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/business/impl/PhotoBusiness.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/business/impl/PhotoBusiness.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/controller/impl/PhotoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/mapper/PhotoMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/dto/Photo.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/dto/Photo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/entity/PhotoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/models/entity/PhotoEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/repository/PhotoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/MeetMyBarApi/src/main/java/org/meetmybar/meetmybarapi/util/ImageCompressor.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,34 +112,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build MeetMyBarApi.executor": "Run",
-    "Gradle.MeetMyBarApi [bootRun].executor": "Run",
-    "Gradle.MeetMyBarApi [build].executor": "Run",
-    "Gradle.MeetMyBarApi [compileTestJava].executor": "Run",
-    "Gradle.MeetMyBarApi [test].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.MeetMyBarApiApplication.executor": "Run",
-    "git-widget-placeholder": "featureBack/photo",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/ACours/Brest/Master_TILL-A/semestre9/ProgrammationGenerative/java_reflect_examples",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build MeetMyBarApi.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MeetMyBarApi [bootRun].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MeetMyBarApi [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MeetMyBarApi [compileTestJava].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MeetMyBarApi [test].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.MeetMyBarApiApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;featureBack/photo&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/ACours/Brest/Master_TILL-A/semestre9/ProgrammationGenerative/java_reflect_examples&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;
+    ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.meetmybar.meetmybarapi.repository" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.MeetMyBarApi [build]">
+  <component name="RunManager" selected="Gradle.MeetMyBarApi [bootRun]">
     <configuration name="MeetMyBarApi [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -242,8 +242,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.MeetMyBarApi [build]" />
         <item itemvalue="Gradle.MeetMyBarApi [bootRun]" />
+        <item itemvalue="Gradle.MeetMyBarApi [build]" />
         <item itemvalue="Gradle.MeetMyBarApi [test]" />
         <item itemvalue="Gradle.MeetMyBarApi [compileTestJava]" />
       </list>
@@ -270,6 +270,8 @@
       <workItem from="1736763397878" duration="367000" />
       <workItem from="1736846962372" duration="2068000" />
       <workItem from="1736858164885" duration="9983000" />
+      <workItem from="1737105569634" duration="47000" />
+      <workItem from="1737115092949" duration="1332000" />
     </task>
     <task id="LOCAL-00001" summary="Photo start">
       <option name="closed" value="true" />
@@ -279,7 +281,23 @@
       <option name="project" value="LOCAL" />
       <updated>1736865389621</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fix compile + photo">
+      <option name="closed" value="true" />
+      <created>1737034857103</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1737034857103</updated>
+    </task>
+    <task id="LOCAL-00003" summary="upload photo OK">
+      <option name="closed" value="true" />
+      <created>1737040590177</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1737040590177</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -287,6 +305,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Photo start" />
-    <option name="LAST_COMMIT_MESSAGE" value="Photo start" />
+    <MESSAGE value="Fix compile + photo" />
+    <MESSAGE value="upload photo OK" />
+    <option name="LAST_COMMIT_MESSAGE" value="upload photo OK" />
   </component>
 </project>
