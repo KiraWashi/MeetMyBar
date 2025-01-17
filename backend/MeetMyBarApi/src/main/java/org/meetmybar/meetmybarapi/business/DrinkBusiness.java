@@ -53,8 +53,8 @@ public interface DrinkBusiness {
      * deleteDrink
      * Supprime une boisson
      *
-     * @param drink la boisson à supprimer
+     * @param drinkId la boisson à supprimer
      * @return Drink supprimée
      */
-    Drink deleteDrink(Drink drink);
+    Drink deleteDrink(int drinkId);
 }

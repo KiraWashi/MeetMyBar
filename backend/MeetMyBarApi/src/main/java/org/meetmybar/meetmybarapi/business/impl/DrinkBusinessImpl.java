@@ -105,10 +105,7 @@ public class DrinkBusinessImpl implements DrinkBusiness {
 
 
     @Override
-    public Drink deleteDrink(Drink drink) {
-        if (drink == null || drink.getId() == null) {
-            throw new IllegalArgumentException("Drink or drink ID cannot be null");
-        }
-        return drinkRepository.deleteDrink(drink);
+    public Drink deleteDrink(int drinkId) {
+        return drinkRepository.deleteDrink(drinkId);
     }
 }

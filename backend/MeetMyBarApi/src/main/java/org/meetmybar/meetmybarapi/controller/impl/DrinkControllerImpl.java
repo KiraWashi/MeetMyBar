@@ -31,9 +31,9 @@ public class DrinkControllerImpl implements DrinkController {
     }
 
     @Override
-    public ResponseEntity<Drink> deleteDrink(Drink drink) {
+    public ResponseEntity<Drink> deleteDrink(int drinkId) {
         try {
-            Drink deletedDrink = drinkBusiness.deleteDrink(drink);
+            Drink deletedDrink = drinkBusiness.deleteDrink(drinkId);
             return ResponseEntity.ok(deletedDrink);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

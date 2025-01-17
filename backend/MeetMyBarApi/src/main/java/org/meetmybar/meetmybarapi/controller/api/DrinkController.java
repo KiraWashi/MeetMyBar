@@ -42,44 +42,33 @@ public interface DrinkController {
 
 
     /**
-     * DELETE /drink : Your DELETE endpoint
+     * DELETE /drink/{drinkId} : Your DELETE endpoint
      *
-     * @param drink  (optional)
+     * @param drinkId  (required)
      * @return OK (status code 200)
-     *         or Bad Request (status code 400)
-     *         or Unauthorized (status code 401)
-     *         or Forbidden (status code 403)
-     *         or Not Found (status code 404)
-     *         or Internal Server Error (status code 500)
      */
     @Operation(
-            operationId = "deleteDrink",
+            operationId = "deleteDrinkDrinkId",
             summary = "Your DELETE endpoint",
             tags = {  },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = Drink.class))
-                    }),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found"),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Drink.class))
+                    })
             }
     )
     @RequestMapping(
             method = RequestMethod.DELETE,
-            value = "/drink",
-            produces = { "application/json" },
-            consumes = { "application/json" }
+            value = "/drink/{drinkId}",
+            produces = { "application/json" }
     )
     default ResponseEntity<Drink> deleteDrink(
-            @Parameter(name = "Drink", description = "") @Valid @RequestBody(required = false) Drink drink
+            @Parameter(name = "drinkId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("drinkId") int drinkId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }";
+                    String exampleString = "{ \"name\" : \"name\", \"id\" : 1, \"type\" : \"biere_blonde\", \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

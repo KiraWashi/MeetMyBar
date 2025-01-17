@@ -102,24 +102,24 @@ public class DrinkRepository {
         }
     }
 
-    public Drink deleteDrink(Drink drink) {
+    public Drink deleteDrink(int drinkId) {
         try {
             // On récupère d'abord la boisson pour pouvoir la retourner après suppression
-            Drink existingDrink = getDrinkById(drink.getId());
+            Drink existingDrink = getDrinkById(drinkId);
 
             if (existingDrink == null) {
-                throw new RuntimeException("Drink not found with id: " + drink.getId());
+                throw new RuntimeException("Drink not found with id: " + drinkId);
             }
 
             HashMap<String, Object> params = new HashMap<>();
-            params.put("id", drink.getId());
+            params.put("id", drinkId);
 
             int rowsAffected = drinkTemplate.update(SQL_DELETE_DRINK, params);
 
             if (rowsAffected > 0) {
                 return existingDrink;
             } else {
-                throw new RuntimeException("Failed to delete drink with id: " + drink.getId());
+                throw new RuntimeException("Failed to delete drink with id: " + drinkId);
             }
         } catch (Exception e) {
             throw new RuntimeException("Error deleting drink: " + e.getMessage(), e);
