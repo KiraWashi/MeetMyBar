@@ -30,7 +30,8 @@ public class DrinkBusinessImpl implements DrinkBusiness {
 
     @Override
     public Drink getDrinkById(int drinkId) {
-        return this.drinkRepository.getDrinkById(drinkId);
+        Drink drink = drinkRepository.getDrinkById(drinkId);
+        return drink;
     }
 
     @Override

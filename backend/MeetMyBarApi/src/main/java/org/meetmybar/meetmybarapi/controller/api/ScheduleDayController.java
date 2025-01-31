@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import org.meetmybar.api.controller.ApiUtil;
-import org.meetmybar.api.model.ScheduleDay;
+import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ import java.util.Optional;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-17T14:26:25.502834400+01:00[Europe/Paris]")
 @Validated
 @Controller
-@Tag(name = "Default", description = "the Default API")
+@Tag(name = "ScheduleDay", description = "the ScheduleDay API")
 public interface ScheduleDayController {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -58,7 +58,7 @@ public interface ScheduleDayController {
             produces = { "application/json" }
     )
     default ResponseEntity<ScheduleDay> deleteScheduledayScheduledayId(
-            @Parameter(name = "scheduledayId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("scheduledayId") Object scheduledayId
+            @Parameter(name = "scheduledayId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("scheduledayId") int scheduledayId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -132,7 +132,7 @@ public interface ScheduleDayController {
             produces = { "application/json" }
     )
     default ResponseEntity<ScheduleDay> getScheduledayScheduledayId(
-            @Parameter(name = "scheduledayId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("scheduledayId") Object scheduledayId
+            @Parameter(name = "scheduledayId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("scheduledayId") int scheduledayId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

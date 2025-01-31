@@ -25,6 +25,7 @@ public class BarControllerImpl implements BarController {
         this.barBusiness = barBusiness;
     }
 
+
     @Override
     public ResponseEntity<Bar> getBarByName(@PathVariable("barName") String barName) {
         try {

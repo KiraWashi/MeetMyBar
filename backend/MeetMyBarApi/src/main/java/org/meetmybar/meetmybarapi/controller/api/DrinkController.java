@@ -33,7 +33,7 @@ import jakarta.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-14T14:14:59.611161700+01:00[Europe/Paris]")
 @Validated
 @Controller
-@Tag(name = "Default", description = "the Default API")
+@Tag(name = "Drink", description = "the Drink API")
 public interface DrinkController {
 
     default Optional<NativeWebRequest> getRequest() {

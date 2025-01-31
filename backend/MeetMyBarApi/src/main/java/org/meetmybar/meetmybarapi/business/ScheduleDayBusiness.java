@@ -10,5 +10,26 @@ public interface ScheduleDayBusiness {
      *
      * @return List of ScheduleDay
      */
-    List<ScheduleDay> getScheduleDays();
+    public List<ScheduleDay> getScheduleDays();
+
+
+
+    /**
+     * getScheduleDayById
+     * Récupère un horaire d'ouverture en base de données
+     *
+     * @param id Identifiant du scheduleDay
+     * @return ScheduleDay
+     */
+    public ScheduleDay getScheduleDayById(int id);
+
+
+    /**
+     * deleteScheduleDayById
+     * Supprime un horaire d'ouverture en base de données
+     *
+     * @param id Identifiant du scheduleDay
+     * @return ScheduleDay
+     */
+    public ScheduleDay deleteScheduleDayById(int id);
 }

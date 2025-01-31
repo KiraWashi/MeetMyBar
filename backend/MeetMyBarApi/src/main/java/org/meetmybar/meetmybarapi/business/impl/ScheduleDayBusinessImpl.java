@@ -20,4 +20,14 @@ public class ScheduleDayBusinessImpl implements ScheduleDayBusiness {
     public List<ScheduleDay> getScheduleDays() {
         return this.scheduleDayRepository.getScheduleDays();
     }
+
+    @Override
+    public ScheduleDay getScheduleDayById(int id) {
+        return this.scheduleDayRepository.getScheduleDayById(id);
+    }
+
+    @Override
+    public ScheduleDay deleteScheduleDayById(int id) {
+        return this.scheduleDayRepository.deleteScheduleDayById(id);
+    }
 }
