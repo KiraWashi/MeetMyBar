@@ -3,7 +3,10 @@ package org.meetmybar.meetmybarapi.repository;
 import jakarta.inject.Inject;
 import org.meetmybar.meetmybarapi.models.dto.Drink;
 import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -20,6 +23,13 @@ public class ScheduleDayRepository {
 
     private static final String SQL_DELETE_SCHEDULEDAY =
             "DELETE FROM SCHEDULE_DAY WHERE id = :id";
+
+    private static final String SQL_INSERT_SCHEDULEDAY =
+            "INSERT INTO SCHEDULE_DAY (day, closing, opening) VALUES (:day, :closing, :opening)";
+
+    private static final String SQL_UPDATE_SCHEDULEDAY =
+            "UPDATE DRINK SET day = :day, opening = :opening, closing = :closing WHERE id = :id";
+
 
     @Inject
     private NamedParameterJdbcTemplate scheduleDayTemplate;
@@ -86,4 +96,55 @@ public class ScheduleDayRepository {
             throw new RuntimeException("Error deleting ScheduleDay: " + e.getMessage(), e);
         }
     }
+
+    public ScheduleDay createScheduleDay(ScheduleDay scheduleDay) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("day", scheduleDay.getDay());
+            params.put("closing", scheduleDay.getClosing());
+            params.put("opening", scheduleDay.getOpening());
+
+
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            scheduleDayTemplate.update(SQL_INSERT_SCHEDULEDAY, new MapSqlParameterSource(params), keyHolder, new String[]{"id"});
+
+            Number newId = keyHolder.getKey();
+            if (newId != null) {
+                scheduleDay.setId(newId.intValue());
+                return scheduleDay;
+            } else {
+                throw new RuntimeException("Failed to create scheduleDay - no ID returned");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating scheduleDay: " + e.getMessage(), e);
+        }
+    }
+
+    public ScheduleDay updateScheduleDay(ScheduleDay scheduleDay) {
+        try {
+            // Vérifie d'abord si la boisson existe
+            ScheduleDay existingDrink = getScheduleDayById(scheduleDay.getId());
+            if (existingDrink == null) {
+                throw new RuntimeException("ScheduleDay not found with id: " + scheduleDay.getId());
+            }
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", scheduleDay.getId());
+            params.put("day", scheduleDay.getDay());
+            params.put("opening", scheduleDay.getOpening());
+            params.put("closing", scheduleDay.getClosing());
+
+
+            int rowsAffected = scheduleDayTemplate.update(SQL_UPDATE_SCHEDULEDAY, params);
+
+            if (rowsAffected > 0) {
+                return scheduleDay;
+            } else {
+                throw new RuntimeException("Failed to update scheduleDay with id: " + scheduleDay.getId());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating ScheduleDay: " + e.getMessage(), e);
+        }
+    }
+
 }
