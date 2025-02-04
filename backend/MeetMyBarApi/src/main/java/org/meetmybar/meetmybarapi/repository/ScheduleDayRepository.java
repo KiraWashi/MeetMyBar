@@ -1,7 +1,7 @@
 package org.meetmybar.meetmybarapi.repository;
 
 import jakarta.inject.Inject;
-import org.meetmybar.meetmybarapi.models.dto.Drink;
+
 import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,10 +16,10 @@ import java.util.List;
 public class ScheduleDayRepository {
 
     private static final String SQL_GET_SCHEDULEDAYS =
-            "SELECT id, openning, closing, day FROM SCHEDULE_DAY";
+            "SELECT id, opening, closing, day FROM SCHEDULE_DAY";
 
     private static final String SQL_GET_SCHEDULEDAY_BY_ID =
-            "SELECT id, openning, closing, day FROM SCHEDULE_DAY WHERE id = :id";
+            "SELECT id, opening, closing, day FROM SCHEDULE_DAY WHERE id = :id";
 
     private static final String SQL_DELETE_SCHEDULEDAY =
             "DELETE FROM SCHEDULE_DAY WHERE id = :id";
@@ -28,7 +28,7 @@ public class ScheduleDayRepository {
             "INSERT INTO SCHEDULE_DAY (day, closing, opening) VALUES (:day, :closing, :opening)";
 
     private static final String SQL_UPDATE_SCHEDULEDAY =
-            "UPDATE DRINK SET day = :day, opening = :opening, closing = :closing WHERE id = :id";
+            "UPDATE SCHEDULE_DAY SET day = :day, opening = :opening, closing = :closing WHERE id = :id";
 
 
     @Inject
@@ -40,7 +40,7 @@ public class ScheduleDayRepository {
             return scheduleDayTemplate.query(SQL_GET_SCHEDULEDAYS, map, (r, s) -> {
                 var scheduleDay = new ScheduleDay();
                 scheduleDay.setId(r.getInt("id"));
-                scheduleDay.setOpening(r.getString("openning"));
+                scheduleDay.setOpening(r.getString("opening"));
                 scheduleDay.setClosing(r.getString("closing"));
                 scheduleDay.setDay(r.getString("day"));
                 return scheduleDay;
@@ -62,7 +62,7 @@ public class ScheduleDayRepository {
                     (r, rowNum) -> {
                         var scheduleDay = new ScheduleDay();
                         scheduleDay.setId(r.getInt("id"));
-                        scheduleDay.setOpening(r.getString("openning"));
+                        scheduleDay.setOpening(r.getString("opening"));
                         scheduleDay.setClosing(r.getString("closing"));
                         scheduleDay.setDay(r.getString("day"));
                         return scheduleDay;

@@ -21,8 +21,8 @@ public class ScheduleDayEntity {
     private Integer id;
 
     @NotNull
-    @Column(name = "openning", nullable = false)
-    private LocalTime openning;
+    @Column(name = "opening", nullable = false)
+    private LocalTime opening;
 
     @NotNull
     @Column(name = "closing", nullable = false)

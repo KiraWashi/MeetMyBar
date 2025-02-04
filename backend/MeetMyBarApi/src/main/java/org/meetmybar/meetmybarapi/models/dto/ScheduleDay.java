@@ -42,7 +42,6 @@ public class ScheduleDay {
    * Get id
    * @return id
   */
-  @NotNull 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
