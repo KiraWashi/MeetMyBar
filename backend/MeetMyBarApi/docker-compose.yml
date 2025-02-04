@@ -1,30 +1,43 @@
-version: '3.8'
-
 services:
-  app:
-    image: 'docker-spring-boot-postgres:latest'
+  api:
     build:
       context: .
-    container_name: app
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://database:3306/meetmybar
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
     depends_on:
-      - db
-    environment:
-      - POSTGRES_USER=$YOUR_USERNAME
-      - POSTGRES_PASSWORD=$YOUR_PASSWORD
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/$YOUR_DB_NAME
-      - SPRING_DATASOURCE_USERNAME=$YOUR_USERNAME
-      - SPRING_DATASOURCE_PASSWORD=$YOUR_PASSWORD
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - database
+      - redis
+    networks:
+      - meetmybar-network
 
-    ports:
-      - "$LOCAL_PORT:$DOCKER_PORT"
-
-  db:
-    image: postgres
-    container_name: db
+  database:
+    image: mariadb:latest
     environment:
-      - POSTGRES_USER=$YOUR_USERNAME
-      - POSTGRES_PASSWORD=$YOUR_PASSWORD
-      - POSTGRES_DB=$YOUR_DB_NAME
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=meetmybar
     ports:
-      - "$LOCAL_PORT:$DOCKER_PORT"
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - meetmybar-network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - meetmybar-network
+
+volumes:
+  db-data:
+
+networks:
+  meetmybar-network:
+    driver: bridge
