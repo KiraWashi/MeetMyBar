@@ -25,16 +25,14 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_DATABASE=meetmybar
+      - MYSQL_TCP_PORT=3336  # Définition du port d'écoute ici
     ports:
       - "3336:3336"
     volumes:
       - db-data:/var/lib/mysql
       - ./db-init/:/docker-entrypoint-initdb.d/
-      - ./db-init/mysql.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - meetmybar-network
-
-
 
   redis:
     image: redis:alpine
@@ -42,7 +40,6 @@ services:
       - "6379:6379"
     networks:
       - meetmybar-network
-
 volumes:
   db-data:
 
