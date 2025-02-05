@@ -9,7 +9,7 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://database:3306/meetmybar
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://database:3336/meetmybar
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=rootpassword
     depends_on:
@@ -26,7 +26,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_DATABASE=meetmybar
     ports:
-      - "3306:3306"
+      - "3336:3336"
     volumes:
       - db-data:/var/lib/mysql
       - ./db-init/:/docker-entrypoint-initdb.d/
