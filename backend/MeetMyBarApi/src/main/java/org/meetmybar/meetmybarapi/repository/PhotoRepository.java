@@ -3,6 +3,7 @@ package org.meetmybar.meetmybarapi.repository;
 
 import jakarta.annotation.Resource;
 import jakarta.ws.rs.core.HttpHeaders;
+import org.meetmybar.meetmybarapi.models.dto.Drink;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class PhotoRepository{
 
     private static final String SQL_DOWNLOAD_PHOTO_BY_ID =
             "SELECT image_data FROM PHOTO WHERE id = :id";
+
+    private static final String SQL_UPDATE_PHOTO =
+            "UPDATE PHOTO SET description = :description, image_data = :imageData, main_photo = :mainPhoto " +
+                    "WHERE id = :id";
+    private static final String SQL_DELETE_PHOTO = "DELETE FROM PHOTO WHERE id = :id";
     @Autowired
     private NamedParameterJdbcTemplate photoTemplate;
 
@@ -43,7 +49,7 @@ public class PhotoRepository{
             });
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error fetching bars: " + e.getMessage(), e);
+            throw new RuntimeException("Error finding Photo : " + e.getMessage(), e);
         }
     }
 
@@ -83,7 +89,57 @@ public class PhotoRepository{
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error fetching bars: " + e.getMessage(), e);
+            throw new RuntimeException("Error downloading Photo: " + e.getMessage(), e);
+        }
+    }
+
+    public Photo updatePhoto(Photo photo) {
+        try {
+            // Vérifie d'abord si la photo existe
+            Photo existingPhoto = this.findById(photo.getId());
+            if (existingPhoto == null) {
+                throw new RuntimeException("Photo not found with id: " + photo.getId());
+            }
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", photo.getId());
+            params.put("description", photo.getDescription());
+            params.put("image_data", photo.getImageData());
+            params.put("main_photo", photo.isMainPhoto());
+
+            int rowsAffected = photoTemplate.update(SQL_UPDATE_PHOTO, params);
+
+            if (rowsAffected > 0) {
+                return photo;
+            } else {
+                throw new RuntimeException("Failed to update photo with id: " + photo.getId());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating photo : " + e.getMessage(), e);
+        }
+    }
+
+    public Photo deletePhoto(int photoId) {
+        try {
+            // On récupère d'abord la boisson pour pouvoir la retourner après suppression
+            Photo existingPhoto = findById(photoId);
+
+            if (existingPhoto  == null) {
+                throw new RuntimeException("Photo not found with id: " + photoId);
+            }
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", photoId);
+
+            int rowsAffected = photoTemplate.update(SQL_DELETE_PHOTO, params);
+
+            if (rowsAffected > 0) {
+                return existingPhoto;
+            } else {
+                throw new RuntimeException("Failed to delete Photo with id: " + photoId);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting photo : " + e.getMessage(), e);
         }
     }
 }

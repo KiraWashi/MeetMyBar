@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://database:3306/meetmybar
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
+    depends_on:
+      - database
+      - redis
+    networks:
+      - meetmybar-network
+
+  database:
+    image: mariadb:latest
+    container_name: mariadb_container
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=meetmybar
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db-init/:/docker-entrypoint-initdb.d/
+    networks:
+      - meetmybar-network
+
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - meetmybar-network
+
+volumes:
+  db-data:
+
+networks:
+  meetmybar-network:
+    driver: bridge

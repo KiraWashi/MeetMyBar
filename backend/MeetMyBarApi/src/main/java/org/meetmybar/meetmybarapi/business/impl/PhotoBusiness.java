@@ -1,5 +1,6 @@
 package org.meetmybar.meetmybarapi.business.impl;
 
+import jakarta.validation.Valid;
 import org.meetmybar.meetmybarapi.exception.*;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
@@ -61,4 +62,17 @@ public class PhotoBusiness {
     }
 
 
+    public Photo updatePhoto(int id, @Valid Photo updateDto) {
+        if(photoRepository.findById(id)==null){
+            throw new PhotoNotFoundException(id);
+        }
+        return photoRepository.updatePhoto(updateDto);
+    }
+
+    public Photo deletePhoto(int id) {
+        if(photoRepository.findById(id)==null){
+            throw new PhotoNotFoundException(id);
+        }
+        return photoRepository.deletePhoto(id);
+    }
 }
