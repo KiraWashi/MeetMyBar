@@ -9,28 +9,11 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://database:3336/meetmybar
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=rootpassword
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://pma.letareau.fr:3306/meetmybar
+      - SPRING_DATASOURCE_USERNAME=leop
+      - SPRING_DATASOURCE_PASSWORD=m2tiila-leop
     depends_on:
-      - database
       - redis
-    networks:
-      - meetmybar-network
-
-  database:
-    image: mariadb:latest
-    container_name: mariadb_container
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=meetmybar
-      - MYSQL_TCP_PORT=3336  # Définition du port d'écoute ici
-    ports:
-      - "3336:3336"
-    volumes:
-      - db-data:/var/lib/mysql
-      - ./db-init/:/docker-entrypoint-initdb.d/
     networks:
       - meetmybar-network
 
@@ -40,8 +23,6 @@ services:
       - "6379:6379"
     networks:
       - meetmybar-network
-volumes:
-  db-data:
 
 networks:
   meetmybar-network:
