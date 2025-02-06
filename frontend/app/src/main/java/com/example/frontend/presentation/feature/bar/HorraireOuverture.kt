@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.bar
+package com.example.frontend.presentation.feature.bar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.frontend.domain.model.ScheduleDayModel
 import java.time.LocalDate
 import java.util.Locale
 
@@ -29,33 +30,21 @@ data class Schedule(
 @Composable
 fun HorraireOuverture(
     modifier: Modifier = Modifier,
-    darkMode: Boolean
+    darkMode: Boolean,
+    planning: List<ScheduleDayModel>
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-
-    // Liste des horaires
-    val schedules = remember {
-        listOf(
-            Schedule("Lundi", "9h00 - 18h00"),
-            Schedule("Mardi", "9h00 - 18h00"),
-            Schedule("Mercredi", "9h00 - 18h00"),
-            Schedule("Jeudi", "9h00 - 18h00"),
-            Schedule("Vendredi", "9h00 - 18h00"),
-            Schedule("Samedi", "10h00 - 17h00"),
-            Schedule("Dimanche", "Fermé")
-        )
-    }
 
     // Obtenir le jour actuel en français
     val currentDay = remember {
         LocalDate.now()
             .dayOfWeek
-            .getDisplayName(java.time.format.TextStyle.FULL, Locale.FRENCH)
+            .getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH)
             .replaceFirstChar { it.uppercase() }
     }
 
     // Trouver l'horaire du jour actuel
-    val currentSchedule = schedules.find { it.day == currentDay }
+    val currentSchedule = planning.find { it.day == currentDay }
 
     Box(modifier = modifier) {
         Column {
@@ -72,17 +61,15 @@ fun HorraireOuverture(
                     text = currentDay,
                     style = TextStyle(
                         fontSize = 16.sp,
-                        color = if (darkMode) Color.Black else Color.White
                     )
                 )
 
                 Spacer(modifier = Modifier.width(70.dp))
 
                 Text(
-                    text = currentSchedule?.hours ?: "",
+                    text = (currentSchedule?.opening + "-" + currentSchedule?.closing) ?: "",
                     style = TextStyle(
                         fontSize = 16.sp,
-                        color = if (darkMode) Color.Black else Color.White
                     )
                 )
 
@@ -92,7 +79,6 @@ fun HorraireOuverture(
                     else
                         Icons.Default.KeyboardArrowDown,
                     contentDescription = if (isExpanded) "Réduire" else "Développer",
-                    tint = if (darkMode) Color.Black else Color.White,
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
@@ -108,7 +94,7 @@ fun HorraireOuverture(
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    schedules.forEach { schedule ->
+                    planning.forEach { schedule ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -120,14 +106,12 @@ fun HorraireOuverture(
                                 text = schedule.day,
                                 style = TextStyle(
                                     fontSize = 16.sp,
-                                    color = if (darkMode) Color.Black else Color.White
                                 )
                             )
                             Text(
-                                text = schedule.hours,
+                                text = (currentSchedule?.opening + "-" + currentSchedule?.closing) ?: "",
                                 style = TextStyle(
                                     fontSize = 16.sp,
-                                    color = if (darkMode) Color.Black else Color.White
                                 )
                             )
                         }

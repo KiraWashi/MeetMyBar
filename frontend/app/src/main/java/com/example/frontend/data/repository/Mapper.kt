@@ -8,7 +8,7 @@ fun DrinkVo.toModel() = DrinkModel(
     alcoholDegree = alcoholDegree,
     name = name,
     brand = brand,
-    type = type
+    type = type ?: ""
 )
 
 fun DrinkModel.toVo() = DrinkVo(

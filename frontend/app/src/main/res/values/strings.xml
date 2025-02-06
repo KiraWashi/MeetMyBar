@@ -9,5 +9,30 @@
     <string name="home_activate_localisation">Activer la localisation.</string>
     <string name="home_position">Ma position</string>
     <string name="home_search">Recherche</string>
+    <string name="home_error_description">Un erreur inconnue est survenue, veuillez réessayer.</string>
+    <string name="home_dismiss_dialog_error_button">Ok</string>
+    <string name="home_see_more_button">Voir plus</string>
+    <string name="home_open">Ouvert</string>
+    <string name="home_close">Fermé</string>
+
+    <!-- ADD BAR Screen -->
+    <string name="add_bar_title">Ajouter un bar</string>
+    <string name="add_bar_label_text_field_name">Nom</string>
+    <string name="add_bar_label_text_field_capacity">Capacité</string>
+    <string name="add_bar_label_text_field_address">Adresse</string>
+    <string name="add_bar_label_text_field_city">Ville</string>
+    <string name="add_bar_label_text_field_postal_code">Code Postal</string>
+    <string name="add_bar_label_button_label">Ajouter</string>
+    <string name="add_bar_success_message">Le bar a été ajouté avec succès.</string>
+
+    <!-- SETTINGS Screen -->
+    <string name="settings_title">Paramétres</string>
+    <string name="settings_theme_preference_title">Theme Mode</string>
+
+    <!-- EDIT BAR MENU Screen -->
+    <string name="edit_bar_menu_title">Editer les bars</string>
+    <string name="edit_bar_menu_add">Ajouter un bar</string>
+    <string name="edit_bar_menu_delete">Supprimer un bar</string>
+    <string name="edit_bar_menu_update">Modifier un bar</string>
 
 </resources>
