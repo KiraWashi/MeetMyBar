@@ -89,6 +89,60 @@ public class DrinkControllerTest {
 
     }
 
+    @Test
+    void testCreateDrinks() {
+        // Arrange
+        Mockito.when(this.drinkBusinessMock.createDrink(Mockito.any())).thenReturn(getDrink());
+        // Act
+        final Response responseToAssert = RestAssured.given()
+                .contentType("application/json")
+                .body(getDrink())
+                .header("authentication", "JWT_VALID")
+                .post("/drink");
+
+        // Assert
+        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
+                .createDrink(getDrink());
+        Assertions.assertEquals(201, responseToAssert.statusCode());
+
+    }
+
+    @Test
+    void testUpdateDrinks() {
+        // Arrange
+        Mockito.when(this.drinkBusinessMock.updateDrink(Mockito.any())).thenReturn(getDrink());
+        // Act
+        final Response responseToAssert = RestAssured.given()
+                .contentType("application/json")
+                .body(getDrink())
+                .header("authentication", "JWT_VALID")
+                .patch("/drink");
+
+        // Assert
+        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
+                .updateDrink(getDrink());
+        Assertions.assertEquals(200, responseToAssert.statusCode());
+
+    }
+
+    @Test
+    void testDeleteDrinks() {
+        // Arrange
+        Mockito.when(this.drinkBusinessMock.deleteDrink(Mockito.anyInt())).thenReturn(getDrink());
+        // Act
+        final Response responseToAssert = RestAssured.given()
+                .contentType("application/json")
+                .header("authentication", "JWT_VALID")
+                .pathParam("drinkId", 1)
+                .delete("/drink/{drinkId}");
+
+        // Assert
+        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
+                .deleteDrink(1);
+        Assertions.assertEquals(200, responseToAssert.statusCode());
+
+    }
+
     Drink getDrink(){
         Drink drink = new Drink();
         drink.setBrand("Lancelot");
