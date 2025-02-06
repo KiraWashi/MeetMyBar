@@ -4,9 +4,9 @@ services:
   ssh-tunnel:
     image: alpine:latest
     environment:
-      - SSH_HOST=pma.letareau.fr
-      - SSH_USER=leop
-      - SSHPASS=m2-leop
+      - SSH_HOST=${SSH_HOST}
+      - SSH_USER=${SSH_USER}
+      - SSHPASS=${SSH_PASSWORD}
     command: >
       sh -c "apk add --no-cache openssh-client sshpass && sshpass -e ssh -o StrictHostKeyChecking=no -N -L 0.0.0.0:3307:localhost:3306 $$SSH_USER@$$SSH_HOST"
     networks:
@@ -20,13 +20,12 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      # Modifié pour pointer vers le tunnel SSH local
       - SPRING_DATASOURCE_URL=jdbc:mariadb://ssh-tunnel:3307/meetmybar
-      - SPRING_DATASOURCE_USERNAME=leop
-      - SPRING_DATASOURCE_PASSWORD=m2tiila-leop
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     depends_on:
       - redis
-      - ssh-tunnel  # Ajout de la dépendance au tunnel SSH
+      - ssh-tunnel
     networks:
       - meetmybar-network
 
