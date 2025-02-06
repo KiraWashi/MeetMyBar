@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.bar
+package com.example.frontend.presentation.feature.bar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -72,7 +72,6 @@ fun HorraireOuverture(
                     text = currentDay,
                     style = TextStyle(
                         fontSize = 16.sp,
-                        color = if (darkMode) Color.Black else Color.White
                     )
                 )
 
@@ -82,7 +81,6 @@ fun HorraireOuverture(
                     text = currentSchedule?.hours ?: "",
                     style = TextStyle(
                         fontSize = 16.sp,
-                        color = if (darkMode) Color.Black else Color.White
                     )
                 )
 
@@ -92,7 +90,6 @@ fun HorraireOuverture(
                     else
                         Icons.Default.KeyboardArrowDown,
                     contentDescription = if (isExpanded) "Réduire" else "Développer",
-                    tint = if (darkMode) Color.Black else Color.White,
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
@@ -120,14 +117,12 @@ fun HorraireOuverture(
                                 text = schedule.day,
                                 style = TextStyle(
                                     fontSize = 16.sp,
-                                    color = if (darkMode) Color.Black else Color.White
                                 )
                             )
                             Text(
                                 text = schedule.hours,
                                 style = TextStyle(
                                     fontSize = 16.sp,
-                                    color = if (darkMode) Color.Black else Color.White
                                 )
                             )
                         }

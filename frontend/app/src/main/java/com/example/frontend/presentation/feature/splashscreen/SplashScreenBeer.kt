@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.splashscreen
+package com.example.frontend.presentation.feature.splashscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
