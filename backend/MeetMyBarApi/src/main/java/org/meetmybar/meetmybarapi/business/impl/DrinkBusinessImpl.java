@@ -30,7 +30,8 @@ public class DrinkBusinessImpl implements DrinkBusiness {
 
     @Override
     public Drink getDrinkById(int drinkId) {
-        return this.drinkRepository.getDrinkById(drinkId);
+        Drink drink = drinkRepository.getDrinkById(drinkId);
+        return drink;
     }
 
     @Override
@@ -40,10 +41,10 @@ public class DrinkBusinessImpl implements DrinkBusiness {
             throw new IllegalArgumentException("Drink cannot be null");
         }
         if (drink.getName() == null || drink.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Drink name cannot be null or empty");
+            //throw new IllegalArgumentException("Drink name cannot be null or empty");
         }
         if (drink.getBrand() == null || drink.getBrand().trim().isEmpty()) {
-            throw new IllegalArgumentException("Drink brand cannot be null or empty");
+            //throw new IllegalArgumentException("Drink brand cannot be null or empty");
         }
         if (drink.getAlcoholDegree() < 0) {
             throw new IllegalArgumentException("Alcohol degree cannot be negative");
@@ -76,10 +77,10 @@ public class DrinkBusinessImpl implements DrinkBusiness {
             throw new IllegalArgumentException("Drink ID cannot be null for update");
         }
         if (drink.getName() == null || drink.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Drink name cannot be null or empty");
+            //throw new IllegalArgumentException("Drink name cannot be null or empty");
         }
         if (drink.getBrand() == null || drink.getBrand().trim().isEmpty()) {
-            throw new IllegalArgumentException("Drink brand cannot be null or empty");
+            //throw new IllegalArgumentException("Drink brand cannot be null or empty");
         }
         if (drink.getAlcoholDegree() < 0) {
             throw new IllegalArgumentException("Alcohol degree cannot be negative");

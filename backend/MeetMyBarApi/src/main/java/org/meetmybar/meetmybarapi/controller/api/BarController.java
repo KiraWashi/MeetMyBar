@@ -34,7 +34,7 @@ import java.util.Optional;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-09T15:34:47.595602900+01:00[Europe/Paris]")
 @Validated
 @Controller
-@Tag(name = "Default", description = "the Default API")
+@Tag(name = "Bar", description = "the Bar API")
 public interface BarController {
 
     default Optional<NativeWebRequest> getRequest() {
