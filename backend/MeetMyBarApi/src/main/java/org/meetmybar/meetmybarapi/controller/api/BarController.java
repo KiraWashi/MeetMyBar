@@ -42,44 +42,33 @@ public interface BarController {
     }
 
     /**
-     * DELETE /bar : Your DELETE endpoint
+     * DELETE /bar/{barId} : Your DELETE endpoint
      *
-     * @param bar  (optional)
+     * @param barId  (required)
      * @return OK (status code 200)
-     *         or Bad Request (status code 400)
-     *         or Unauthorized (status code 401)
-     *         or Forbidden (status code 403)
-     *         or Not Found (status code 404)
-     *         or Internal Server Error (status code 500)
      */
     @Operation(
-        operationId = "deleteBar",
-        summary = "Your DELETE endpoint",
-        tags = {  },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Bar.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-        }
+            operationId = "deleteBarBarId",
+            summary = "Your DELETE endpoint",
+            tags = {  },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Bar.class))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/bar",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+            method = RequestMethod.DELETE,
+            value = "/bar/{barId}",
+            produces = { "application/json" }
     )
-    default ResponseEntity<Bar> deleteBar(
-        @Parameter(name = "Bar", description = "") @Valid @RequestBody(required = false) Bar bar
+    default ResponseEntity<org.meetmybar.api.model.Bar> deleteBarBarId(
+            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") Object barId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"beers\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"capacity\" : 6 }";
+                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"city\" : \"city\", \"drinks\" : [ { \"name\" : \"name\", \"id\" : 1, \"type\" : \"biere_blonde\", \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"type\" : \"biere_blonde\", \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"postal_code\" : \"postal_code\", \"capacity\" : 6 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

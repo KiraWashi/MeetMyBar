@@ -42,6 +42,19 @@ paths:
       operationId: get-bar-barId
       x-stoplight:
         id: s3d2zezptq514
+    delete:
+      summary: Your DELETE endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+      operationId: delete-bar-barId
+      x-stoplight:
+        id: c5kxfbefb49go
   '/bar/address/{barAddress}':
     parameters:
       - schema:
@@ -156,34 +169,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Bar'
-    delete:
-      summary: Your DELETE endpoint
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Bar'
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '404':
-          description: Not Found
-        '500':
-          description: Internal Server Error
-      operationId: delete-bar
-      x-stoplight:
-        id: 3mm21fwnyhf3j
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Bar'
   /drink:
     get:
       summary: Your GET endpoint
@@ -268,34 +253,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Drink'
-    delete:
-      summary: Your DELETE endpoint
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Drink'
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '404':
-          description: Not Found
-        '500':
-          description: Internal Server Error
-      operationId: delete-drink
-      x-stoplight:
-        id: 7fmq3m5xwnlrt
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Drink'
   '/drink/{drinkId}':
     parameters:
       - schema:
@@ -326,6 +283,19 @@ paths:
       operationId: get-drink.-drinkName
       x-stoplight:
         id: 6tyqiqc517buq
+    delete:
+      summary: Your DELETE endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drink'
+      operationId: delete-drink-drinkId
+      x-stoplight:
+        id: dnfobti44jfqy
   '/bar/name/{barName}':
     parameters:
       - schema:

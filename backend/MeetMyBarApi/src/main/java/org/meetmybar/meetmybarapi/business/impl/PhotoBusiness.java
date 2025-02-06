@@ -1,10 +1,13 @@
 package org.meetmybar.meetmybarapi.business.impl;
 
+import jakarta.validation.Valid;
 import org.meetmybar.meetmybarapi.exception.*;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
 
 import org.meetmybar.meetmybarapi.utils.ImageUtils;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -23,11 +26,16 @@ public class PhotoBusiness {
 
     }
 
-    public String savePhoto(MultipartFile imageFile, Photo photo) {
+    public String savePhoto(MultipartFile imageFile, String description, boolean mainData) {
         try {
             // Compression de l'image
             byte[] compressedImage = ImageUtils.compressImage(imageFile.getBytes());
+            Photo photo = new Photo();
+            photo.setMainPhoto(mainData);
             photo.setImageData(compressedImage);
+            if (description != null && !description.isEmpty()) {
+                photo.setDescription(description);
+            }
 
             // Sauvegarde dans le dépôt
             photoRepository.save(photo);
@@ -44,5 +52,27 @@ public class PhotoBusiness {
             throw new PhotoNotFoundException(id);
         }
         return photoRepository.findById(id);
+    }
+
+    public ResponseEntity<ByteArrayResource> downloadPhotoById(int id) {
+        if(photoRepository.findById(id)==null){
+            throw new PhotoNotFoundException(id);
+        }
+        return photoRepository.downloadById(id);
+    }
+
+
+    public Photo updatePhoto(int id, @Valid Photo updateDto) {
+        if(photoRepository.findById(id)==null){
+            throw new PhotoNotFoundException(id);
+        }
+        return photoRepository.updatePhoto(updateDto);
+    }
+
+    public Photo deletePhoto(int id) {
+        if(photoRepository.findById(id)==null){
+            throw new PhotoNotFoundException(id);
+        }
+        return photoRepository.deletePhoto(id);
     }
 }

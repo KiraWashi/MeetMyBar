@@ -21,6 +21,11 @@ public class Photo {
     public Photo(Integer id) {
         this.id = id;
     }
+    /**
+     * Constructor with only required parameters
+     */
+    public Photo(){
+    }
 
     public Photo(int id, String description, byte[] image_data, boolean mainPhoto) {
         this.id = id;
