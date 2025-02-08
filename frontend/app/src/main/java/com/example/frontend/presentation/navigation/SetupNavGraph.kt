@@ -12,6 +12,7 @@ import com.example.frontend.presentation.bar.PageBar
 import com.example.frontend.presentation.biere.AddBiere
 import com.example.frontend.presentation.biere.ListBiere
 import com.example.frontend.presentation.home.HomeScreen
+import com.example.frontend.presentation.biere.TestApiScreen
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
@@ -46,6 +47,11 @@ fun SetupNavGraph(
             )
         }
         composable(
+            route = Screen.TestApiScreen.route
+        ) {
+            TestApiScreen()
+        }
+        composable(
             route = Screen.ListBiere.route
         ) {
             ListBiere(
@@ -70,4 +76,5 @@ sealed class Screen(val route: String) {
     object HomeScreen : Screen("HomeScreen")
     object ListBiere : Screen("ListBiere")
     object AddBiere : Screen("AddBiere")
+    object TestApiScreen : Screen("TestApiScreen")
 }
