@@ -10,3 +10,11 @@ fun DrinkVo.toModel() = DrinkModel(
     brand = brand,
     type = type
 )
+
+fun DrinkModel.toVo() = DrinkVo(
+    id = id,
+    alcoholDegree = alcoholDegree,
+    name = name,
+    brand = brand,
+    type = type
+)

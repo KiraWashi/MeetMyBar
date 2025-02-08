@@ -21,6 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,23 +30,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.frontend.presentation.navigation.Screen
 import com.example.frontend.ui.theme.SpritzClairColor
+import org.koin.androidx.compose.koinViewModel
 
+data class AddBeerState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val success: Boolean = false
+)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier) {
+    val viewModel = koinViewModel<ListBiereViewModel>()
     val (name, setName) = remember { mutableStateOf("") }
-    val (degree, setDegree) = remember { mutableStateOf("") }
-    val (selectedColor, setSelectedColor) = remember { mutableStateOf("") }
+    val (alcoholDegree, setAlcoholDegree) = remember { mutableStateOf("") }
+    val (type, setType) = remember { mutableStateOf("") }
     val (quantity, setQuantity) = remember { mutableStateOf("") }
     val (prix, setPrix) = remember { mutableStateOf("") }
+    val (brand, setBrand) = remember { mutableStateOf("") }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().background(mapBeerColor(selectedColor)),
+        modifier = Modifier.fillMaxSize().background(mapBeerColor(type)),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -92,15 +103,15 @@ fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = degree,
-                onValueChange = setDegree,
+                value = alcoholDegree,
+                onValueChange = setAlcoholDegree,
                 label = { Text("Degré d'alcool") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
             ColorPicker(
-                selectedColor = selectedColor,
-                onColorSelected = setSelectedColor
+                selectedColor = type,
+                onColorSelected = setType
             )
             OutlinedTextField(
                 value = quantity,
@@ -116,19 +127,21 @@ fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+            OutlinedTextField(
+                value = brand,
+                onValueChange = setBrand,
+                label = { Text("Marque") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Button(
                 onClick = {
-                    // Valider et créer une nouvelle bière
-                    val newBeer = Beer(
+                    viewModel.createBeer(
                         name = name,
-                        degree = degree.toDoubleOrNull() ?: 0.0,
-                        color = selectedColor,
-                        quantity = quantity.toDoubleOrNull() ?: 0.0,
-                        prix = prix.toDoubleOrNull() ?: 0.0
+                        alcoholDegree = alcoholDegree,
+                        brand = brand,
+                        type = type
                     )
-                    // Ajouter la bière à votre système ici
-                    navHostController.navigate(Screen.ListBiere.route)
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {

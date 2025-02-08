@@ -10,13 +10,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -42,11 +40,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.example.frontend.presentation.biere.Beer
 import com.example.frontend.presentation.biere.mapBeerColor
 import com.example.frontend.presentation.biere.mapFontOverBeer
 import com.example.frontend.presentation.navigation.Screen
@@ -59,9 +52,6 @@ import java.time.LocalDate
 @Composable
 fun PageBar(modifier: Modifier, navHostController: NavHostController) {
 
-    val beerCollection = mutableMapOf<Int, Beer>()
-    beerCollection[0] = Beer("Pale Ale", 5.2, "Dorée", 0.25,7.0)
-    beerCollection[1] = Beer("Stout", 8.0, "Ambrée", 0.5,6.5)
 
     val darkMode = !isSystemInDarkTheme();
     val scrollState = rememberScrollState()
@@ -135,15 +125,14 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 darkMode = darkMode
             )
-           beerCollection.forEach { beer ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth() // La Card occupe toute la largeur de l'écran
                             .padding(8.dp), // Ajoute un peu d'espace autour de la carte
                         shape = RoundedCornerShape(8.dp), // Coins arrondis
                         colors = CardDefaults.cardColors(
-                            containerColor = mapBeerColor(beer.value.color), //Card background color
-                            contentColor = mapFontOverBeer(beer.value.color)  //Card content color,e.g.text
+                            containerColor = mapBeerColor("biere_blonde"), //Card background color
+                            contentColor = mapFontOverBeer("biere_blonde")  //Card content color,e.g.text
                         )
                     ) {
                         Row(
@@ -153,17 +142,17 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text(text = beer.value.name)
-                                Text(text = beer.value.color)
+                                Text(text = "Chimay Bleue")
+                                Text(text = "Biere Blonde")
                             }
-                            Text(text = beer.value.degree.toString() + "°")
+                            Text(text = "9" + "°")
                             Column {
-                                Text(text = beer.value.prix.toString() + " €")
-                                Text(text = beer.value.quantity.toString() + "L")
+                                Text(text = "8" + " €")
+                                Text(text = "1" + "L")
                             }
                         }
                     }
-                }
+
             Text(
                 text = "Voir toutes les bières diponibles",
                 style = TextStyle(
@@ -176,7 +165,5 @@ fun PageBar(modifier: Modifier, navHostController: NavHostController) {
             )
             Caroussel()
         }
-
-
     }
 }
