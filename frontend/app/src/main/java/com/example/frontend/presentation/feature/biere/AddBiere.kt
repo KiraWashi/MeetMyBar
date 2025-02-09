@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.biere
+package com.example.frontend.presentation.feature.biere
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

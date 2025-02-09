@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.home
+package com.example.frontend.presentation.feature.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

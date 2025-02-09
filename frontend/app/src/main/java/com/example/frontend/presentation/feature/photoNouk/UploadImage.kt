@@ -1,15 +1,11 @@
-package com.example.frontend.presentation.photo
+package com.example.frontend.presentation.feature.photoNouk
 
 import android.content.Context
 import android.net.Uri
-import com.google.android.gms.common.api.Response
-import com.google.firebase.appdistribution.gradle.models.UploadResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+
 /*
 // Service Retrofit
 interface ApiService {

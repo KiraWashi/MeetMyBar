@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.photo
+package com.example.frontend.presentation.feature.photoNouk
 
 import android.os.Build
 import android.util.Log

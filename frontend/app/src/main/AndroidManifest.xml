@@ -44,7 +44,7 @@
             android:value="${MAPS_API_KEY}" />
 
         <provider
-            android:name="com.example.frontend.presentation.photo.ComposeFileProvider"
+            android:name="com.example.frontend.presentation.feature.photoNouk.ComposeFileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true"
