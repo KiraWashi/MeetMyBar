@@ -3,9 +3,12 @@ package com.example.frontend.core
 import android.util.Log
 import com.example.frontend.data.api.MeetMyBarAPI
 import com.example.frontend.data.repository.DrinkRepository
+import com.example.frontend.data.repository.photo.PhotoRepository
 import com.example.frontend.domain.repository.DrinkRepositoryInterface
-import com.example.frontend.presentation.biere.ListBiereViewModel
-import com.example.frontend.presentation.home.HomeViewModel
+import com.example.frontend.domain.repository.PhotoRepositoryInterface
+import com.example.frontend.presentation.feature.biere.ListBiereViewModel
+import com.example.frontend.presentation.feature.home.HomeViewModel
+import com.example.frontend.presentation.feature.photo.PhotoViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
@@ -16,6 +19,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -28,10 +32,12 @@ val appModule = module {
 
     // Repository
     single<DrinkRepositoryInterface> { DrinkRepository(get()) }
+    single<PhotoRepositoryInterface> { PhotoRepository(get()) }
 
     // View Model
-    viewModel { HomeViewModel() }
-    viewModel { ListBiereViewModel(get()) }
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::ListBiereViewModel)
+    viewModelOf(::PhotoViewModel)
 }
 
 fun createJson() = Json { isLenient = true; ignoreUnknownKeys = true }
