@@ -21,6 +21,13 @@ class MeetMyBarAPI(
         }.body<List<DrinkVo>>()
     }
 
+    //GET - Une boisson selon sont id
+    suspend fun getDrink(id : Int): DrinkVo {
+        return client.get("$baseUrl/drink/$id") {
+            contentType(ContentType.Application.Json)
+        }.body<DrinkVo>()
+    }
+
     // POST - Créer une nouvelle boisson
     suspend fun createDrink(drink: DrinkVo): DrinkVo {
         return client.post("$baseUrl/drink") {
@@ -30,8 +37,8 @@ class MeetMyBarAPI(
     }
 
     // PUT - Mettre à jour une boisson existante
-    suspend fun updateDrink(id: Int, drink: DrinkVo): DrinkVo {
-        return client.put("$baseUrl/drink/$id") {
+    suspend fun updateDrink( drink: DrinkVo): DrinkVo {
+        return client.patch("$baseUrl/drink") {
             contentType(ContentType.Application.Json)
             setBody(drink)
         }.body<DrinkVo>()

@@ -97,7 +97,8 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
                             colors = CardDefaults.cardColors(
                                 containerColor = mapBeerColor(beer.type), //Card background color
                                 contentColor = mapFontOverBeer(beer.type)  //Card content color,e.g.text
-                            )
+                            ),
+                            onClick = {navHostController.navigate(Screen.ModifyBiere.createRoute(beer.id))}
                         ) {
                             Row(
                                 modifier = Modifier

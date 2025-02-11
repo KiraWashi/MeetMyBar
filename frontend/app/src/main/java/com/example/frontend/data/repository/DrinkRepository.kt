@@ -14,40 +14,52 @@ class DrinkRepository(
     private val meetMyBarAPI: MeetMyBarAPI,
 ): DrinkRepositoryInterface, KoinComponent {
     override suspend fun getDrinks(): Flow<Resource<List<DrinkModel>?>> = flow {
-        emit(Resource.Loading())
-        var drinksModel = meetMyBarAPI.getDrinks().map { drinkVo ->
-            drinkVo.toModel()
+        try{
+            emit(Loading())
+            var drinksModel = meetMyBarAPI.getDrinks().map { drinkVo ->
+                drinkVo.toModel() }
+            emit(Success(drinksModel))
+        } catch (e: Exception) {
+            emit(Error(e))
         }
-        emit(Success(drinksModel))
     }
-
-    override suspend fun createDrink(drink: DrinkModel): Flow<Resource<DrinkModel?>> = flow {
-        emit(Resource.Loading())
-        try {
-            val drinkVo = drink.toVo()
-            val createdDrink = meetMyBarAPI.createDrink(drinkVo).toModel()
-            emit(Resource.Success(createdDrink))
+    override suspend fun getDrink(id : Int):  Flow<Resource<DrinkModel?>> = flow {
+       try{
+           emit(Loading())
+            var drinkModel = meetMyBarAPI.getDrink(id).toModel()
+            emit(Success(drinkModel))
         } catch (e: Exception) {
             emit(Error(e))
         }
     }
 
-    override suspend fun updateDrink(id: Int, drink: DrinkModel): Flow<Resource<DrinkModel?>> = flow {
-        emit(Resource.Loading())
+    override suspend fun createDrink(drink: DrinkModel): Flow<Resource<DrinkModel?>> = flow {
+        emit(Loading())
         try {
             val drinkVo = drink.toVo()
-            val updatedDrink = meetMyBarAPI.updateDrink(id, drinkVo).toModel()
-            emit(Resource.Success(updatedDrink))
+            val createdDrink = meetMyBarAPI.createDrink(drinkVo).toModel()
+            emit(Success(createdDrink))
         } catch (e: Exception) {
-            emit(Resource.Error(e))
+            emit(Error(e))
+        }
+    }
+
+    override suspend fun updateDrink(drink: DrinkModel): Flow<Resource<DrinkModel?>> = flow {
+        emit(Loading())
+        try {
+            val drinkVo = drink.toVo()
+            val updatedDrink = meetMyBarAPI.updateDrink(drinkVo).toModel()
+            emit(Success(updatedDrink))
+        } catch (e: Exception) {
+            emit(Error(e))
         }
     }
 
     override suspend fun deleteDrink(id: Int): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading())
+        emit(Loading())
         try {
             meetMyBarAPI.deleteDrink(id)
-            emit(Resource.Success(Unit))
+            emit(Success(Unit))
         } catch (e: Exception) {
             emit(Error(e))
         }
