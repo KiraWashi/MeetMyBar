@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 
 data class ListBiereViewModelState(
     var drinks: List<DrinkModel>? = emptyList(),
+    val isLoading: Boolean = false
 )
 
 class ListBiereViewModel(
@@ -24,6 +25,7 @@ class ListBiereViewModel(
 
     fun getDrinks() {
         viewModelScope.launch {
+            _listeBiereViewModelState.update { it.copy(isLoading = true) }
             drinkRepository.getDrinks().collect { ret ->
                 _listeBiereViewModelState.update {
                     ListBiereViewModelState(
