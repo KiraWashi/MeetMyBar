@@ -14,20 +14,51 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 
+
+object BeerColorTranslator {
+    private val displayToDb = mapOf(
+        "Blanche" to "biere_blanche",
+        "Blonde" to "biere_blonde",
+        "Dorée" to "biere_dorée",
+        "Ambrée" to "biere_ambre",
+        "Rousse" to "biere_rousse",
+        "Brune" to "biere_brune",
+        "Noire" to "biere_noire",
+        "Cuivrée" to "biere_cuivrée",
+        "Rubis" to "biere_rouge",
+        "Ébène" to "biere_ébène"
+    )
+
+    private val dbToDisplay = displayToDb.entries.associate { (k, v) -> v to k }
+
+    fun toDbName(displayName: String): String = displayToDb[displayName] ?: "biere_blonde"
+    fun toDisplayName(dbName: String): String = dbToDisplay[dbName] ?: "Blonde"
+
+    val allDisplayNames = displayToDb.keys.toList()
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColorPicker(selectedColor: String, onColorSelected: (String) -> Unit) {
-    val beerColors = listOf("Blanche", "Blonde", "Dorée",
-        "Ambrée", "Rousse", "Brune", "Noire", "Cuivrée", "Rubis", "Ébène")
-
+fun ColorPicker(
+    selectedColor: String,
+    onColorSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var expanded by remember { mutableStateOf(false) }
+
+    // Convertir le nom de la BDD en nom d'affichage si nécessaire
+    val displayColor = if (selectedColor.startsWith("biere_")) {
+        BeerColorTranslator.toDisplayName(selectedColor)
+    } else {
+        selectedColor
+    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it }
     ) {
         OutlinedTextField(
-            value = selectedColor,
+            value = displayColor,
             onValueChange = {},
             readOnly = true,
             label = { Text("Couleur de la bière") },
@@ -37,11 +68,11 @@ fun ColorPicker(selectedColor: String, onColorSelected: (String) -> Unit) {
                         .padding(start = 8.dp)
                         .size(24.dp)
                         .clip(CircleShape)
-                        .background(mapBeerColor(selectedColor))
+                        .background(mapBeerColor(BeerColorTranslator.toDbName(displayColor)))
                         .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f), CircleShape)
                 )
             },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .menuAnchor()
         )
@@ -49,9 +80,10 @@ fun ColorPicker(selectedColor: String, onColorSelected: (String) -> Unit) {
         StyledColorMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            items = beerColors,
+            items = BeerColorTranslator.allDisplayNames,
             onItemSelected = { color ->
-                onColorSelected(color)
+                // Convertir le nom d'affichage en nom de BDD avant de le passer au callback
+                onColorSelected(BeerColorTranslator.toDbName(color))
                 expanded = false
             }
         )
@@ -77,26 +109,27 @@ fun StyledColorMenu(
             expanded = expanded,
             onDismissRequest = onDismissRequest
         ) {
-            items.forEach { color ->
+            items.forEach { displayColor ->
+                val dbColor = BeerColorTranslator.toDbName(displayColor)
                 DropdownMenuItem(
                     text = {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(mapBeerColor(color))
+                                .background(mapBeerColor(dbColor))
                                 .padding(vertical = 8.dp, horizontal = 12.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = color,
-                                color = mapFontOverBeer(color),
+                                text = displayColor,
+                                color = mapFontOverBeer(dbColor),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     },
-                    onClick = { onItemSelected(color) },
+                    onClick = { onItemSelected(displayColor) },
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }

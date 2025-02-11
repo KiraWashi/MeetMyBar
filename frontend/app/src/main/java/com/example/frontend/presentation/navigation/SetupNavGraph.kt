@@ -5,12 +5,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.frontend.data.vo.DrinkVo
 import com.example.frontend.presentation.splashscreen.SplashScreenBeer
 import com.example.frontend.presentation.bar.PageBar
 import com.example.frontend.presentation.biere.AddBiere
 import com.example.frontend.presentation.biere.ListBiere
+import com.example.frontend.presentation.biere.ModifyBiere
 import com.example.frontend.presentation.home.HomeScreen
 import com.example.frontend.presentation.biere.TestApiScreen
 
@@ -47,11 +51,6 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.TestApiScreen.route
-        ) {
-            TestApiScreen()
-        }
-        composable(
             route = Screen.ListBiere.route
         ) {
             ListBiere(
@@ -67,6 +66,18 @@ fun SetupNavGraph(
                 modifier = modifier
             )
         }
+        composable(
+            route = Screen.ModifyBiere.route,
+            arguments = listOf(navArgument("drinkId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val drinkId = backStackEntry.arguments?.getInt("drinkId") ?: -1
+
+            ModifyBiere(
+                navHostController = navHostController,
+                modifier = modifier,
+                drinkId = drinkId
+            )
+        }
     }
 }
 
@@ -76,5 +87,7 @@ sealed class Screen(val route: String) {
     object HomeScreen : Screen("HomeScreen")
     object ListBiere : Screen("ListBiere")
     object AddBiere : Screen("AddBiere")
-    object TestApiScreen : Screen("TestApiScreen")
+    object ModifyBiere : Screen("ModifyBiere/{drinkId}") {
+        fun createRoute(drinkId: Int) = "ModifyBiere/$drinkId"
+    }
 }

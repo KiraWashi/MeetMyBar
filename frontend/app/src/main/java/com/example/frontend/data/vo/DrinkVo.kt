@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class DrinkVo(
     val id: Int,
     @SerialName("alcohol_degree")
-    val alcoholDegree: Double,
+    val alcoholDegree: String,
     val name: String,
     val brand: String,
     val type: String
