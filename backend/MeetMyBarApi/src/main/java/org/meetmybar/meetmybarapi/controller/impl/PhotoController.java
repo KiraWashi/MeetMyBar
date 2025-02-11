@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/photos")
@@ -41,7 +42,7 @@ public class PhotoController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Récupérer une photo par son ID")
-    public ResponseEntity<Photo> getPhoto(@PathVariable int id) {
+    public ResponseEntity<Optional<Photo>> getPhoto(@PathVariable int id) {
         return ResponseEntity.ok(photoBusiness.getPhotoById(id));
     }
 
@@ -62,7 +63,7 @@ public class PhotoController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Supprimer une photo")
-    public ResponseEntity<Photo> deletePhoto(@PathVariable int id) {
+    public ResponseEntity<Optional<Photo>> deletePhoto(@PathVariable int id) {
        return ResponseEntity.ok(photoBusiness.deletePhoto(id));
     }
 }

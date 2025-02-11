@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class PhotoNotFoundException extends RuntimeException {
-    public PhotoNotFoundException(int id) {
+    public PhotoNotFoundException(String id) {
         super("Photo non trouvée avec l'ID: " + id);
     }
 }
