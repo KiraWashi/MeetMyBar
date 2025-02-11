@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 
@@ -28,11 +29,9 @@ public class PhotoBusiness {
 
     public String savePhoto(MultipartFile imageFile, String description, boolean mainData) {
         try {
-            // Compression de l'image
-            byte[] compressedImage = ImageUtils.compressImage(imageFile.getBytes());
             Photo photo = new Photo();
             photo.setMainPhoto(mainData);
-            photo.setImageData(compressedImage);
+            photo.setImageData(imageFile.getBytes());
             if (description != null && !description.isEmpty()) {
                 photo.setDescription(description);
             }
@@ -47,31 +46,28 @@ public class PhotoBusiness {
     }
 
 
-    public Photo getPhotoById(int id) {
-        if(photoRepository.findById(id)==null){
-            throw new PhotoNotFoundException(id);
-        }
+    public Optional<Photo> getPhotoById(int id) {
         return photoRepository.findById(id);
     }
 
     public ResponseEntity<ByteArrayResource> downloadPhotoById(int id) {
-        if(photoRepository.findById(id)==null){
-            throw new PhotoNotFoundException(id);
+        if(photoRepository.findById(id).isEmpty()){
+            throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
         return photoRepository.downloadById(id);
     }
 
 
     public Photo updatePhoto(int id, @Valid Photo updateDto) {
-        if(photoRepository.findById(id)==null){
-            throw new PhotoNotFoundException(id);
+        if(photoRepository.findById(id).isEmpty()){
+            throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
         return photoRepository.updatePhoto(updateDto);
     }
 
-    public Photo deletePhoto(int id) {
-        if(photoRepository.findById(id)==null){
-            throw new PhotoNotFoundException(id);
+    public Optional<Photo> deletePhoto(int id) {
+        if(photoRepository.findById(id).isEmpty()){
+            throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
         return photoRepository.deletePhoto(id);
     }
