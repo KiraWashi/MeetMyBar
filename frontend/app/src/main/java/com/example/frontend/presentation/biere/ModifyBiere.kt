@@ -146,6 +146,7 @@ fun ModifyBiere(navHostController: NavHostController, modifier: Modifier = Modif
             OutlinedTextField(
                 value = alcoholDegree,
                 onValueChange = setAlcoholDegree,
+                label = { Text("Degré d'alcool") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
