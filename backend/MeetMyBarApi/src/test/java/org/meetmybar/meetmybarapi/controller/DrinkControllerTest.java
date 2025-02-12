@@ -17,6 +17,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
@@ -29,121 +32,204 @@ public class DrinkControllerTest {
     @LocalServerPort
     private int port;
 
+    private Drink testDrink;
+
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+        testDrink = createTestDrink();
     }
 
     @Test
-    void testGetDrinkByDrinkId() {
+    void testGetDrinks_Success() {
         // Arrange
-        Mockito.when(this.drinkBusinessMock.getDrinkById(1)).thenReturn(getDrink());
+        List<Drink> drinks = new ArrayList<>();
+        drinks.add(testDrink);
+        when(drinkBusinessMock.getDrinks()).thenReturn(drinks);
+
         // Act
-        final Response responseToAssert = RestAssured.given()
+        Response response = RestAssured.given()
                 .contentType("application/json")
-                .header("authentication", "JWT_VALID")
+                .get("/drink");
+
+        // Assert
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).getDrinks();
+    }
+
+    @Test
+    void testGetDrinks_InternalServerError() {
+        // Arrange
+        when(drinkBusinessMock.getDrinks()).thenThrow(new RuntimeException("Database error"));
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .get("/drink");
+
+        // Assert
+        Assertions.assertEquals(500, response.getStatusCode());
+    }
+
+    @Test
+    void testGetDrinkById_Success() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
                 .pathParam("drinkId", 1)
                 .get("/drink/{drinkId}");
 
         // Assert
-        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
-                .getDrinkById(1);
-        Assertions.assertEquals(200, responseToAssert.statusCode());
-
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).getDrinkById(1);
     }
 
     @Test
-    void testGetDrinkByDrinkName() {
+    void testGetDrinkById_NotFound() {
         // Arrange
-        Mockito.when(this.drinkBusinessMock.getDrinkByName(Mockito.anyString())).thenReturn(getDrink());
+        when(drinkBusinessMock.getDrinkById(anyInt())).thenReturn(null);
+
         // Act
-        final Response responseToAssert = RestAssured.given()
+        Response response = RestAssured.given()
                 .contentType("application/json")
-                .header("authentication", "JWT_VALID")
+                .pathParam("drinkId", 999)
+                .get("/drink/{drinkId}");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testGetDrinkByName_Success() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkByName("Duchesse")).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
                 .pathParam("drinkName", "Duchesse")
                 .get("/drink/name/{drinkName}");
 
         // Assert
-        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
-                .getDrinkByName("Duchesse");
-        Assertions.assertEquals(200, responseToAssert.statusCode());
-
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).getDrinkByName("Duchesse");
     }
 
     @Test
-    void testGetDrinks() {
+    void testGetDrinkByName_InternalServerError() {
         // Arrange
-        List<Drink> list = new ArrayList<>();
-        list.add(getDrink());
-        Mockito.when(this.drinkBusinessMock.getDrinks()).thenReturn(list);
+        when(drinkBusinessMock.getDrinkByName(anyString())).thenThrow(new RuntimeException("Database error"));
+
         // Act
-        final Response responseToAssert = RestAssured.given()
+        Response response = RestAssured.given()
                 .contentType("application/json")
-                .header("authentication", "JWT_VALID")
-                .get("/drink");
+                .pathParam("drinkName", "NonExistent")
+                .get("/drink/name/{drinkName}");
 
         // Assert
-        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
-                .getDrinks();
-        Assertions.assertEquals(200, responseToAssert.statusCode());
-
+        Assertions.assertEquals(500, response.getStatusCode());
     }
 
     @Test
-    void testCreateDrinks() {
+    void testCreateDrink_Success() {
         // Arrange
-        Mockito.when(this.drinkBusinessMock.createDrink(Mockito.any())).thenReturn(getDrink());
+        when(drinkBusinessMock.createDrink(any(Drink.class))).thenReturn(testDrink);
+
         // Act
-        final Response responseToAssert = RestAssured.given()
+        Response response = RestAssured.given()
                 .contentType("application/json")
-                .body(getDrink())
-                .header("authentication", "JWT_VALID")
+                .body(testDrink)
                 .post("/drink");
 
         // Assert
-        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
-                .createDrink(getDrink());
-        Assertions.assertEquals(201, responseToAssert.statusCode());
-
+        Assertions.assertEquals(201, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).createDrink(any(Drink.class));
     }
 
     @Test
-    void testUpdateDrinks() {
+    void testCreateDrink_BadRequest() {
         // Arrange
-        Mockito.when(this.drinkBusinessMock.updateDrink(Mockito.any())).thenReturn(getDrink());
+        when(drinkBusinessMock.createDrink(any(Drink.class)))
+                .thenThrow(new IllegalArgumentException("Invalid drink data"));
+
         // Act
-        final Response responseToAssert = RestAssured.given()
+        Response response = RestAssured.given()
                 .contentType("application/json")
-                .body(getDrink())
-                .header("authentication", "JWT_VALID")
+                .body(testDrink)
+                .post("/drink");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    @Test
+    void testUpdateDrink_Success() {
+        // Arrange
+        when(drinkBusinessMock.updateDrink(any(Drink.class))).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body(testDrink)
                 .patch("/drink");
 
         // Assert
-        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
-                .updateDrink(getDrink());
-        Assertions.assertEquals(200, responseToAssert.statusCode());
-
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).updateDrink(any(Drink.class));
     }
 
     @Test
-    void testDeleteDrinks() {
+    void testUpdateDrink_BadRequest() {
         // Arrange
-        Mockito.when(this.drinkBusinessMock.deleteDrink(Mockito.anyInt())).thenReturn(getDrink());
+        when(drinkBusinessMock.updateDrink(any(Drink.class)))
+                .thenThrow(new IllegalArgumentException("Invalid drink data"));
+
         // Act
-        final Response responseToAssert = RestAssured.given()
+        Response response = RestAssured.given()
                 .contentType("application/json")
-                .header("authentication", "JWT_VALID")
+                .body(testDrink)
+                .patch("/drink");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteDrink_Success() {
+        // Arrange
+        when(drinkBusinessMock.deleteDrink(1)).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
                 .pathParam("drinkId", 1)
                 .delete("/drink/{drinkId}");
 
         // Assert
-        Mockito.verify(this.drinkBusinessMock, Mockito.times(1))
-                .deleteDrink(1);
-        Assertions.assertEquals(200, responseToAssert.statusCode());
-
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).deleteDrink(1);
     }
 
-    Drink getDrink(){
+    @Test
+    void testDeleteDrink_BadRequest() {
+        // Arrange
+        when(drinkBusinessMock.deleteDrink(anyInt()))
+                .thenThrow(new IllegalArgumentException("Invalid drink ID"));
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .pathParam("drinkId", -1)
+                .delete("/drink/{drinkId}");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    private Drink createTestDrink() {
         Drink drink = new Drink();
         drink.setBrand("Lancelot");
         drink.setId(1);

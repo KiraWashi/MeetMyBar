@@ -54,14 +54,17 @@ public class DrinkBusinessImpl implements DrinkBusiness {
         }
 
         // Vérifier si une boisson avec le même nom existe déjà
+        // Vérifier si une boisson avec le même nom existe déjà
+        Drink existingDrink = null;
         try {
-            Drink existingDrink = drinkRepository.getDrinkByName(drink.getName());
-            if (existingDrink != null) {
-                throw new IllegalArgumentException("A drink with this name already exists");
-            }
+            existingDrink = drinkRepository.getDrinkByName(drink.getName());
         } catch (RuntimeException ignored) {
-            // Si getDrinkByName lance une exception, cela signifie que la boisson n'existe pas
-            // donc on peut continuer
+            // Si une exception est levée, on considère que la boisson n'existe pas
+        }
+
+        // Si on a trouvé une boisson existante, on lève une exception
+        if (existingDrink != null) {
+            throw new IllegalArgumentException("A drink with this name already exists");
         }
 
         return drinkRepository.createDrink(drink);
@@ -96,8 +99,7 @@ public class DrinkBusinessImpl implements DrinkBusiness {
                 throw new IllegalArgumentException("Another drink with this name already exists");
             }
         } catch (RuntimeException ignored) {
-            // Si getDrinkByName lance une exception, cela signifie que la boisson n'existe pas
-            // donc on peut continuer
+            // Si une exception est levée, on considère que la boisson n'existe pas
         }
 
         return drinkRepository.updateDrink(drink);
