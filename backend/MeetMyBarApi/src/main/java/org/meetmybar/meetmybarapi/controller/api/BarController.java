@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import org.meetmybar.api.controller.ApiUtil;
-import org.meetmybar.meetmybarapi.models.dto.Bar;
+import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ import java.util.Optional;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-09T15:34:47.595602900+01:00[Europe/Paris]")
 @Validated
 @Controller
-@Tag(name = "Default", description = "the Default API")
+@Tag(name = "Bar", description = "the Bar API")
 public interface BarController {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -77,9 +77,6 @@ public interface BarController {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
-
-
-    ResponseEntity<Bar> getBarByName(@PathVariable("barName") String barName);
 
     /**
      * GET /bar : Your GET endpoint
@@ -140,7 +137,7 @@ public interface BarController {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-            operationId = "getBarAddressBarAddress",
+            operationId = "getBarByAddress",
             summary = "Your GET endpoint",
             tags = {  },
             responses = {
@@ -159,7 +156,7 @@ public interface BarController {
             value = "/bar/address/{barAddress}",
             produces = { "application/json" }
     )
-    default ResponseEntity<Bar> getBarAddressBarAddress(
+    default ResponseEntity<Bar> getBarByAddress(
             @Parameter(name = "barAddress", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barAddress") String barAddress
     ) {
         getRequest().ifPresent(request -> {
@@ -175,6 +172,8 @@ public interface BarController {
 
     }
 
+
+
     /**
      * GET /bar/{barId} : Your GET endpoint
      *
@@ -187,7 +186,7 @@ public interface BarController {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-            operationId = "getBarBarId",
+            operationId = "getBarById",
             summary = "Your GET endpoint",
             tags = {  },
             responses = {
@@ -207,7 +206,7 @@ public interface BarController {
             produces = { "application/json" }
     )
     default ResponseEntity<Bar> getBarById(
-            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") String barId
+            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") int barId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -235,12 +234,12 @@ public interface BarController {
      *         or Internal Server Error (status code 500)
      */
     @Operation(
-            operationId = "getBarNameBarName",
+            operationId = "getBarByName",
             summary = "Your GET endpoint",
             tags = {  },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Bar.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Bar.class))
                     }),
                     @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -254,7 +253,7 @@ public interface BarController {
             value = "/bar/name/{barName}",
             produces = { "application/json" }
     )
-    default ResponseEntity<Bar> getBarNameBarName(
+    default ResponseEntity<Bar> getBarByName(
             @Parameter(name = "barName", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barName") String barName
     ) {
         getRequest().ifPresent(request -> {
@@ -270,8 +269,6 @@ public interface BarController {
 
     }
 
-
-    ResponseEntity<Bar> getBarByAddress(String barAddress);
 
     /**
      * PATCH /bar : Your PATCH endpoint

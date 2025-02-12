@@ -356,6 +356,93 @@ paths:
       operationId: get-drink-name-drinkName
       x-stoplight:
         id: hu39hretcrslt
+  /scheduleday:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleDay'
+                  x-stoplight:
+                    id: u1osbho2do65j
+      operationId: get-scheduleday
+      x-stoplight:
+        id: ibbw44caqt6v7
+    post:
+      summary: Your POST endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDay'
+      operationId: post-scheduleday
+      x-stoplight:
+        id: mrpx4t6mjgagq
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleDay'
+    patch:
+      summary: Your PATCH endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDay'
+      operationId: patch-scheduleday
+      x-stoplight:
+        id: 8agh6ziqztj95
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleDay'
+  '/scheduleday/{scheduledayId}':
+    parameters:
+      - schema:
+          type: integer
+        name: scheduledayId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDay'
+      operationId: get-scheduleday-scheduledayId
+      x-stoplight:
+        id: d8bvd64j475cl
+    delete:
+      summary: Your DELETE endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDay'
+      operationId: delete-scheduleday-scheduledayId
+      x-stoplight:
+        id: d5c8ca97vpl17
 components:
   schemas:
     Bar:
