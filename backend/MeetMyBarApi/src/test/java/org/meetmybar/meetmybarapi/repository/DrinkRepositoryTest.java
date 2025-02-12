@@ -39,6 +39,7 @@ public class DrinkRepositoryTest {
 
     private Drink testDrink;
 
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
