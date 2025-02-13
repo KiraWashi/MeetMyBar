@@ -55,6 +55,7 @@ public class DrinkControllerTest {
         // Assert
         Assertions.assertEquals(200, response.getStatusCode());
         Mockito.verify(drinkBusinessMock).getDrinks();
+
     }
 
     @Test

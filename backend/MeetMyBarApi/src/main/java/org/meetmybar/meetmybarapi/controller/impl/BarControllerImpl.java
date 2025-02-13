@@ -3,6 +3,7 @@ package org.meetmybar.meetmybarapi.controller.impl;
 import org.meetmybar.meetmybarapi.business.BarBusiness;
 import org.meetmybar.meetmybarapi.controller.api.BarController;
 
+import org.meetmybar.meetmybarapi.models.dto.Drink;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,7 +75,13 @@ public class BarControllerImpl implements BarController {
 
     @Override
     public ResponseEntity<Bar> addBar(Bar bar) {
-        // TODO: Implement create logic
-        return ResponseEntity.ok().build();
+        try {
+            Bar createdBar = barBusiness.createBar(bar);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdBar);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
