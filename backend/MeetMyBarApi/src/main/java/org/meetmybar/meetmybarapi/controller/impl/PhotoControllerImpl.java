@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.Logger;
 import org.meetmybar.meetmybarapi.business.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.controller.api.PhotoController;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/photos")
 @Validated
@@ -37,6 +41,8 @@ public class PhotoControllerImpl implements PhotoController {
             @RequestParam("image") MultipartFile file,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "main_photo", required = false) Boolean mainPhoto) throws IOException {
+        final Logger logger = (Logger) LoggerFactory.getLogger(PhotoControllerImpl.class);
+        logger.info("File : "+file.getOriginalFilename()+" description "+description+" main_photo "+mainPhoto);
         return ResponseEntity.status(HttpStatus.OK).body(photoBusiness.savePhoto(file, description, mainPhoto));
     }
 
