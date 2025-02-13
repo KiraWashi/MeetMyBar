@@ -352,7 +352,7 @@ public interface BarController {
         consumes = { "application/json" }
     )
     default ResponseEntity<Bar> addBar(
-        @Parameter(name = "Bar", description = "") @Valid @RequestBody(required = false) Bar bar
+        @Parameter(name = "Bar", description = "") @RequestBody(required = false) Bar bar
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
