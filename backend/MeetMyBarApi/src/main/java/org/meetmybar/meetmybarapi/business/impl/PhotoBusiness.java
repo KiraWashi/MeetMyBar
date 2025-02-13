@@ -27,7 +27,7 @@ public class PhotoBusiness {
 
     }
 
-    public String savePhoto(MultipartFile imageFile, String description, boolean mainData) {
+    public Photo savePhoto(MultipartFile imageFile, String description, boolean mainData) {
         try {
             Photo photo = new Photo();
             photo.setMainPhoto(mainData);
@@ -38,7 +38,7 @@ public class PhotoBusiness {
 
             // Sauvegarde dans le dépôt
             photoRepository.save(photo);
-            return "Photo successfully inserted!";
+            return photo;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Error saving photo: " + e.getMessage(), e);
@@ -46,27 +46,40 @@ public class PhotoBusiness {
     }
 
 
-    public Optional<Photo> getPhotoById(int id) {
-        return photoRepository.findById(id);
+    public Photo getPhotoById(int id) {
+        Photo photoRet=photoRepository.findById(id);
+        if(photoRet==null){
+            throw new PhotoNotFoundException("Photo not found for id :"+id);
+        }
+        return photoRet;
     }
 
     public ResponseEntity<ByteArrayResource> downloadPhotoById(int id) {
-        if(photoRepository.findById(id).isEmpty()){
+        if(photoRepository.findById(id)==null){
             throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
         return photoRepository.downloadById(id);
     }
 
 
-    public Photo updatePhoto(int id, @Valid Photo updateDto) {
-        if(photoRepository.findById(id).isEmpty()){
-            throw new PhotoNotFoundException("Photo not found for id :"+id);
+    public Photo updatePhoto(Photo patchPhoto) {
+        System.out.println("Received update request for photo: " + patchPhoto);
+        // Récupérer l'objet existant
+        Photo existingPhoto = photoRepository.findById(patchPhoto.getId());
+        if(existingPhoto==null){
+            throw new PhotoNotFoundException("Photo not found for id :"+patchPhoto.getId());
         }
-        return photoRepository.updatePhoto(updateDto);
+
+        existingPhoto.setDescription(patchPhoto.getDescription());
+        existingPhoto.setImageData(patchPhoto.getImageData());
+        existingPhoto.setMainPhoto(patchPhoto.isMainPhoto());
+        // Appeler la méthode du repository qui exécute la requête dynamique
+        return photoRepository.updatePhoto(existingPhoto);
     }
 
-    public Optional<Photo> deletePhoto(int id) {
-        if(photoRepository.findById(id).isEmpty()){
+
+    public Photo deletePhoto(int id) {
+        if(photoRepository.findById(id)==null){
             throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
         return photoRepository.deletePhoto(id);

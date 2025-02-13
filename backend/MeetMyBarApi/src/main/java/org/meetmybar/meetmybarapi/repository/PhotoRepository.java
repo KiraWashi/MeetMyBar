@@ -34,18 +34,18 @@ public class PhotoRepository{
     private NamedParameterJdbcTemplate photoTemplate;
 
 
-    public Optional<Photo> findById(int id) {
+    public Photo findById(int id) {
         try {
             HashMap<String, Object> map = new HashMap<>();
             map.put("id", id);
-            return Optional.ofNullable(photoTemplate.queryForObject(SQL_GET_PHOTO_BY_ID, map, (r, s) -> {
+            return photoTemplate.queryForObject(SQL_GET_PHOTO_BY_ID, map, (r, s) -> {
 
                 return new Photo(
                         r.getInt("id"),
                         r.getString("description"),
                         r.getBytes("image_data"),
                         r.getBoolean("main_photo"));
-            }));
+            });
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error finding Photo for id : "+ id);
@@ -94,29 +94,52 @@ public class PhotoRepository{
     }
 
     public Photo updatePhoto(Photo photo) {
-        try {
-            HashMap<String, Object> params = new HashMap<>();
-            params.put("id", photo.getId());
+        // Construction dynamique de la requête SQL
+        StringBuilder sql = new StringBuilder("UPDATE PHOTO SET ");
+        Map<String, Object> params = new HashMap<>();
+        boolean premierChamp = true; // pour gérer la virgule entre les colonnes
+
+        if (photo.getDescription() != null) {
+            sql.append("description = :description");
             params.put("description", photo.getDescription());
-            params.put("image_data", photo.getImageData());
-            params.put("main_photo", photo.isMainPhoto());
+            premierChamp = false;
+        }
 
-            int rowsAffected = photoTemplate.update(SQL_UPDATE_PHOTO, params);
-
-            if (rowsAffected > 0) {
-                return photo;
-            } else {
-                throw new RuntimeException("Failed to update photo with id: " + photo.getId());
+        if (photo.getImageData() != null) {
+            if (!premierChamp) {
+                sql.append(", ");
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error updating photo : " + e.getMessage(), e);
+            sql.append("image_data = :image_data");
+            params.put("image_data", photo.getImageData());
+            premierChamp = false;
+        }
+
+        // Mise à jour de main_photo (ici, mise à jour systématique)
+        if (!premierChamp) {
+            sql.append(", ");
+        }
+        sql.append("main_photo = :main_photo");
+        params.put("main_photo", photo.isMainPhoto());
+
+        // Clause WHERE
+        sql.append(" WHERE id = :id");
+        params.put("id", photo.getId());
+        System.out.println(sql.toString());
+        // Exécution de la requête
+        int rowsAffected = photoTemplate.update(sql.toString(), params);
+        if (rowsAffected > 0) {
+            // On retourne l'objet qui a déjà été mis à jour en mémoire.
+            // Une autre option serait de relire l'objet depuis la DB.
+            return photo;
+        } else {
+            throw new RuntimeException("Échec de la mise à jour de la photo avec l'id : " + photo.getId());
         }
     }
 
-    public Optional<Photo> deletePhoto(int photoId) {
+    public Photo deletePhoto(int photoId) {
         try {
             // On récupère d'abord la boisson pour pouvoir la retourner après suppression
-            Optional<Photo> existingPhoto = findById(photoId);
+            Photo existingPhoto = findById(photoId);
             HashMap<String, Object> params = new HashMap<>();
             params.put("id", photoId);
 

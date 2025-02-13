@@ -10,10 +10,11 @@ import org.meetmybar.meetmybarapi.repository.PhotoRepository;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,9 +47,12 @@ public class PhotoBusinessTest {
         when(mockImageFile.getBytes()).thenReturn(new byte[]{1, 2, 3});
         when(photoRepository.save(any(Photo.class))).thenReturn(mockPhoto);
 
-        String result = photoBusiness.savePhoto(mockImageFile, "Test Photo", true);
+        Photo result = photoBusiness.savePhoto(mockImageFile, "Test Photo", true);
 
-        assertEquals("Photo successfully inserted!", result);
+        assertNotNull(result);
+        assertEquals(mockPhoto.isMainPhoto(), result.isMainPhoto());
+        //assertEquals(mockPhoto.getImageData(), result.getImageData());
+        assertEquals(mockPhoto.getDescription(), result.getDescription());
         verify(photoRepository, times(1)).save(any(Photo.class));
     }
 
@@ -66,76 +70,107 @@ public class PhotoBusinessTest {
 
     @Test
     void getPhotoById_Success() {
-        when(photoRepository.findById(1)).thenReturn(Optional.of(mockPhoto));
+        when(photoRepository.findById(1)).thenReturn(mockPhoto);
 
-        Photo result = photoBusiness.getPhotoById(1)
-                .orElseThrow(() -> new PhotoNotFoundException("Photo not found with id: 1"));
+        Photo result = photoBusiness.getPhotoById(1);
 
+        assertNotNull(result);
         assertEquals(mockPhoto, result);
         verify(photoRepository, times(1)).findById(1);
     }
 
     @Test
     void getPhotoById_NotFound() {
-        when(photoRepository.findById(1)).thenReturn(Optional.empty());
+        when(photoRepository.findById(1)).thenReturn(null);
 
         assertThrows(PhotoNotFoundException.class, () -> {
-            photoBusiness.getPhotoById(1)
-                    .orElseThrow(() -> new PhotoNotFoundException("Photo not found with id: 1"));
+            photoBusiness.getPhotoById(1);
         });
 
         verify(photoRepository, times(1)).findById(1);
     }
 
     @Test
+    void downloadPhotoById_Success() {
+        ByteArrayResource resource = new ByteArrayResource(new byte[]{1, 2, 3});
+        when(photoRepository.findById(1)).thenReturn(mockPhoto);
+        when(photoRepository.downloadById(1)).thenReturn(ResponseEntity.ok(resource));
+
+        ResponseEntity<ByteArrayResource> response = photoBusiness.downloadPhotoById(1);
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+        verify(photoRepository, times(1)).findById(1);
+        verify(photoRepository, times(1)).downloadById(1);
+    }
+
+    @Test
+    void downloadPhotoById_NotFound() {
+        when(photoRepository.findById(1)).thenReturn(null);
+
+        assertThrows(PhotoNotFoundException.class, () -> {
+            photoBusiness.downloadPhotoById(1);
+        });
+
+        verify(photoRepository, times(1)).findById(1);
+        verify(photoRepository, never()).downloadById(1);
+    }
+
+    @Test
     void updatePhoto_Success() {
-        when(photoRepository.findById(1)).thenReturn(Optional.of(mockPhoto));
+        when(photoRepository.findById(1)).thenReturn(mockPhoto);
         when(photoRepository.updatePhoto(any(Photo.class))).thenReturn(mockPhoto);
 
-        Photo result = photoBusiness.updatePhoto(1, mockPhoto);
+        Photo updatedPhoto = new Photo();
+        updatedPhoto.setId(1);
+        updatedPhoto.setDescription("Updated Photo");
+
+        Photo result = photoBusiness.updatePhoto(updatedPhoto);
 
         assertNotNull(result);
-        assertEquals(mockPhoto, result);
-        verify(photoRepository, times(1)).updatePhoto(any(Photo.class));
+        assertEquals("Updated Photo", result.getDescription());
+        verify(photoRepository, times(1)).findById(1);
+        verify(photoRepository, times(1)).updatePhoto(updatedPhoto);
     }
 
     @Test
     void updatePhoto_NotFound() {
-        when(photoRepository.findById(1)).thenReturn(Optional.empty());
+        when(photoRepository.findById(1)).thenReturn(null);
+
+        Photo updatedPhoto = new Photo();
+        updatedPhoto.setId(1);
 
         assertThrows(PhotoNotFoundException.class, () -> {
-            photoBusiness.updatePhoto(1, mockPhoto);
+            photoBusiness.updatePhoto(updatedPhoto);
         });
 
+        verify(photoRepository, times(1)).findById(1);
         verify(photoRepository, never()).updatePhoto(any(Photo.class));
     }
 
     @Test
     void deletePhoto_Success() {
-        // First, mock that the photo exists
-        when(photoRepository.findById(1)).thenReturn(Optional.of(mockPhoto));
+        when(photoRepository.findById(1)).thenReturn(mockPhoto);
+        when(photoRepository.deletePhoto(1)).thenReturn(mockPhoto);
 
-        // Then mock the delete operation
-        when(photoRepository.deletePhoto(1)).thenReturn(Optional.of(mockPhoto));
-
-        Optional<Photo> result = photoBusiness.deletePhoto(1);
+        Photo result = photoBusiness.deletePhoto(1);
 
         assertNotNull(result);
-        assertEquals(Optional.of(mockPhoto), result);
-
-        // Verify both methods were called
-        verify(photoRepository).findById(1);
-        verify(photoRepository).deletePhoto(1);
+        assertEquals(mockPhoto, result);
+        verify(photoRepository, times(1)).findById(1);
+        verify(photoRepository, times(1)).deletePhoto(1);
     }
 
     @Test
     void deletePhoto_NotFound() {
-        when(photoRepository.findById(1)).thenReturn(Optional.empty());
+        when(photoRepository.findById(1)).thenReturn(null);
 
         assertThrows(PhotoNotFoundException.class, () -> {
             photoBusiness.deletePhoto(1);
         });
 
+        verify(photoRepository, times(1)).findById(1);
         verify(photoRepository, never()).deletePhoto(1);
     }
 }
