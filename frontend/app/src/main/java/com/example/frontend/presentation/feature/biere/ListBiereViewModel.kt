@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.biere
+package com.example.frontend.presentation.feature.biere
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

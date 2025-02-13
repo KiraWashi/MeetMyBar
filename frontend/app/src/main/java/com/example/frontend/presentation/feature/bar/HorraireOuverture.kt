@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.bar
+package com.example.frontend.presentation.feature.bar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

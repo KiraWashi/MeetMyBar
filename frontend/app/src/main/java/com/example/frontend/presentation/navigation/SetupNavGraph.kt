@@ -7,22 +7,24 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.frontend.presentation.splashscreen.SplashScreenBeer
-import com.example.frontend.presentation.bar.PageBar
-import com.example.frontend.presentation.biere.AddBiere
-import com.example.frontend.presentation.biere.ListBiere
-import com.example.frontend.presentation.home.HomeScreen
-import com.example.frontend.presentation.biere.TestApiScreen
+import com.example.frontend.presentation.feature.splashscreen.SplashScreenBeer
+import com.example.frontend.presentation.feature.bar.PageBar
+import com.example.frontend.presentation.feature.biere.AddBiere
+import com.example.frontend.presentation.feature.biere.ListBiere
+import com.example.frontend.presentation.feature.home.HomeScreen
+import com.example.frontend.presentation.feature.biere.TestApiScreen
+import com.example.frontend.presentation.feature.photo.PhotoScreen
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
 fun SetupNavGraph(
     modifier: Modifier,
-    navHostController: NavHostController) {
+    navHostController: NavHostController
+) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.SplachScreenBeer.route
+        startDestination = Screen.PhotoScreen.route
     ) {
         composable(
             route = Screen.SplachScreenBeer.route
@@ -67,6 +69,11 @@ fun SetupNavGraph(
                 modifier = modifier
             )
         }
+        composable(
+            route = Screen.PhotoScreen.route,
+        ) {
+            PhotoScreen()
+        }
     }
 }
 
@@ -77,4 +84,5 @@ sealed class Screen(val route: String) {
     object ListBiere : Screen("ListBiere")
     object AddBiere : Screen("AddBiere")
     object TestApiScreen : Screen("TestApiScreen")
+    object PhotoScreen : Screen("PhotoScreen")
 }
