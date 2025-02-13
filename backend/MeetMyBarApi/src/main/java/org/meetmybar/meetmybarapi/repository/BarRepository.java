@@ -4,7 +4,10 @@ import jakarta.inject.Inject;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.meetmybar.meetmybarapi.models.modif.Drink;
 import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class BarRepository {
                     "FROM SCHEDULE_DAY sd " +
                     "JOIN LINK_BAR_SCHEDULE_DAY lbs ON sd.id = lbs.id_schedule_day " +
                     "WHERE lbs.id_bar = :barId";
+
+    private static final String SQL_INSERT_BAR =
+            "INSERT INTO BAR (name, capacity, address, city, postal_code) VALUES (:name, :capacity, :address, :city, :postal_code)";
 
     @Inject
     private NamedParameterJdbcTemplate barTemplate;
@@ -166,6 +172,30 @@ public class BarRepository {
             );
         } catch (Exception e) {
             throw new RuntimeException("Error fetching bar with id " + barId + ": " + e.getMessage(), e);
+        }
+    }
+
+    public Bar createBar(Bar bar) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("name", bar.getName());
+            params.put("capacity", bar.getCapacity());
+            params.put("address", bar.getAddress());
+            params.put("city", bar.getCity());
+            params.put("postal_code", bar.getPostalCode());
+
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            barTemplate.update(SQL_INSERT_BAR, new MapSqlParameterSource(params), keyHolder, new String[]{"id"});
+
+            Number newId = keyHolder.getKey();
+            if (newId != null) {
+                bar.setId(newId.intValue());
+                return bar;
+            } else {
+                throw new RuntimeException("Failed to create bar - no ID returned");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating bar: " + e.getMessage(), e);
         }
     }
 

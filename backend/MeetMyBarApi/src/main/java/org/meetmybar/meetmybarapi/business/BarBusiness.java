@@ -45,4 +45,13 @@ public interface BarBusiness {
      * @return Bar
      */
     public Bar getBarById(int barId);
+
+    /**
+     * createBar
+     * Ajoute un bar
+     *
+     * @param bar
+     * @return Bar
+     */
+    public Bar createBar(Bar bar);
 }

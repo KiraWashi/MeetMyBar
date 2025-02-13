@@ -38,4 +38,9 @@ public class BarBusinessImpl implements BarBusiness {
     public Bar getBarById(int barId) {
         return this.barRepository.getBarById(barId);
     }
+
+    @Override
+    public Bar createBar(Bar bar) {
+        return this.barRepository.createBar(bar);
+    }
 }
