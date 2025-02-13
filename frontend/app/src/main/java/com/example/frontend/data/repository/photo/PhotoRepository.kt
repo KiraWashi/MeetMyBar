@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import com.example.frontend.data.utils.Resource.*
 
 class PhotoRepository(
     private val meetMyBarAPI: MeetMyBarAPI,
@@ -40,13 +41,14 @@ class PhotoRepository(
         description: String
     ): Flow<Resource<String>> = flow {
         emit(Resource.Loading())
-
-        val imageFile = uriToFile(uri, context)
-
-        val mimeType = context.contentResolver.getType(uri) ?: "image/jpeg"
-        val ret = meetMyBarAPI.postPhoto(imageFile, mimeType, mainPhoto, description)
-
-        emit(Resource.Success(ret.content.toString()))
+        try {
+            val imageFile = uriToFile(uri, context)
+            val mimeType = context.contentResolver.getType(uri) ?: "image/jpeg"
+            val response = meetMyBarAPI.postPhoto(imageFile, mimeType, mainPhoto, description)
+            emit(Resource.Success(response.content.toString()))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.message ?: "Erreur lors de l'upload"))
+        }
     }
 
     private fun uriToFile(uri: Uri, context: Context): File {

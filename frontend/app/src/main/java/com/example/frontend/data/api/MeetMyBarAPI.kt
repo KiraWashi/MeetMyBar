@@ -47,7 +47,7 @@ class MeetMyBarAPI(
         val formData = MultiPartFormDataContent(
             formData {
                 append("description", description)
-                append("main_photo", mainPhoto.toString())
+                append("main_photo", if(mainPhoto) "true" else "false")
                 append("image", byteArray, Headers.build {
                     append(HttpHeaders.ContentType, mimeType)
                     append(HttpHeaders.ContentDisposition, "form-data; name=\"image\"; filename=\"image.jpg\"")
