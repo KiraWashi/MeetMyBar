@@ -30,6 +30,13 @@ public class PhotoRepository{
                     "WHERE id = :id";
     private static final String SQL_DELETE_PHOTO = "DELETE FROM PHOTO WHERE id = :id";
 
+    private static final String SQL_GET_PHOTOS_BY_BAR = """
+    SELECT p.id, p.description, p.image_data, p.main_photo 
+    FROM PHOTO p 
+    INNER JOIN LINK_BAR_PHOTO lbp ON p.id = lbp.id_photo 
+    WHERE lbp.id_bar = :id
+    """;
+
     @Autowired
     private NamedParameterJdbcTemplate photoTemplate;
 
@@ -152,6 +159,24 @@ public class PhotoRepository{
             }
         } catch (Exception e) {
             throw new RuntimeException("Error deleting photo : " + e.getMessage(), e);
+        }
+    }
+
+    public List<Photo> findPhotosByBar(int id) {
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            return photoTemplate.query(SQL_GET_PHOTOS_BY_BAR, map, (r, s) ->
+                    new Photo(
+                            r.getInt("id"),
+                            r.getString("description"),
+                            r.getBytes("image_data"),
+                            r.getBoolean("main_photo")
+                    )
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error finding Photos for bar id : " + id);
         }
     }
 }

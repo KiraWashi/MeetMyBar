@@ -1,6 +1,5 @@
 package org.meetmybar.meetmybarapi.controller.impl;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -50,6 +49,12 @@ public class PhotoControllerImpl implements PhotoController {
     public ResponseEntity<Photo> getPhoto(
             @PathVariable int id) {
         return ResponseEntity.ok(photoBusiness.getPhotoById(id));
+    }
+
+
+    @Override
+    public ResponseEntity<List<Photo>> getPhotosByBar(@PathVariable int id) {
+        return ResponseEntity.ok(photoBusiness.getPhotoByIdBar(id));
     }
 
     @Override

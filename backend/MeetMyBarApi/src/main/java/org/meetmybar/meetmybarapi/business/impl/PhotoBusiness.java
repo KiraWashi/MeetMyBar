@@ -3,6 +3,7 @@ package org.meetmybar.meetmybarapi.business.impl;
 import jakarta.validation.Valid;
 import org.meetmybar.meetmybarapi.exception.*;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
+import org.meetmybar.meetmybarapi.repository.BarRepository;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
 
 import org.meetmybar.meetmybarapi.utils.ImageUtils;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,11 +22,12 @@ import java.util.Optional;
 public class PhotoBusiness {
 
     private final PhotoRepository photoRepository;
+    private final BarRepository barRepository;
 
 
-    public PhotoBusiness(PhotoRepository photoRepository) {
+    public PhotoBusiness(PhotoRepository photoRepository, BarRepository barRepository) {
         this.photoRepository = photoRepository;
-
+        this.barRepository = barRepository;
     }
 
     public Photo savePhoto(MultipartFile imageFile, String description, boolean mainData) {
@@ -83,5 +86,12 @@ public class PhotoBusiness {
             throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
         return photoRepository.deletePhoto(id);
+    }
+
+    public List<Photo> getPhotoByIdBar(int id) {
+        if(barRepository.getBarById(id)==null){
+            throw new PhotoNotFoundException("Bar not found for id :"+id);
+        }
+        return photoRepository.findPhotosByBar(id);
     }
 }

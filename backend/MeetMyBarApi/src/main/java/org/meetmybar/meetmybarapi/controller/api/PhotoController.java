@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-17T14:26:25.502834400+01:00[Europe/Paris]")
@@ -74,6 +75,29 @@ public interface PhotoController {
     @GetMapping("/{id}")
     default ResponseEntity<Photo> getPhoto(
             @Parameter(name = "id", description = "ID de la photo", required = true, in = ParameterIn.PATH) @PathVariable("id") int id
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * GET /photos/bar/{id} : Récupérer les photos d'un bar par son id
+     *
+     * @param id ID du bar (required)
+     * @return Liste des photos récupérées avec succès (status code 200)
+     */
+    @Operation(
+            operationId = "getPhotosByBar",
+            summary = "Récupérer les photos d'un bar par son ID",
+            tags = { "Photos" },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Photos récupérées avec succès", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Photo.class, type = "array"))
+                    })
+            }
+    )
+    @GetMapping("/bar/{id}")
+    default ResponseEntity<List<Photo>> getPhotosByBar(
+            @Parameter(name = "id", description = "ID du bar", required = true, in = ParameterIn.PATH) @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
