@@ -3,7 +3,8 @@ package org.meetmybar.meetmybarapi.controller.impl;
 import org.meetmybar.meetmybarapi.business.BarBusiness;
 import org.meetmybar.meetmybarapi.controller.api.BarController;
 
-import org.meetmybar.meetmybarapi.models.dto.Bar;
+import org.meetmybar.meetmybarapi.models.dto.Drink;
+import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,10 @@ public class BarControllerImpl implements BarController {
 
 
     @Override
-    public ResponseEntity<Bar> getBarByName(@PathVariable("barName") String barName) {
+    public ResponseEntity<Bar> getBarByName(String barName) {
         try {
-            // TODO: Implement actual bar retrieval logic
-            return ResponseEntity.ok().build();
+            Bar bar = this.barBusiness.getBarByName(barName);
+            return ResponseEntity.ok(bar);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -48,14 +49,22 @@ public class BarControllerImpl implements BarController {
 
     @Override
     public ResponseEntity<Bar> getBarByAddress(String barAddress) {
-        // TODO: Implement get bar by address logic
-        return ResponseEntity.ok().build();
+        try {
+            Bar bar = this.barBusiness.getBarByAddress(barAddress);
+            return ResponseEntity.ok(bar);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
-    public ResponseEntity<Bar> getBarById(String barAddress) {
-        // TODO: Implement get bar by address logic
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Bar> getBarById(int barId) {
+        try {
+            Bar bar = this.barBusiness.getBarById(barId);
+            return ResponseEntity.ok(bar);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
@@ -66,7 +75,13 @@ public class BarControllerImpl implements BarController {
 
     @Override
     public ResponseEntity<Bar> addBar(Bar bar) {
-        // TODO: Implement create logic
-        return ResponseEntity.ok().build();
+        try {
+            Bar createdBar = barBusiness.createBar(bar);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdBar);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

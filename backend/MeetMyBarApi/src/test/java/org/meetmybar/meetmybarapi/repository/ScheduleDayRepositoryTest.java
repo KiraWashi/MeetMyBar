@@ -1,7 +1,8 @@
 package org.meetmybar.meetmybarapi.repository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.meetmybar.meetmybarapi.models.dto.Drink;
+import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,108 +30,80 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class DrinkRepositoryTest {
+public class ScheduleDayRepositoryTest {
 
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private DrinkRepository drinkRepository;
+    private ScheduleDayRepository scheduleDayRepository;
 
-    private Drink testDrink;
-
+    private ScheduleDay testScheduleDay;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        testDrink = createTestDrink();
+        testScheduleDay = createTestScheduleDay();
     }
 
     @Test
-    void getDrinks_Success() {
+    void getScheduleDays_Success() {
         // Arrange
-        List<Drink> expectedDrinks = Arrays.asList(testDrink);
+        List<ScheduleDay> expectedScheduleDays = Arrays.asList(testScheduleDay);
         when(jdbcTemplate.query(anyString(), any(Map.class), any(RowMapper.class)))
-                .thenReturn(expectedDrinks);
+                .thenReturn(expectedScheduleDays);
 
         // Act
-        List<Drink> actualDrinks = drinkRepository.getDrinks();
+        List<ScheduleDay> actualScheduleDays = scheduleDayRepository.getScheduleDays();
 
         // Assert
-        assertNotNull(actualDrinks);
-        assertEquals(expectedDrinks.size(), actualDrinks.size());
-        assertEquals(expectedDrinks.get(0).getName(), actualDrinks.get(0).getName());
-        verify(jdbcTemplate).query(eq("SELECT id, name, brand, degree, type FROM DRINK"),
+        assertNotNull(actualScheduleDays);
+        assertEquals(expectedScheduleDays.size(), actualScheduleDays.size());
+        assertEquals(expectedScheduleDays.get(0).getDay(), actualScheduleDays.get(0).getDay());
+        verify(jdbcTemplate).query(eq("SELECT id, opening, closing, day FROM SCHEDULE_DAY"),
                 any(HashMap.class),
                 any(RowMapper.class));
     }
 
     @Test
-    void getDrinks_ThrowsException() {
+    void getScheduleDays_ThrowsException() {
         // Arrange
         when(jdbcTemplate.query(anyString(), any(Map.class), any(RowMapper.class)))
                 .thenThrow(new DataAccessException("Database error") {});
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> drinkRepository.getDrinks());
+        assertThrows(RuntimeException.class, () -> scheduleDayRepository.getScheduleDays());
     }
 
     @Test
-    void getDrinkByName_Success() {
+    void getScheduleDayById_Success() {
         // Arrange
         when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
-                .thenReturn(testDrink);
+                .thenReturn(testScheduleDay);
 
         // Act
-        Drink result = drinkRepository.getDrinkByName("Duchesse");
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("Duchesse", result.getName());
-        verify(jdbcTemplate).queryForObject(eq("SELECT id, name, brand, degree, type FROM DRINK WHERE name = :name"),
-                any(Map.class),
-                any(RowMapper.class));
-    }
-
-    @Test
-    void getDrinkByName_NotFound() {
-        // Arrange
-        when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
-                .thenThrow(new EmptyResultDataAccessException(1));
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> drinkRepository.getDrinkByName("NonExistent"));
-    }
-
-    @Test
-    void getDrinkById_Success() {
-        // Arrange
-        when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
-                .thenReturn(testDrink);
-
-        // Act
-        Drink result = drinkRepository.getDrinkById(1);
+        ScheduleDay result = scheduleDayRepository.getScheduleDayById(1);
 
         // Assert
         assertNotNull(result);
         assertEquals(1, result.getId());
-        verify(jdbcTemplate).queryForObject(eq("SELECT id, name, brand, degree, type FROM DRINK WHERE id = :id"),
+        verify(jdbcTemplate).queryForObject(eq("SELECT id, opening, closing, day FROM SCHEDULE_DAY WHERE id = :id"),
                 any(Map.class),
                 any(RowMapper.class));
     }
 
     @Test
-    void getDrinkById_NotFound() {
+    void getScheduleDayById_NotFound() {
         // Arrange
         when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
                 .thenThrow(new EmptyResultDataAccessException(1));
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> drinkRepository.getDrinkById(999));
+        assertThrows(RuntimeException.class, () -> scheduleDayRepository.getScheduleDayById(999));
     }
 
     @Test
-    void createDrink_Success() {
+    void createScheduleDay_Success() {
         // Arrange
         doAnswer(invocation -> {
             KeyHolder keyHolder = invocation.getArgument(2);
@@ -141,14 +114,14 @@ public class DrinkRepositoryTest {
         }).when(jdbcTemplate).update(anyString(), any(MapSqlParameterSource.class), any(KeyHolder.class), any(String[].class));
 
         // Act
-        Drink result = drinkRepository.createDrink(testDrink);
+        ScheduleDay result = scheduleDayRepository.createScheduleDay(testScheduleDay);
 
         // Assert
         assertNotNull(result);
         assertEquals(1, result.getId());
-        assertEquals(testDrink.getName(), result.getName());
+        assertEquals(testScheduleDay.getDay(), result.getDay());
         verify(jdbcTemplate).update(
-                eq("INSERT INTO DRINK (name, brand, degree, type) VALUES (:name, :brand, :degree, :type)"),
+                eq("INSERT INTO SCHEDULE_DAY (day, closing, opening) VALUES (:day, :closing, :opening)"),
                 any(MapSqlParameterSource.class),
                 any(KeyHolder.class),
                 eq(new String[]{"id"})
@@ -156,74 +129,76 @@ public class DrinkRepositoryTest {
     }
 
     @Test
-    void createDrink_ThrowsException() {
+    void createScheduleDay_ThrowsException() {
         // Arrange
         when(jdbcTemplate.update(anyString(), any(MapSqlParameterSource.class), any(KeyHolder.class), any(String[].class)))
                 .thenThrow(new DataAccessException("Database error") {});
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> drinkRepository.createDrink(testDrink));
+        assertThrows(RuntimeException.class, () -> scheduleDayRepository.createScheduleDay(testScheduleDay));
     }
 
     @Test
-    void updateDrink_Success() {
+    void updateScheduleDay_Success() {
         // Arrange
         when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(1);
         when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
-                .thenReturn(testDrink);
+                .thenReturn(testScheduleDay);
 
         // Act
-        Drink result = drinkRepository.updateDrink(testDrink);
+        ScheduleDay result = scheduleDayRepository.updateScheduleDay(testScheduleDay);
 
         // Assert
         assertNotNull(result);
-        assertEquals(testDrink.getName(), result.getName());
-        verify(jdbcTemplate).update(eq("UPDATE DRINK SET name = :name, brand = :brand, degree = :degree, type = :type WHERE id = :id"),
-                any(Map.class));
+        assertEquals(testScheduleDay.getDay(), result.getDay());
+        verify(jdbcTemplate).update(
+                eq("UPDATE SCHEDULE_DAY SET day = :day, opening = :opening, closing = :closing WHERE id = :id"),
+                any(Map.class)
+        );
     }
 
     @Test
-    void updateDrink_NotFound() {
-        // Arrange
-        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(0);
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> drinkRepository.updateDrink(testDrink));
-    }
-
-    @Test
-    void deleteDrink_Success() {
-        // Arrange
-        when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
-                .thenReturn(testDrink);
-        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(1);
-
-        // Act
-        Drink result = drinkRepository.deleteDrink(1);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.getId());
-        verify(jdbcTemplate).update(eq("DELETE FROM DRINK WHERE id = :id"), any(Map.class));
-    }
-
-    @Test
-    void deleteDrink_NotFound() {
+    void updateScheduleDay_NotFound() {
         // Arrange
         when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
                 .thenThrow(new EmptyResultDataAccessException(1));
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> drinkRepository.deleteDrink(999));
+        assertThrows(RuntimeException.class, () -> scheduleDayRepository.updateScheduleDay(testScheduleDay));
     }
 
-    private Drink createTestDrink() {
-        Drink drink = new Drink();
-        drink.setBrand("Lancelot");
-        drink.setId(1);
-        drink.setName("Duchesse");
-        drink.setAlcoholDegree(7.5);
-        drink.setType(Drink.TypeEnum.BIERE_BLONDE);
-        return drink;
+    @Test
+    void deleteScheduleDay_Success() {
+        // Arrange
+        when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
+                .thenReturn(testScheduleDay);
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(1);
+
+        // Act
+        ScheduleDay result = scheduleDayRepository.deleteScheduleDayById(1);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.getId());
+        verify(jdbcTemplate).update(eq("DELETE FROM SCHEDULE_DAY WHERE id = :id"), any(Map.class));
+    }
+
+    @Test
+    void deleteScheduleDay_NotFound() {
+        // Arrange
+        when(jdbcTemplate.queryForObject(anyString(), any(Map.class), any(RowMapper.class)))
+                .thenThrow(new EmptyResultDataAccessException(1));
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> scheduleDayRepository.deleteScheduleDayById(999));
+    }
+
+    private ScheduleDay createTestScheduleDay() {
+        ScheduleDay scheduleDay = new ScheduleDay();
+        scheduleDay.setId(1);
+        scheduleDay.setDay("Lundi");
+        scheduleDay.setOpening("18h");
+        scheduleDay.setClosing("1h");
+        return scheduleDay;
     }
 }
