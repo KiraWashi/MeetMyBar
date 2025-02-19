@@ -20,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-17T14:26:25.502834400+01:00[Europe/Paris]")
 @Validated
@@ -126,6 +127,35 @@ public interface PhotoController {
     }
 
     /**
+     * GET /photos/download/bar/{id} : Télécharger toutes les photos d'un bar par son ID
+     *
+     * @param id ID du bar required)
+     * @return une liste de photos avec succès (status code 200)
+     */
+    @Operation(
+            operationId = "downloadPhotosByBar",
+            summary = "Télécharger une liste de photos par l'ID du bar",
+            tags = { "Photos" },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Photos téléchargées avec succès", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(
+                                type = "array",
+                                description = "Liste des photos avec leurs données en base64",
+                                implementation = Map.class
+                            ))
+                    }),
+                    @ApiResponse(responseCode = "204", description = "Aucune photo trouvée pour ce bar"),
+                    @ApiResponse(responseCode = "500", description = "Erreur lors du téléchargement des photos")
+            }
+    )
+    @GetMapping("/download/bar/{id}")
+    default ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(
+            @Parameter(name = "id", description = "ID du bar", required = true, in = ParameterIn.PATH) @PathVariable("id") int id
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
      * PATCH /photos : Mettre à jour une photo
      *
      * @param updateDto DTO contenant les informations de mise à jour de la photo (required)
@@ -141,13 +171,17 @@ public interface PhotoController {
                     })
             }
     )
-   @PatchMapping("/update")
+    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     default ResponseEntity<Photo> updatePhoto(
-            @Parameter(name = "Photo", description = "DTO contenant les informations de mise à jour de la photo", required = true)
-            @Valid
-            @RequestBody
-            Photo updateDto
-    ) {
+            @Parameter(name = "id", description = "ID de la photo", required = true)
+            @RequestParam(value = "id") int id,
+            @Parameter(name = "image", description = "Fichier image à uploader")
+            @RequestParam(value = "image", required = false) MultipartFile file,
+            @Parameter(name = "description", description = "Description de la photo")
+            @RequestParam(value = "description", required = false) String description,
+            @Parameter(name = "main_photo", description = "Indique si la photo est la photo principale")
+            @RequestParam(value = "main_photo", required = false) Boolean mainPhoto
+    ) throws IOException {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 

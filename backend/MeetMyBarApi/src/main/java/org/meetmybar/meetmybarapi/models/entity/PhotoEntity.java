@@ -3,8 +3,6 @@ package org.meetmybar.meetmybarapi.models.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "PHOTO")
@@ -25,7 +23,7 @@ public class PhotoEntity {
 
     @NotNull
     @Column(name = "image_data", nullable = true)
-    private byte[] imageData;
+    private byte[] image_data;
 
     public Integer getId() {
         return id;
@@ -57,10 +55,10 @@ public class PhotoEntity {
 
     @NotNull
     public byte[] getImageData() {
-        return imageData;
+        return this.image_data;
     }
 
-    public void setImageData(@NotNull byte[] imageData) {
-        this.imageData = imageData;
+    public void setImageData(byte[] imageData) {
+        this.image_data = imageData;
     }
 }

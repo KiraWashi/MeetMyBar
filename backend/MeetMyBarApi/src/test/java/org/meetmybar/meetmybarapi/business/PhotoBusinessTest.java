@@ -18,13 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 public class PhotoBusinessTest {
@@ -114,7 +113,7 @@ public class PhotoBusinessTest {
         ResponseEntity<ByteArrayResource> response = photoBusiness.downloadPhotoById(1);
 
         assertNotNull(response);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
         verify(photoRepository, times(1)).findById(1);
         verify(photoRepository, times(1)).downloadById(1);
@@ -218,5 +217,48 @@ public class PhotoBusinessTest {
 
         verify(barRepository, times(1)).getBarById(1);
         verify(photoRepository, never()).findPhotosByBar(anyInt());
+    }
+
+    @Test
+    void downloadPhotosByBar_Success() {
+        when(barRepository.getBarById(1)).thenReturn(mockBar);
+        
+        Map<String, Object> photo1 = new HashMap<>();
+        photo1.put("id", 1);
+        photo1.put("description", "Photo 1");
+        photo1.put("image_data", "base64data1");
+        photo1.put("main_photo", true);
+
+        Map<String, Object> photo2 = new HashMap<>();
+        photo2.put("id", 2); 
+        photo2.put("description", "Photo 2");
+        photo2.put("image_data", "base64data2");
+        photo2.put("main_photo", false);
+
+        List<Map<String, Object>> mockPhotos = Arrays.asList(photo1, photo2);
+        ResponseEntity<List<Map<String, Object>>> mockResponse = ResponseEntity.ok(mockPhotos);
+        
+        when(photoRepository.downloadPhotosByBar(1)).thenReturn(mockResponse);
+
+        ResponseEntity<List<Map<String, Object>>> result = photoBusiness.downloadPhotosByBar(1);
+
+        assertNotNull(result);
+        assertEquals(200, result.getStatusCode().value());
+        assertNotNull(result.getBody());
+        assertEquals(2, result.getBody().size());
+        verify(barRepository, times(1)).getBarById(1);
+        verify(photoRepository, times(1)).downloadPhotosByBar(1);
+    }
+
+    @Test
+    void downloadPhotosByBar_BarNotFound() {
+        when(barRepository.getBarById(1)).thenReturn(null);
+
+        assertThrows(PhotoNotFoundException.class, () -> {
+            photoBusiness.downloadPhotosByBar(1);
+        });
+
+        verify(barRepository, times(1)).getBarById(1);
+        verify(photoRepository, never()).downloadPhotosByBar(anyInt());
     }
 }

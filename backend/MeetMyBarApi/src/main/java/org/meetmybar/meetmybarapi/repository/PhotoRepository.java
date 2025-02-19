@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.*;
 
 @Repository
@@ -26,7 +25,7 @@ public class PhotoRepository{
             "SELECT image_data FROM PHOTO WHERE id = :id";
 
     private static final String SQL_UPDATE_PHOTO =
-            "UPDATE PHOTO SET description = :description, image_data = :imageData, main_photo = :mainPhoto " +
+            "UPDATE PHOTO SET description = :description, image_data = :image_data, main_photo = :main_photo " +
                     "WHERE id = :id";
     private static final String SQL_DELETE_PHOTO = "DELETE FROM PHOTO WHERE id = :id";
 
@@ -55,7 +54,7 @@ public class PhotoRepository{
             });
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error finding Photo for id : "+ id);
+            throw new PhotoNotFoundException("Photo not found for id :"+id);
         }
     }
 
@@ -101,45 +100,45 @@ public class PhotoRepository{
     }
 
     public Photo updatePhoto(Photo photo) {
-        // Construction dynamique de la requête SQL
-        StringBuilder sql = new StringBuilder("UPDATE PHOTO SET ");
+        if (photo == null || photo.getId() <= 0) {
+            throw new IllegalArgumentException("Photo invalide");
+        }
+
+        System.out.println("Photo reçue pour update: " + photo);
+        System.out.println("Image data reçue: " + (photo.getImageData() != null ? photo.getImageData().length : "null"));
+
+        // Récupérer la photo existante pour conserver l'image si non fournie
+        Photo existingPhoto = findById(photo.getId());
+        System.out.println("Photo existante: " + existingPhoto);
+        System.out.println("Image data existante: " + (existingPhoto.getImageData() != null ? existingPhoto.getImageData().length : "null"));
+        
         Map<String, Object> params = new HashMap<>();
-        boolean premierChamp = true; // pour gérer la virgule entre les colonnes
-
-        if (photo.getDescription() != null) {
-            sql.append("description = :description");
-            params.put("description", photo.getDescription());
-            premierChamp = false;
-        }
-
-        if (photo.getImageData() != null) {
-            if (!premierChamp) {
-                sql.append(", ");
-            }
-            sql.append("image_data = :image_data");
-            params.put("image_data", photo.getImageData());
-            premierChamp = false;
-        }
-
-        // Mise à jour de main_photo (ici, mise à jour systématique)
-        if (!premierChamp) {
-            sql.append(", ");
-        }
-        sql.append("main_photo = :main_photo");
+        params.put("id", photo.getId());
+        params.put("description", photo.getDescription());
+        byte[] imageToUpdate = photo.getImageData() != null && photo.getImageData().length > 0 
+            ? photo.getImageData() 
+            : existingPhoto.getImageData();
+        params.put("image_data", imageToUpdate);
         params.put("main_photo", photo.isMainPhoto());
 
-        // Clause WHERE
-        sql.append(" WHERE id = :id");
-        params.put("id", photo.getId());
-        System.out.println(sql.toString());
-        // Exécution de la requête
-        int rowsAffected = photoTemplate.update(sql.toString(), params);
-        if (rowsAffected > 0) {
-            // On retourne l'objet qui a déjà été mis à jour en mémoire.
-            // Une autre option serait de relire l'objet depuis la DB.
+        System.out.println("Paramètres pour update: " + params);
+        System.out.println("Image data finale: " + (imageToUpdate != null ? imageToUpdate.length : "null"));
+
+        try {
+            int rowsAffected = photoTemplate.update(SQL_UPDATE_PHOTO, params);
+            
+            if (rowsAffected == 0) {
+                throw new PhotoNotFoundException("Photo non trouvée avec l'id: " + photo.getId());
+            }
+            
             return photo;
-        } else {
-            throw new RuntimeException("Échec de la mise à jour de la photo avec l'id : " + photo.getId());
+            
+        } catch (PhotoNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            System.err.println("Erreur détaillée: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la mise à jour de la photo: " + e.getMessage(), e);
         }
     }
 
@@ -177,6 +176,44 @@ public class PhotoRepository{
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error finding Photos for bar id : " + id);
+        }
+    }
+
+    public ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(int id) {
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            List<Photo> photos = photoTemplate.query(SQL_GET_PHOTOS_BY_BAR, map, 
+                (rs, rowNum) -> new Photo(
+                    rs.getInt("id"),
+                    rs.getString("description"),
+                    rs.getBytes("image_data"),
+                    rs.getBoolean("main_photo")
+                ));
+
+            if (photos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            List<Map<Integer, ByteArrayResource>> responseList = photos.stream()
+                    .map(photo -> {
+                        try {
+                            // Convertir directement les bytes en ByteArrayResource
+                            ByteArrayResource resource = new ByteArrayResource(photo.getImageData());
+                            return Collections.singletonMap(photo.getId(), resource);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Erreur lors de la conversion de l'image: " + e.getMessage(), e);
+                        }
+                    })
+                    .toList();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("X-Total-Count", String.valueOf(responseList.size()))
+                    .body(responseList);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du téléchargement des photos pour le bar id: " + id, e);
         }
     }
 }

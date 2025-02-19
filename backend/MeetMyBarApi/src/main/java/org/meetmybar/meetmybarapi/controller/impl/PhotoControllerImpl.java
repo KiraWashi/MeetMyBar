@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -65,9 +65,33 @@ public class PhotoControllerImpl implements PhotoController {
 
     @Override
     public ResponseEntity<Photo> updatePhoto(
-            @Valid @RequestBody Photo updateDto) {
-        System.out.println("Received update request for photo: " + updateDto);
-        return ResponseEntity.ok(photoBusiness.updatePhoto(updateDto));
+            @RequestParam(value = "id") int id,
+            @RequestParam(value = "image", required = false) MultipartFile file,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "main_photo", required = false) Boolean mainPhoto) throws IOException {
+        
+        log.info("Updating photo - ID: {}, File present: {}, Description: {}, MainPhoto: {}", 
+                id, 
+                (file != null && !file.isEmpty()), 
+                description, 
+                mainPhoto);
+        
+        Photo photoToUpdate = new Photo();
+        photoToUpdate.setId(id);
+        photoToUpdate.setDescription(description);
+        photoToUpdate.setMainPhoto(mainPhoto != null ? mainPhoto : false);
+        
+        if (file != null && !file.isEmpty()) {
+            log.info("New image file detected, size: {} bytes", file.getSize());
+            photoToUpdate.setImageData(file.getBytes());
+        } else {
+            log.info("No new image file provided");
+        }
+        
+        Photo updatedPhoto = photoBusiness.updatePhoto(photoToUpdate);
+        log.info("Photo updated successfully - ID: {}", id);
+        
+        return ResponseEntity.ok(updatedPhoto);
     }
 
     @Override
@@ -75,5 +99,10 @@ public class PhotoControllerImpl implements PhotoController {
             @PathVariable int id) {
         photoBusiness.deletePhoto(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(@PathVariable int id) {
+        return photoBusiness.downloadPhotosByBar(id);
     }
 }
