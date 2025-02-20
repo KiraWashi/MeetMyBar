@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import org.meetmybar.api.controller.ApiUtil;
+import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -260,6 +261,53 @@ public interface BarController {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"city\" : \"city\", \"drinks\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"postal_code\" : \"postal_code\", \"capacity\" : 6 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+    /**
+     * GET /bar/photo/{barId} : Your GET endpoint
+     *
+     * @param barId  (required)
+     * @return OK (status code 200)
+     *         or Bad Request (status code 400)
+     *         or Unauthorized (status code 401)
+     *         or Forbidden (status code 403)
+     *         or Not Found (status code 404)
+     *         or Internal Server Error (status code 500)
+     */
+    @Operation(
+            operationId = "getPhotoByBar",
+            summary = "Your GET endpoint",
+            tags = {  },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Photo.class)))
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"), 
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/bar/photo/{barId}",
+            produces = { "application/json" }
+    )
+    default ResponseEntity<List<Photo>> getPhotoByBar(
+            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") Integer barId
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "[ { \"id\": 1, \"description\": \"Photo du bar\", \"imageData\": \"base64EncodedImage\", \"mainPhoto\": true }, { \"id\": 2, \"description\": \"Terrasse\", \"imageData\": \"base64EncodedImage\", \"mainPhoto\": false } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

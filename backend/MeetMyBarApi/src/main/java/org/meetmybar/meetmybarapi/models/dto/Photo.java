@@ -12,7 +12,9 @@ import java.util.Objects;
 public class Photo {
     private int id;
     private String description;
-    private byte[] image_data;
+    @JsonProperty("image_data")
+    private byte[] imageData;
+    @JsonProperty("main_photo")
     private boolean mainPhoto;
 
     /**
@@ -30,7 +32,7 @@ public class Photo {
     public Photo(int id, String description, byte[] image_data, boolean mainPhoto) {
         this.id = id;
         this.description = description;
-        this.image_data = image_data;
+        this.imageData = image_data;
         this.mainPhoto = mainPhoto;
     }
 
@@ -67,13 +69,13 @@ public class Photo {
         Photo photo = (Photo) o;
         return Objects.equals(this.id, photo.id) &&
                 Objects.equals(this.description, photo.description) &&
-                Arrays.equals(this.image_data, photo.image_data) &&
+                Arrays.equals(this.imageData, photo.imageData) &&
                 Objects.equals(this.mainPhoto, photo.mainPhoto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, this.description, this.mainPhoto, Arrays.hashCode(this.image_data));
+        return Objects.hash(id, this.description, this.mainPhoto, Arrays.hashCode(this.imageData));
     }
 
     @Override
@@ -83,7 +85,7 @@ public class Photo {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    description: ").append(toIndentedString(this.description)).append("\n");
         sb.append("    mainPhoto: ").append(toIndentedString(this.mainPhoto)).append("\n");
-        sb.append("    image: ").append(toIndentedString(this.image_data)).append("\n");
+        sb.append("    image: ").append(toIndentedString(this.imageData)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -108,11 +110,11 @@ public class Photo {
     }
 
     public byte[] getImageData() {
-        return image_data;
+        return imageData;
     }
 
     public void setImageData(byte[] image_data) {
-        this.image_data = image_data;
+        this.imageData = image_data;
     }
 
     public boolean isMainPhoto() {
