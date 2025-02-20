@@ -105,4 +105,13 @@ public class PhotoControllerImpl implements PhotoController {
     public List<ResponseEntity<ByteArrayResource>> downloadPhotosByBar(@PathVariable int id) {
         return photoBusiness.downloadPhotosByBar(id);
     }
+
+    @Override
+    public ResponseEntity<Photo> addPhotoBar(
+            @RequestParam("idBar") int idBar,
+            @RequestParam("idPhoto") int idPhoto) {
+        log.info("Associating photo {} to bar {}", idPhoto, idBar);
+        photoBusiness.addPhotoBar(idBar, idPhoto);
+        return ResponseEntity.ok().build();
+    }
 }

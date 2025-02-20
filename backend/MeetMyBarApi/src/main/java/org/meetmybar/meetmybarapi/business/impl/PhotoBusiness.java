@@ -95,4 +95,17 @@ public class PhotoBusiness {
         }
         return photoRepository.downloadPhotosByBar(id);
     }
+
+    public Photo addPhotoBar(int idBar, int idPhoto) {
+        // Vérification de l'existence du bar et de la photo
+        if (barRepository.getBarById(idBar) == null) {
+            throw new PhotoNotFoundException("Bar not found for id: " + idBar);
+        }
+        if (photoRepository.findById(idPhoto) == null) {
+            throw new PhotoNotFoundException("Photo not found for id: " + idPhoto);
+        }
+        
+        photoRepository.addPhotoBar(idBar, idPhoto);
+        return photoRepository.findById(idPhoto);
+    }
 }

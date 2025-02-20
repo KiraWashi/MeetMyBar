@@ -30,6 +30,7 @@ public class PhotoRepository{
             "UPDATE PHOTO SET description = :description, image_data = :image_data, main_photo = :main_photo " +
                     "WHERE id = :id";
     private static final String SQL_DELETE_PHOTO = "DELETE FROM PHOTO WHERE id = :id";
+    private static final String SQL_DELETE_PHOTO_LINKS = "DELETE FROM LINK_BAR_PHOTO WHERE id_photo = :id";
 
     private static final String SQL_GET_PHOTOS_BY_BAR = """
     SELECT p.id, p.description, p.image_data, p.main_photo 
@@ -37,6 +38,9 @@ public class PhotoRepository{
     INNER JOIN LINK_BAR_PHOTO lbp ON p.id = lbp.id_photo 
     WHERE lbp.id_bar = :id
     """;
+
+    private static final String SQL_ADD_PHOTO_BAR = 
+        "INSERT INTO LINK_BAR_PHOTO (id_bar, id_photo) VALUES (:idBar, :idPhoto)";
 
     @Autowired
     private NamedParameterJdbcTemplate photoTemplate;
@@ -150,11 +154,15 @@ public class PhotoRepository{
 
     public Photo deletePhoto(int photoId) {
         try {
-            // On récupère d'abord la boisson pour pouvoir la retourner après suppression
+            // On récupère d'abord la photo pour pouvoir la retourner après suppression
             Photo existingPhoto = findById(photoId);
             HashMap<String, Object> params = new HashMap<>();
             params.put("id", photoId);
 
+            // Supprime d'abord les liens dans la table de liaison
+            photoTemplate.update(SQL_DELETE_PHOTO_LINKS, params);
+
+            // Puis supprime la photo elle-même
             int rowsAffected = photoTemplate.update(SQL_DELETE_PHOTO, params);
 
             if (rowsAffected > 0) {
@@ -219,6 +227,22 @@ public class PhotoRepository{
 
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors du téléchargement des photos pour le bar id: " + id, e);
+        }
+    }
+
+    public void addPhotoBar(int idBar, int idPhoto) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("idBar", idBar);
+            params.put("idPhoto", idPhoto);
+
+            int rowsAffected = photoTemplate.update(SQL_ADD_PHOTO_BAR, params);
+            
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Échec de l'association de la photo au bar");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'association de la photo au bar: " + e.getMessage(), e);
         }
     }
 }

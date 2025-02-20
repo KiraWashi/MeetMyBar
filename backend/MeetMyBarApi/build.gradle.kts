@@ -35,6 +35,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-cache:3.3.5")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis:3.3.5")
 	compileOnly("org.projectlombok:lombok:1.18.34")
+	annotationProcessor("org.projectlombok:lombok:1.18.34")
+	testCompileOnly("org.projectlombok:lombok:1.18.34")
+	testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
 	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.2.0")
 	implementation("io.github.resilience4j:resilience4j-feign:2.2.0")
 

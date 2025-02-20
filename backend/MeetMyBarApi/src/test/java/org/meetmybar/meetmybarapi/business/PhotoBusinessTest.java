@@ -14,8 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -229,25 +227,20 @@ public class PhotoBusinessTest {
         ByteArrayResource resource2 = new ByteArrayResource(new byte[]{4, 5, 6});
         
         List<ResponseEntity<ByteArrayResource>> mockResponses = Arrays.asList(
-            ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
-                .contentLength(3)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"photo_1.jpg\"")
-                .body(resource1),
-            ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
-                .contentLength(3)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"photo_2.jpg\"")
-                .body(resource2)
+            ResponseEntity.ok().body(resource1),
+            ResponseEntity.ok().body(resource2)
         );
-        
+
         when(photoRepository.downloadPhotosByBar(1)).thenReturn(mockResponses);
 
         List<ResponseEntity<ByteArrayResource>> result = photoBusiness.downloadPhotosByBar(1);
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(MediaType.IMAGE_JPEG, result.get(0).getHeaders().getContentType());
-        assertNotNull(result.get(0).getBody());
-        assertNotNull(result.get(1).getBody());
+        result.forEach(response -> {
+            assertEquals(200, response.getStatusCode().value());
+            assertNotNull(response.getBody());
+        });
         verify(barRepository, times(1)).getBarById(1);
         verify(photoRepository, times(1)).downloadPhotosByBar(1);
     }

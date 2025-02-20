@@ -204,4 +204,29 @@ public interface PhotoController {
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
+
+    /**
+     * POST /photos/bar : Associer une photo à un bar
+     *
+     * @param idBar ID du bar (required)
+     * @param idPhoto ID de la photo (required)
+     * @return Association créée avec succès (status code 200)
+     */
+    @Operation(
+            operationId = "addPhotoBar",
+            summary = "Associer une photo à un bar",
+            tags = { "Photos" },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Association créée avec succès"),
+                    @ApiResponse(responseCode = "404", description = "Bar ou photo non trouvé"),
+                    @ApiResponse(responseCode = "400", description = "Requête invalide")
+            }
+    )
+    @PostMapping("/bar")
+    default ResponseEntity<Photo> addPhotoBar(
+            @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+            @Parameter(name = "idPhoto", description = "ID de la photo", required = true) @RequestParam("idPhoto") int idPhoto
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
 }
