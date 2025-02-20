@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.io.IOException;
 import java.util.*;
 
 @Repository
@@ -83,19 +85,19 @@ public class PhotoRepository{
             }).getFirst(); // Prend le premier résultat car on s'attend à une seule image
 ;
             //on décompresse l'image et on la renvoie
-            byte[] image =ImageUtils.decompressImage(imageData);
+            byte[] image = ImageUtils.decompressImage(imageData);
 
             ByteArrayResource resource = new ByteArrayResource(image);
 
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
-                    .contentLength(imageData.length)
+                    .contentLength(image.length)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"image.jpg\"")
                     .body(resource);
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error downloading Photo: " + e.getMessage(), e);
+            throw new RuntimeException("Error downloading Photo: " + e.getMessage() + " for photo id: " + id, e);
         }
     }
 
@@ -104,25 +106,29 @@ public class PhotoRepository{
             throw new IllegalArgumentException("Photo invalide");
         }
 
-        System.out.println("Photo reçue pour update: " + photo);
-        System.out.println("Image data reçue: " + (photo.getImageData() != null ? photo.getImageData().length : "null"));
-
-        // Récupérer la photo existante pour conserver l'image si non fournie
+        // Récupérer la photo existante
         Photo existingPhoto = findById(photo.getId());
-        System.out.println("Photo existante: " + existingPhoto);
-        System.out.println("Image data existante: " + (existingPhoto.getImageData() != null ? existingPhoto.getImageData().length : "null"));
+        
+        // Si pas de nouvelles données d'image, utiliser les données existantes
+        if (photo.getImageData() == null) {
+            photo.setImageData(existingPhoto.getImageData());
+        } else {
+            // Compresser la nouvelle image avant de la sauvegarder
+            try {
+                photo.setImageData(ImageUtils.compressImage(photo.getImageData()));
+            } catch (IOException e) {
+                throw new RuntimeException("Error compressing image: " + e.getMessage() + " for photo id: " + photo.getId(), e);
+            }
+        }
         
         Map<String, Object> params = new HashMap<>();
         params.put("id", photo.getId());
         params.put("description", photo.getDescription());
-        byte[] imageToUpdate = photo.getImageData() != null && photo.getImageData().length > 0 
-            ? photo.getImageData() 
-            : existingPhoto.getImageData();
-        params.put("image_data", imageToUpdate);
+        params.put("image_data", photo.getImageData());
         params.put("main_photo", photo.isMainPhoto());
 
         System.out.println("Paramètres pour update: " + params);
-        System.out.println("Image data finale: " + (imageToUpdate != null ? imageToUpdate.length : "null"));
+        System.out.println("Image data finale: " + (photo.getImageData() != null ? photo.getImageData().length : "null"));
 
         try {
             int rowsAffected = photoTemplate.update(SQL_UPDATE_PHOTO, params);
@@ -179,7 +185,7 @@ public class PhotoRepository{
         }
     }
 
-    public ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(int id) {
+    public List<ResponseEntity<ByteArrayResource>> downloadPhotosByBar(int id) {
         try {
             HashMap<String, Object> map = new HashMap<>();
             map.put("id", id);
@@ -192,25 +198,24 @@ public class PhotoRepository{
                 ));
 
             if (photos.isEmpty()) {
-                return ResponseEntity.noContent().build();
+                return Collections.emptyList();
             }
 
-            List<Map<Integer, ByteArrayResource>> responseList = photos.stream()
+            return photos.stream()
                     .map(photo -> {
                         try {
-                            // Convertir directement les bytes en ByteArrayResource
-                            ByteArrayResource resource = new ByteArrayResource(photo.getImageData());
-                            return Collections.singletonMap(photo.getId(), resource);
+                            byte[] decompressedImage = ImageUtils.decompressImage(photo.getImageData());
+                            ByteArrayResource resource = new ByteArrayResource(decompressedImage);
+                            
+                            return ResponseEntity.ok()
+                                    .contentType(MediaType.IMAGE_JPEG)
+                                    .contentLength(decompressedImage.length)
+                                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"photo_" + photo.getId() + ".jpg\"")
+                                    .body(resource);
                         } catch (Exception e) {
-                            throw new RuntimeException("Erreur lors de la conversion de l'image: " + e.getMessage(), e);
+                            throw new RuntimeException("Erreur lors de la décompression de l'image: " + e.getMessage(), e);
                         }
-                    })
-                    .toList();
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("X-Total-Count", String.valueOf(responseList.size()))
-                    .body(responseList);
+                    }).toList();
 
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors du téléchargement des photos pour le bar id: " + id, e);

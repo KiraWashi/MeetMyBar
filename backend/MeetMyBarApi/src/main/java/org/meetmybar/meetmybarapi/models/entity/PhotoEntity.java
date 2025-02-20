@@ -3,6 +3,7 @@ package org.meetmybar.meetmybarapi.models.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "PHOTO")
@@ -21,9 +22,9 @@ public class PhotoEntity {
     @Column(name = "main_photo", nullable = false)
     private Boolean mainPhoto = false;
 
-    @NotNull
-    @Column(name = "image_data", nullable = true)
-    private byte[] image_data;
+    @Lob
+    @Column(name = "image_data")
+    private byte[] imageData;
 
     public Integer getId() {
         return id;
@@ -54,11 +55,12 @@ public class PhotoEntity {
     }
 
     @NotNull
+    @JsonProperty("image_data")
     public byte[] getImageData() {
-        return this.image_data;
+        return this.imageData;
     }
 
     public void setImageData(byte[] imageData) {
-        this.image_data = imageData;
+        this.imageData = imageData;
     }
 }

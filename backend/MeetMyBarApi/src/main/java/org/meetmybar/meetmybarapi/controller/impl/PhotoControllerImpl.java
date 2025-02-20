@@ -1,14 +1,11 @@
 package org.meetmybar.meetmybarapi.controller.impl;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.Logger;
 import org.meetmybar.meetmybarapi.business.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.controller.api.PhotoController;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -40,9 +37,12 @@ public class PhotoControllerImpl implements PhotoController {
             @RequestParam("image") MultipartFile file,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "main_photo", required = false) Boolean mainPhoto) throws IOException {
-        final Logger logger = (Logger) LoggerFactory.getLogger(PhotoControllerImpl.class);
-        logger.info("File : "+file.getOriginalFilename()+" description "+description+" main_photo "+mainPhoto);
-        return ResponseEntity.status(HttpStatus.OK).body(photoBusiness.savePhoto(file, description, mainPhoto));
+        log.info("File : {} description {} main_photo {}", 
+            file.getOriginalFilename(), 
+            description, 
+            mainPhoto);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(photoBusiness.savePhoto(file, description, mainPhoto));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class PhotoControllerImpl implements PhotoController {
     }
 
     @Override
-    public ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(@PathVariable int id) {
+    public List<ResponseEntity<ByteArrayResource>> downloadPhotosByBar(@PathVariable int id) {
         return photoBusiness.downloadPhotosByBar(id);
     }
 }

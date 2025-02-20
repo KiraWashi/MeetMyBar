@@ -3,6 +3,7 @@ import org.meetmybar.meetmybarapi.exception.*;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.repository.BarRepository;
 import org.meetmybar.meetmybarapi.repository.PhotoRepository;
+import org.meetmybar.meetmybarapi.utils.ImageUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class PhotoBusiness {
         try {
             Photo photo = new Photo();
             photo.setMainPhoto(mainData);
-            photo.setImageData(imageFile.getBytes());
+            photo.setImageData(ImageUtils.compressImage(imageFile.getBytes()));
             if (description != null && !description.isEmpty()) {
                 photo.setDescription(description);
             }
@@ -88,7 +89,7 @@ public class PhotoBusiness {
         return photoRepository.findPhotosByBar(id);
     }
 
-    public ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(int id) {
+    public List<ResponseEntity<ByteArrayResource>> downloadPhotosByBar(int id) {
         if(barRepository.getBarById(id)==null){
             throw new PhotoNotFoundException("Bar not found for id :"+id);
         }

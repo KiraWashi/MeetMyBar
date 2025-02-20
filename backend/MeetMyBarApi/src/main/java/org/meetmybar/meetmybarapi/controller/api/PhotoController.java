@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-01-17T14:26:25.502834400+01:00[Europe/Paris]")
 @Validated
@@ -138,10 +136,9 @@ public interface PhotoController {
             tags = { "Photos" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Photos téléchargées avec succès", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(
+                            @Content(mediaType = "image/jpeg", schema = @Schema(
                                 type = "array",
-                                description = "Liste des photos avec leurs données en base64",
-                                implementation = Map.class
+                                description = "Liste des photos décompressées"
                             ))
                     }),
                     @ApiResponse(responseCode = "204", description = "Aucune photo trouvée pour ce bar"),
@@ -149,10 +146,10 @@ public interface PhotoController {
             }
     )
     @GetMapping("/download/bar/{id}")
-    default ResponseEntity<List<Map<Integer, ByteArrayResource>>> downloadPhotosByBar(
+    default List<ResponseEntity<ByteArrayResource>> downloadPhotosByBar(
             @Parameter(name = "id", description = "ID du bar", required = true, in = ParameterIn.PATH) @PathVariable("id") int id
     ) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return Collections.emptyList();
     }
 
     /**
