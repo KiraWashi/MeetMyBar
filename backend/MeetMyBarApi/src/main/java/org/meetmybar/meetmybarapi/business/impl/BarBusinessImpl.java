@@ -43,4 +43,12 @@ public class BarBusinessImpl implements BarBusiness {
     public Bar createBar(Bar bar) {
         return this.barRepository.createBar(bar);
     }
+
+    @Override
+    public Bar modifyBar(Bar bar) {
+        if (bar == null || bar.getId() == null) {
+            throw new IllegalArgumentException("Bar and bar ID must not be null");
+        }
+        return this.barRepository.modifyBar(bar);
+    }
 }

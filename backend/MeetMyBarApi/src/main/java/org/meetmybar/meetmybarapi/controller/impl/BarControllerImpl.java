@@ -69,8 +69,17 @@ public class BarControllerImpl implements BarController {
 
     @Override
     public ResponseEntity<Bar> modifyBar(Bar bar) {
-        // TODO: Implement update logic
-        return ResponseEntity.ok().build();
+        try {
+            if (bar == null || bar.getId() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            Bar updatedBar = barBusiness.modifyBar(bar);
+            return ResponseEntity.ok(updatedBar);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
