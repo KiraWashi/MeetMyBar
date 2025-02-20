@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,7 +26,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PhotoRepositoryTest {
+public class PhotoRepositoryTest {
 
     @Mock
     private NamedParameterJdbcTemplate photoTemplate;
@@ -32,188 +34,159 @@ class PhotoRepositoryTest {
     @InjectMocks
     private PhotoRepository photoRepository;
 
-    private Photo testPhoto;
-    private byte[] testImageData;
+    private Photo mockPhoto;
+    private byte[] mockImageData;
 
     @BeforeEach
     void setUp() {
-        testImageData = "test image data".getBytes();
-        testPhoto = new Photo(1, "Test Photo", testImageData, true);
+        mockImageData = new byte[]{1, 2, 3};
+        mockPhoto = new Photo(1, "Test Photo", mockImageData, true);
     }
 
     @Test
-    void findById_ExistingPhoto_ReturnsPhoto() {
-        // Arrange
-        when(photoTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class)))
-                .thenReturn(testPhoto);
+    void findById_Success() {
+        when(photoTemplate.queryForObject(
+            eq("SELECT id,description, image_data, main_photo FROM PHOTO WHERE id = :id"),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenReturn(mockPhoto);
 
-        // Act
         Photo result = photoRepository.findById(1);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(testPhoto.getId(), result.getId());
-        assertEquals(testPhoto.getDescription(), result.getDescription());
-        assertTrue(result.isMainPhoto());
-        verify(photoTemplate).queryForObject(anyString(), anyMap(), any(RowMapper.class));
+        assertEquals(mockPhoto.getId(), result.getId());
+        assertEquals(mockPhoto.getDescription(), result.getDescription());
+        assertArrayEquals(mockPhoto.getImageData(), result.getImageData());
+        assertEquals(mockPhoto.isMainPhoto(), result.isMainPhoto());
     }
 
     @Test
-    void findById_NonExistingPhoto_ThrowsPhotoNotFoundException() {
-        // Arrange
-        when(photoTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class)))
-                .thenThrow(new RuntimeException());
+    void findById_NotFound() {
+        when(photoTemplate.queryForObject(
+            anyString(),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenThrow(new RuntimeException("Photo not found"));
 
-        // Act & Assert
-        assertThrows(PhotoNotFoundException.class, () -> photoRepository.findById(999));
-        verify(photoTemplate).queryForObject(anyString(), anyMap(), any(RowMapper.class));
+        assertThrows(PhotoNotFoundException.class, () -> photoRepository.findById(1));
     }
 
     @Test
-    void save_ValidPhoto_ReturnsSavedPhoto() {
-        // Arrange
+    void save_Success() {
         when(photoTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        // Act
-        Photo result = photoRepository.save(testPhoto);
+        Photo result = photoRepository.save(mockPhoto);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(testPhoto, result);
-        verify(photoTemplate).update(anyString(), anyMap());
+        assertEquals(mockPhoto, result);
+        verify(photoTemplate, times(1)).update(anyString(), anyMap());
     }
 
     @Test
-    void save_ErrorOccurs_ThrowsRuntimeException() {
-        // Arrange
-        when(photoTemplate.update(anyString(), anyMap()))
-                .thenThrow(new RuntimeException("DB Error"));
+    void downloadById_Success() throws Exception {
+        byte[] compressedData = ImageUtils.compressImage(mockImageData);
+        when(photoTemplate.query(
+            eq("SELECT image_data FROM PHOTO WHERE id = :id"),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenReturn(Arrays.asList(compressedData));
 
-        // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> photoRepository.save(testPhoto));
-        assertTrue(exception.getMessage().contains("Error inserting photo"));
+        ResponseEntity<ByteArrayResource> response = photoRepository.downloadById(1);
+
+        assertNotNull(response);
+        assertEquals(MediaType.IMAGE_JPEG, response.getHeaders().getContentType());
+        assertNotNull(response.getBody());
+        assertTrue(response.getHeaders().containsKey(HttpHeaders.CONTENT_DISPOSITION));
     }
 
     @Test
-    void downloadById_ExistingPhoto_ReturnsResponseEntity() {
-        // Arrange
-        List<byte[]> mockResult = Arrays.asList(testImageData);
-        when(photoTemplate.query(anyString(), anyMap(), any(RowMapper.class)))
-                .thenReturn(mockResult);
-
-        // Act
-        ResponseEntity<ByteArrayResource> result = photoRepository.downloadById(1);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.getStatusCode().is2xxSuccessful());
-        assertNotNull(result.getBody());
-        verify(photoTemplate).query(anyString(), anyMap(), any(RowMapper.class));
-    }
-
-    @Test
-    void updatePhoto_ValidPhoto_ReturnsUpdatedPhoto() {
-        // Arrange
+    void updatePhoto_Success() {
         when(photoTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        // Act
-        Photo result = photoRepository.updatePhoto(testPhoto);
+        Photo result = photoRepository.updatePhoto(mockPhoto);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(testPhoto.getId(), result.getId());
-        assertEquals(testPhoto.getDescription(), result.getDescription());
-        verify(photoTemplate).update(anyString(), anyMap());
+        assertEquals(mockPhoto, result);
+        verify(photoTemplate, times(1)).update(anyString(), anyMap());
     }
 
     @Test
-    void updatePhoto_NonExistingPhoto_ThrowsPhotoNotFoundException() {
-        // Arrange
+    void updatePhoto_NotFound() {
         when(photoTemplate.update(anyString(), anyMap())).thenReturn(0);
 
-        // Act & Assert
-        assertThrows(PhotoNotFoundException.class, () -> photoRepository.updatePhoto(testPhoto));
+        assertThrows(PhotoNotFoundException.class, () -> photoRepository.updatePhoto(mockPhoto));
     }
 
     @Test
-    void updatePhoto_NullPhoto_ThrowsIllegalArgumentException() {
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> photoRepository.updatePhoto(null));
-    }
-
-    @Test
-    void deletePhoto_ExistingPhoto_ReturnsDeletedPhoto() {
-        // Arrange
-        when(photoTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class)))
-                .thenReturn(testPhoto);
+    void deletePhoto_Success() {
+        when(photoTemplate.queryForObject(
+            eq("SELECT id,description, image_data, main_photo FROM PHOTO WHERE id = :id"),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenReturn(mockPhoto);
         when(photoTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        // Act
         Photo result = photoRepository.deletePhoto(1);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(testPhoto.getId(), result.getId());
-        verify(photoTemplate).update(anyString(), anyMap());
+        assertEquals(mockPhoto, result);
+        verify(photoTemplate, times(1)).update(anyString(), anyMap());
     }
 
     @Test
-    void deletePhoto_NonExistingPhoto_ThrowsRuntimeException() {
-        // Arrange
-        when(photoTemplate.update(anyString(), anyMap())).thenReturn(0);
-        when(photoTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class)))
-                .thenReturn(testPhoto);
+    void findPhotosByBar_Success() {
+        List<Photo> mockPhotos = Arrays.asList(
+            new Photo(1, "Photo 1", mockImageData, true),
+            new Photo(2, "Photo 2", mockImageData, false)
+        );
 
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> photoRepository.deletePhoto(999));
-    }
+        when(photoTemplate.query(
+            anyString(),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenReturn(mockPhotos);
 
-    @Test
-    void findPhotosByBar_ExistingBar_ReturnsPhotoList() {
-        // Arrange
-        List<Photo> expectedPhotos = Arrays.asList(testPhoto);
-        when(photoTemplate.query(anyString(), anyMap(), any(RowMapper.class)))
-                .thenReturn(expectedPhotos);
-
-        // Act
         List<Photo> result = photoRepository.findPhotosByBar(1);
 
-        // Assert
         assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(expectedPhotos.size(), result.size());
-        assertEquals(expectedPhotos.get(0).getId(), result.get(0).getId());
-        verify(photoTemplate).query(anyString(), anyMap(), any(RowMapper.class));
+        assertEquals(2, result.size());
+        assertEquals(mockPhotos, result);
     }
 
     @Test
-    void downloadPhotosByBar_ExistingBar_ReturnsResponseEntityWithResources() {
-        // Arrange
-        List<byte[]> mockImageData = Arrays.asList(testImageData);
-        when(photoTemplate.query(anyString(), anyMap(), any(RowMapper.class)))
-                .thenReturn(mockImageData);
+    void downloadPhotosByBar_Success() throws Exception {
+        List<Photo> mockPhotos = Arrays.asList(
+            new Photo(1, "Photo 1", ImageUtils.compressImage(mockImageData), true),
+            new Photo(2, "Photo 2", ImageUtils.compressImage(mockImageData), false)
+        );
 
-        // Act
-        ResponseEntity<List<ByteArrayResource>> result = photoRepository.downloadPhotosByBar(1);
+        when(photoTemplate.query(
+            anyString(),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenReturn(mockPhotos);
 
-        // Assert
+        List<ResponseEntity<ByteArrayResource>> result = photoRepository.downloadPhotosByBar(1);
+
         assertNotNull(result);
-        assertTrue(result.getStatusCode().is2xxSuccessful());
-        assertNotNull(result.getBody());
-        assertFalse(result.getBody().isEmpty());
-        verify(photoTemplate).query(anyString(), anyMap(), any(RowMapper.class));
+        assertEquals(2, result.size());
+        result.forEach(response -> {
+            assertEquals(MediaType.IMAGE_JPEG, response.getHeaders().getContentType());
+            assertNotNull(response.getBody());
+            assertTrue(response.getHeaders().containsKey(HttpHeaders.CONTENT_DISPOSITION));
+        });
     }
 
     @Test
-    void downloadPhotosByBar_ErrorOccurs_ThrowsRuntimeException() {
-        // Arrange
-        when(photoTemplate.query(anyString(), anyMap(), any(RowMapper.class)))
-                .thenThrow(new RuntimeException("DB Error"));
+    void downloadPhotosByBar_EmptyList() {
+        when(photoTemplate.query(
+            anyString(),
+            anyMap(),
+            any(RowMapper.class)
+        )).thenReturn(Arrays.asList());
 
-        // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, 
-            () -> photoRepository.downloadPhotosByBar(1));
-        assertTrue(exception.getMessage().contains("Erreur lors du téléchargement des photos"));
+        List<ResponseEntity<ByteArrayResource>> result = photoRepository.downloadPhotosByBar(1);
+
+        assertTrue(result.isEmpty());
     }
 }

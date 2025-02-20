@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -223,29 +225,29 @@ public class PhotoBusinessTest {
     void downloadPhotosByBar_Success() {
         when(barRepository.getBarById(1)).thenReturn(mockBar);
         
-        Map<String, Object> photo1 = new HashMap<>();
-        photo1.put("id", 1);
-        photo1.put("description", "Photo 1");
-        photo1.put("image_data", "base64data1");
-        photo1.put("main_photo", true);
-
-        Map<String, Object> photo2 = new HashMap<>();
-        photo2.put("id", 2); 
-        photo2.put("description", "Photo 2");
-        photo2.put("image_data", "base64data2");
-        photo2.put("main_photo", false);
-
-        List<Map<String, Object>> mockPhotos = Arrays.asList(photo1, photo2);
-        ResponseEntity<List<Map<String, Object>>> mockResponse = ResponseEntity.ok(mockPhotos);
+        ByteArrayResource resource1 = new ByteArrayResource(new byte[]{1, 2, 3});
+        ByteArrayResource resource2 = new ByteArrayResource(new byte[]{4, 5, 6});
         
-        when(photoRepository.downloadPhotosByBar(1)).thenReturn(mockResponse);
+        List<ResponseEntity<ByteArrayResource>> mockResponses = Arrays.asList(
+            ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+                .contentLength(3)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"photo_1.jpg\"")
+                .body(resource1),
+            ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+                .contentLength(3)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"photo_2.jpg\"")
+                .body(resource2)
+        );
+        
+        when(photoRepository.downloadPhotosByBar(1)).thenReturn(mockResponses);
 
-        ResponseEntity<List<Map<String, Object>>> result = photoBusiness.downloadPhotosByBar(1);
+        List<ResponseEntity<ByteArrayResource>> result = photoBusiness.downloadPhotosByBar(1);
 
         assertNotNull(result);
-        assertEquals(200, result.getStatusCode().value());
-        assertNotNull(result.getBody());
-        assertEquals(2, result.getBody().size());
+        assertEquals(2, result.size());
+        assertEquals(MediaType.IMAGE_JPEG, result.get(0).getHeaders().getContentType());
+        assertNotNull(result.get(0).getBody());
+        assertNotNull(result.get(1).getBody());
         verify(barRepository, times(1)).getBarById(1);
         verify(photoRepository, times(1)).downloadPhotosByBar(1);
     }
