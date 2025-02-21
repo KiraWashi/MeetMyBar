@@ -54,4 +54,13 @@ public interface BarBusiness {
      * @return Bar
      */
     public Bar createBar(Bar bar);
+
+    /**
+     * modifyBar
+     * Modifie un bar existant en base de données
+     *
+     * @param bar Le bar avec les modifications à appliquer
+     * @return Bar Le bar modifié
+     */
+    public Bar modifyBar(Bar bar);
 }

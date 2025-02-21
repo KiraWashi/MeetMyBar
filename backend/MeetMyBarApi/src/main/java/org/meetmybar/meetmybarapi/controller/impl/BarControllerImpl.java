@@ -3,6 +3,8 @@ package org.meetmybar.meetmybarapi.controller.impl;
 import org.meetmybar.meetmybarapi.business.BarBusiness;
 import org.meetmybar.meetmybarapi.business.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.controller.api.BarController;
+
+import org.meetmybar.meetmybarapi.exception.BarNotFoundException;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class BarControllerImpl implements BarController {
         try {
             Bar bar = this.barBusiness.getBarByName(barName);
             return ResponseEntity.ok(bar);
+        } catch (BarNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -52,6 +56,8 @@ public class BarControllerImpl implements BarController {
         try {
             Bar bar = this.barBusiness.getBarByAddress(barAddress);
             return ResponseEntity.ok(bar);
+        } catch (BarNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -62,15 +68,28 @@ public class BarControllerImpl implements BarController {
         try {
             Bar bar = this.barBusiness.getBarById(barId);
             return ResponseEntity.ok(bar);
+        } catch (BarNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @Override
-    public ResponseEntity<Bar> modifyBar(Bar bar) {
-        // TODO: Implement update logic
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Bar> updateBar(Bar bar) {
+        try {
+            if (bar == null || bar.getId() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            Bar updatedBar = barBusiness.modifyBar(bar);
+            return ResponseEntity.ok(updatedBar);
+        } catch (BarNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
