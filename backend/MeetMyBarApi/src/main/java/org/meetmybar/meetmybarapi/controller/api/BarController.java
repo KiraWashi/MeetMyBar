@@ -271,22 +271,22 @@ public interface BarController {
 
 
     /**
-     * PATCH /bar : Your PATCH endpoint
+     * PATCH /bar : Mettre à jour un bar
      *
-     * @param bar  (optional)
-     * @return OK (status code 200)
-     *         or Bad Request (status code 400)
-     *         or Unauthorized (status code 401)
-     *         or Forbidden (status code 403)
-     *         or Not Found (status code 404)
-     *         or Internal Server Error (status code 500)
+     * @param bar Les informations du bar à mettre à jour (required)
+     * @return Bar mis à jour avec succès (status code 200)
+     *         ou Bad Request (status code 400)
+     *         ou Unauthorized (status code 401)
+     *         ou Forbidden (status code 403)
+     *         ou Not Found (status code 404)
+     *         ou Internal Server Error (status code 500)
      */
     @Operation(
-        operationId = "modifyBar",
-        summary = "Your PATCH endpoint",
-        tags = {  },
+        operationId = "updateBar",
+        summary = "Mettre à jour un bar",
+        tags = { },
         responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
+            @ApiResponse(responseCode = "200", description = "Bar mis à jour avec succès", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Bar.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
@@ -302,22 +302,21 @@ public interface BarController {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<Bar> modifyBar(
-        @Parameter(name = "Bar", description = "") @Valid @RequestBody(required = false) Bar bar
+    default ResponseEntity<Bar> updateBar(
+        @Parameter(name = "Bar", description = "Les informations du bar à mettre à jour") 
+        @Valid @RequestBody(required = true) Bar bar
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"beers\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"capacity\" : 6 }";
+                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"city\" : \"city\", \"drinks\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"postal_code\" : \"postal_code\", \"capacity\" : 6 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
     }
-
 
     /**
      * POST /bar : Your POST endpoint

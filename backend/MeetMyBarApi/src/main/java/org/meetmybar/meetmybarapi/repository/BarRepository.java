@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public class BarRepository {
 
-    private static final String SQL_GET_BAR =
+    static final String SQL_GET_BAR =
             "SELECT id, name, capacity, address, city, postal_code FROM BAR";
 
     private static final String SQL_GET_BAR_BY_NAME =
@@ -247,7 +247,7 @@ public class BarRepository {
     }
 
     public Bar modifyBar(Bar bar) {
-        try {
+        try {    
             // Vérifier que le bar existe
             getBarById(bar.getId());
 
@@ -259,9 +259,9 @@ public class BarRepository {
             params.put("address", bar.getAddress());
             params.put("city", bar.getCity());
             params.put("postal_code", bar.getPostalCode());
-
             // Exécuter la mise à jour
             int rowsAffected = barTemplate.update(SQL_UPDATE_BAR, params);
+            
             if (rowsAffected == 0) {
                 throw new RuntimeException("No bar found with id: " + bar.getId());
             }
@@ -269,6 +269,8 @@ public class BarRepository {
             // Retourner le bar mis à jour
             return getBarById(bar.getId());
         } catch (Exception e) {
+            System.err.println("Erreur lors de la modification: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException("Error updating bar: " + e.getMessage(), e);
         }
     }
