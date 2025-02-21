@@ -1,9 +1,11 @@
 package org.meetmybar.meetmybarapi.controller.impl;
 
 import org.meetmybar.meetmybarapi.business.BarBusiness;
+import org.meetmybar.meetmybarapi.business.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.controller.api.BarController;
-import org.meetmybar.meetmybarapi.exception.BarNotFoundException;
 
+import org.meetmybar.meetmybarapi.exception.BarNotFoundException;
+import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,12 @@ import java.util.List;
 public class BarControllerImpl implements BarController {
 
     private final BarBusiness barBusiness;
+    private final PhotoBusiness photoBusiness;
 
     @Autowired
-    public BarControllerImpl(BarBusiness barBusiness) {
+    public BarControllerImpl(BarBusiness barBusiness, PhotoBusiness photoBusiness) {
         this.barBusiness = barBusiness;
+        this.photoBusiness = photoBusiness;
     }
 
 
@@ -99,4 +103,18 @@ public class BarControllerImpl implements BarController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @Override
+    public ResponseEntity<List<Photo>> getPhotoByBar(Integer barId) {
+        try {
+            if(this.getBarById(barId).getBody() == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            List<Photo> photos = this.photoBusiness.getPhotoByIdBar(barId);
+            return ResponseEntity.ok(photos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
 }
