@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public class BarRepository {
 
-    private static final String SQL_GET_BAR =
+    static final String SQL_GET_BAR =
             "SELECT id, name, capacity, address, city, postal_code FROM BAR";
 
     private static final String SQL_GET_BAR_BY_NAME =
@@ -43,6 +43,10 @@ public class BarRepository {
 
     private static final String SQL_INSERT_BAR =
             "INSERT INTO BAR (name, capacity, address, city, postal_code) VALUES (:name, :capacity, :address, :city, :postal_code)";
+
+    private static final String SQL_UPDATE_BAR =
+            "UPDATE BAR SET name = :name, capacity = :capacity, address = :address, " +
+            "city = :city, postal_code = :postal_code WHERE id = :id";
 
     @Inject
     private NamedParameterJdbcTemplate barTemplate;
@@ -239,6 +243,35 @@ public class BarRepository {
             // Log de l'erreur sans bloquer la récupération du bar
             System.err.println("Error fetching schedule days for bar " + barId + ": " + e.getMessage());
             return new ArrayList<>();
+        }
+    }
+
+    public Bar modifyBar(Bar bar) {
+        try {    
+            // Vérifier que le bar existe
+            getBarById(bar.getId());
+
+            // Préparer les paramètres
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", bar.getId());
+            params.put("name", bar.getName());
+            params.put("capacity", bar.getCapacity());
+            params.put("address", bar.getAddress());
+            params.put("city", bar.getCity());
+            params.put("postal_code", bar.getPostalCode());
+            // Exécuter la mise à jour
+            int rowsAffected = barTemplate.update(SQL_UPDATE_BAR, params);
+            
+            if (rowsAffected == 0) {
+                throw new RuntimeException("No bar found with id: " + bar.getId());
+            }
+
+            // Retourner le bar mis à jour
+            return getBarById(bar.getId());
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la modification: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Error updating bar: " + e.getMessage(), e);
         }
     }
 }
