@@ -103,4 +103,80 @@ public class DrinkControllerImpl implements DrinkController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @Override
+    public ResponseEntity<Drink> addDrinkBar(int idBar, int idDrink, double volume, double price) {
+        try {
+            // Vérification de l'existence de la boisson
+            Drink existingDrink = drinkBusiness.getDrinkById(idDrink);
+            if (existingDrink == null) {
+                logger.warn("Boisson non trouvée avec l'ID: {}", idDrink);
+                return ResponseEntity.notFound().build();
+            }
+
+            Drink associatedDrink = drinkBusiness.addDrinkToBar(idBar, idDrink, volume, price);
+            return ResponseEntity.ok(associatedDrink);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Données invalides: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            // Vérifier si l'erreur est due à une contrainte de clé étrangère (bar non trouvé)
+            if (e.getMessage() != null && e.getMessage().contains("foreign key constraint fails")) {
+                logger.warn("Bar non trouvé avec l'ID: {}", idBar);
+                return ResponseEntity.notFound().build();
+            }
+            logger.error("Erreur lors de l'association boisson-bar", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<Drink> updateDrinkBar(int idBar, int idDrink, double volume, double newPrice) {
+        try {
+            // Vérification de l'existence de la boisson
+            Drink existingDrink = drinkBusiness.getDrinkById(idDrink);
+            if (existingDrink == null) {
+                logger.warn("Boisson non trouvée avec l'ID: {}", idDrink);
+                return ResponseEntity.notFound().build();
+            }
+
+            Drink updatedDrink = drinkBusiness.updateDrinkBar(idBar, idDrink, volume, newPrice);
+            return ResponseEntity.ok(updatedDrink);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Données invalides: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Association bar-boisson non trouvée")) {
+                logger.warn("Association bar-boisson non trouvée: {}", e.getMessage());
+                return ResponseEntity.notFound().build();
+            }
+            logger.error("Erreur lors de la mise à jour du prix", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<Drink> deleteDrinkBar(int idBar, int idDrink, double volume) {
+        try {
+            // Vérification de l'existence de la boisson
+            Drink existingDrink = drinkBusiness.getDrinkById(idDrink);
+            if (existingDrink == null) {
+                logger.warn("Boisson non trouvée avec l'ID: {}", idDrink);
+                return ResponseEntity.notFound().build();
+            }
+
+            Drink deletedDrink = drinkBusiness.deleteDrinkBar(idBar, idDrink, volume);
+            return ResponseEntity.ok(deletedDrink);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Données invalides: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Association bar-boisson non trouvée")) {
+                logger.warn("Association bar-boisson non trouvée: {}", e.getMessage());
+                return ResponseEntity.notFound().build();
+            }
+            logger.error("Erreur lors de la suppression de l'association", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

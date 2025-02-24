@@ -230,6 +230,236 @@ public class DrinkControllerTest {
         Assertions.assertEquals(400, response.getStatusCode());
     }
 
+    @Test
+    void testAddDrinkToBar_Success() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.addDrinkToBar(1, 1, 0.33, 5.0)).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .queryParam("price", 5.0)
+            .post("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).addDrinkToBar(1, 1, 0.33, 5.0);
+    }
+
+    @Test
+    void testAddDrinkToBar_DrinkNotFound() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(999)).thenReturn(null);
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 999)
+            .queryParam("volume", 0.33)
+            .queryParam("price", 5.0)
+            .post("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testAddDrinkToBar_InvalidData() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.addDrinkToBar(1, 1, -0.33, 5.0))
+            .thenThrow(new IllegalArgumentException("Le volume doit être supérieur à 0"));
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", -0.33)
+            .queryParam("price", 5.0)
+            .post("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    @Test
+    void testAddDrinkToBar_BarNotFound() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.addDrinkToBar(999, 1, 0.33, 5.0))
+            .thenThrow(new RuntimeException("foreign key constraint fails"));
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 999)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .queryParam("price", 5.0)
+            .post("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testUpdateDrinkBar_Success() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.updateDrinkBar(1, 1, 0.33, 6.0)).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .queryParam("newPrice", 6.0)
+            .patch("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).updateDrinkBar(1, 1, 0.33, 6.0);
+    }
+
+    @Test
+    void testUpdateDrinkBar_AssociationNotFound() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.updateDrinkBar(1, 1, 0.33, 6.0))
+            .thenThrow(new RuntimeException("Association bar-boisson non trouvée"));
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .queryParam("newPrice", 6.0)
+            .patch("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteDrinkBar_Success() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.deleteDrinkBar(1, 1, 0.33)).thenReturn(testDrink);
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .delete("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(200, response.getStatusCode());
+        Mockito.verify(drinkBusinessMock).deleteDrinkBar(1, 1, 0.33);
+    }
+
+    @Test
+    void testDeleteDrinkBar_AssociationNotFound() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.deleteDrinkBar(1, 1, 0.33))
+            .thenThrow(new RuntimeException("Association bar-boisson non trouvée"));
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .delete("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testUpdateDrinkBar_DrinkNotFound() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(999)).thenReturn(null);
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 999)
+            .queryParam("volume", 0.33)
+            .queryParam("newPrice", 6.0)
+            .patch("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testUpdateDrinkBar_InvalidPrice() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.updateDrinkBar(1, 1, 0.33, -1.0))
+            .thenThrow(new IllegalArgumentException("Le prix ne peut pas être négatif"));
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", 0.33)
+            .queryParam("newPrice", -1.0)
+            .patch("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteDrinkBar_DrinkNotFound() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(999)).thenReturn(null);
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 999)
+            .queryParam("volume", 0.33)
+            .delete("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteDrinkBar_InvalidVolume() {
+        // Arrange
+        when(drinkBusinessMock.getDrinkById(1)).thenReturn(testDrink);
+        when(drinkBusinessMock.deleteDrinkBar(1, 1, -0.33))
+            .thenThrow(new IllegalArgumentException("Le volume doit être supérieur à 0"));
+
+        // Act
+        Response response = RestAssured.given()
+            .contentType("application/json")
+            .queryParam("idBar", 1)
+            .queryParam("idDrink", 1)
+            .queryParam("volume", -0.33)
+            .delete("/drink/bar");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
     private Drink createTestDrink() {
         Drink drink = new Drink();
         drink.setBrand("Lancelot");

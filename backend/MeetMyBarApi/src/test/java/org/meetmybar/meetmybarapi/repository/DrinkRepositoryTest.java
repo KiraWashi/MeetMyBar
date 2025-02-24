@@ -217,6 +217,50 @@ public class DrinkRepositoryTest {
         assertThrows(RuntimeException.class, () -> drinkRepository.deleteDrink(999));
     }
 
+    @Test
+    void addDrinkToBar_Success() {
+        // Arrange
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(1);
+
+        // Act
+        drinkRepository.addDrinkToBar(1, 1, 0.33, 5.0);
+
+        // Assert
+        ArgumentCaptor<Map<String, Object>> paramsCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(jdbcTemplate).update(eq("INSERT INTO LINK_BAR_DRINK (id_bar, id_drink, volume, price) VALUES (:idBar, :idDrink, :volume, :price)"), paramsCaptor.capture());
+        
+        Map<String, Object> params = paramsCaptor.getValue();
+        assertEquals(1, params.get("idBar"));
+        assertEquals(1, params.get("idDrink"));
+        assertEquals(0.33, params.get("volume"));
+        assertEquals(5.0, params.get("price"));
+    }
+
+    @Test
+    void addDrinkToBar_KO_No_Rows_Affected() {
+        // Arrange
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(0);
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            drinkRepository.addDrinkToBar(1, 1, 0.33, 5.0)
+        );
+        assertEquals("Erreur lors de l'association boisson-bar: Échec de l'association boisson-bar", exception.getMessage());
+    }
+
+    @Test
+    void addDrinkToBar_KO_Database_Error() {
+        // Arrange
+        when(jdbcTemplate.update(anyString(), any(Map.class)))
+            .thenThrow(new DataAccessException("Database error") {});
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            drinkRepository.addDrinkToBar(1, 1, 0.33, 5.0)
+        );
+        assertTrue(exception.getMessage().contains("Erreur lors de l'association boisson-bar"));
+    }
+
     private Drink createTestDrink() {
         Drink drink = new Drink();
         drink.setBrand("Lancelot");

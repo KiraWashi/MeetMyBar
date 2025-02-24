@@ -105,10 +105,71 @@ public class DrinkBusinessImpl implements DrinkBusiness {
         return drinkRepository.updateDrink(drink);
     }
 
+    @Override
+    public Drink updateDrinkBar(int idBar, int idDrink, double volume, double newPrice) {
+        // Validation des données
+        if (newPrice < 0) {
+            throw new IllegalArgumentException("Le prix ne peut pas être négatif");
+        }
+        if (volume <= 0) {
+            throw new IllegalArgumentException("Le volume doit être supérieur à 0");
+        }
 
+        // Vérifie si la boisson existe
+        Drink drink = getDrinkById(idDrink);
+        if (drink == null) {
+            throw new IllegalArgumentException("Boisson non trouvée avec l'ID: " + idDrink);
+        }
+
+        // Met à jour le prix dans la base de données
+        drinkRepository.updateDrinkBar(idBar, idDrink, volume, newPrice);
+        
+        return drink;
+    }
 
     @Override
     public Drink deleteDrink(int drinkId) {
         return drinkRepository.deleteDrink(drinkId);
+    }
+
+    @Override
+    public Drink addDrinkToBar(int idBar, int idDrink, double volume, double price) {
+        // Validation des données
+        if (volume <= 0) {
+            throw new IllegalArgumentException("Le volume doit être supérieur à 0");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("Le prix ne peut pas être négatif");
+        }
+
+        // Vérifie si la boisson existe
+        Drink drink = getDrinkById(idDrink);
+        if (drink == null) {
+            throw new IllegalArgumentException("Boisson non trouvée avec l'ID: " + idDrink);
+        }
+
+        // Ajoute l'association
+        drinkRepository.addDrinkToBar(idBar, idDrink, volume, price);
+        
+        return drink;
+    }
+
+    @Override
+    public Drink deleteDrinkBar(int idBar, int idDrink, double volume) {
+        // Validation des données
+        if (volume <= 0) {
+            throw new IllegalArgumentException("Le volume doit être supérieur à 0");
+        }
+
+        // Vérifie si la boisson existe
+        Drink drink = getDrinkById(idDrink);
+        if (drink == null) {
+            throw new IllegalArgumentException("Boisson non trouvée avec l'ID: " + idDrink);
+        }
+
+        // Supprime l'association
+        drinkRepository.deleteDrinkBar(idBar, idDrink, volume);
+        
+        return drink;
     }
 }
