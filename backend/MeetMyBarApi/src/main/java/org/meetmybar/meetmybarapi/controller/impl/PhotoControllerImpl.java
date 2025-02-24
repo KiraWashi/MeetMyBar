@@ -70,26 +70,16 @@ public class PhotoControllerImpl implements PhotoController {
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "main_photo", required = false) Boolean mainPhoto) throws IOException {
         
-        log.info("Updating photo - ID: {}, File present: {}, Description: {}, MainPhoto: {}", 
-                id, 
-                (file != null && !file.isEmpty()), 
-                description, 
-                mainPhoto);
-        
         Photo photoToUpdate = new Photo();
         photoToUpdate.setId(id);
         photoToUpdate.setDescription(description);
         photoToUpdate.setMainPhoto(mainPhoto != null ? mainPhoto : false);
         
         if (file != null && !file.isEmpty()) {
-            log.info("New image file detected, size: {} bytes", file.getSize());
             photoToUpdate.setImageData(file.getBytes());
-        } else {
-            log.info("No new image file provided");
         }
         
         Photo updatedPhoto = photoBusiness.updatePhoto(photoToUpdate);
-        log.info("Photo updated successfully - ID: {}", id);
         
         return ResponseEntity.ok(updatedPhoto);
     }

@@ -317,4 +317,83 @@ public interface DrinkController {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
+
+    /**
+     * POST /drink/bar : Associer une boisson à un bar
+     *
+     * @param idBar ID du bar (required)
+     * @param idDrink ID de la boisson (required)
+     * @param volume Volume de la boisson (required)
+     * @param price Prix de la boisson (required)
+     * @return Association créée avec succès (status code 200)
+     */
+    @Operation(
+            operationId = "addDrinkBar",
+            summary = "Associer une boisson à un bar",
+            tags = { "Drinks" },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Association créée avec succès"),
+                    @ApiResponse(responseCode = "404", description = "Bar ou boisson non trouvé"),
+                    @ApiResponse(responseCode = "400", description = "Requête invalide")
+            }
+    )
+    @PostMapping("/drink/bar")
+    ResponseEntity<Drink> addDrinkBar(
+            @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+            @Parameter(name = "idDrink", description = "ID de la boisson", required = true) @RequestParam("idDrink") int idDrink,
+            @Parameter(name = "volume", description = "Volume de la boisson", required = true) @RequestParam("volume") double volume,
+            @Parameter(name = "price", description = "Prix de la boisson", required = true) @RequestParam("price") double price
+    );
+
+    /**
+     * PATCH /drink/bar : Modifier le prix d'une boisson dans un bar
+     *
+     * @param idBar ID du bar (required)
+     * @param idDrink ID de la boisson (required)
+     * @param volume Volume de la boisson (required)
+     * @param newPrice Nouveau prix de la boisson (required)
+     * @return Mise à jour effectuée avec succès (status code 200)
+     */
+    @Operation(
+            operationId = "updateDrinkBar",
+            summary = "Modifier le prix d'une boisson dans un bar",
+            tags = { "Drinks" },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Prix mis à jour avec succès"),
+                    @ApiResponse(responseCode = "404", description = "Association bar-boisson non trouvée"),
+                    @ApiResponse(responseCode = "400", description = "Requête invalide")
+            }
+    )
+    @PatchMapping("/drink/bar")
+    ResponseEntity<Drink> updateDrinkBar(
+            @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+            @Parameter(name = "idDrink", description = "ID de la boisson", required = true) @RequestParam("idDrink") int idDrink,
+            @Parameter(name = "volume", description = "Volume de la boisson", required = true) @RequestParam("volume") double volume,
+            @Parameter(name = "newPrice", description = "Nouveau prix de la boisson", required = true) @RequestParam("newPrice") double newPrice
+    );
+
+    /**
+     * DELETE /drink/bar : Supprimer une boisson d'un bar
+     *
+     * @param idBar ID du bar (required)
+     * @param idDrink ID de la boisson (required)
+     * @param volume Volume de la boisson (required)
+     * @return Suppression effectuée avec succès (status code 200)
+     */
+    @Operation(
+            operationId = "deleteDrinkBar",
+            summary = "Supprimer une boisson d'un bar",
+            tags = { "Drinks" },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Boisson supprimée avec succès"),
+                    @ApiResponse(responseCode = "404", description = "Association bar-boisson non trouvée"),
+                    @ApiResponse(responseCode = "400", description = "Requête invalide")
+            }
+    )
+    @DeleteMapping("/drink/bar")
+    ResponseEntity<Drink> deleteDrinkBar(
+            @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+            @Parameter(name = "idDrink", description = "ID de la boisson", required = true) @RequestParam("idDrink") int idDrink,
+            @Parameter(name = "volume", description = "Volume de la boisson", required = true) @RequestParam("volume") double volume
+    );
 }

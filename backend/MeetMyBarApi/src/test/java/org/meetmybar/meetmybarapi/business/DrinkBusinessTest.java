@@ -197,5 +197,138 @@ public class DrinkBusinessTest {
         verify(drinkRepository).deleteDrink(1);
     }
 
+    @Test
+    void addDrinkToBar_Success() {
+        // Arrange
+        when(drinkRepository.getDrinkById(1)).thenReturn(testDrink);
+        doNothing().when(drinkRepository).addDrinkToBar(1, 1, 0.33, 5.0);
+
+        // Act
+        Drink result = drinkBusiness.addDrinkToBar(1, 1, 0.33, 5.0);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(testDrink.getId(), result.getId());
+        verify(drinkRepository).addDrinkToBar(1, 1, 0.33, 5.0);
+    }
+
+    @Test
+    void addDrinkToBar_KO_Volume_Invalid() {
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.addDrinkToBar(1, 1, 0.0, 5.0)
+        );
+        assertEquals("Le volume doit être supérieur à 0", exception.getMessage());
+        verify(drinkRepository, never()).addDrinkToBar(anyInt(), anyInt(), anyDouble(), anyDouble());
+    }
+
+    @Test
+    void addDrinkToBar_KO_Price_Negative() {
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.addDrinkToBar(1, 1, 0.33, -1.0)
+        );
+        assertEquals("Le prix ne peut pas être négatif", exception.getMessage());
+        verify(drinkRepository, never()).addDrinkToBar(anyInt(), anyInt(), anyDouble(), anyDouble());
+    }
+
+    @Test
+    void addDrinkToBar_KO_Drink_Not_Found() {
+        // Arrange
+        when(drinkRepository.getDrinkById(999)).thenReturn(null);
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.addDrinkToBar(1, 999, 0.33, 5.0)
+        );
+        assertEquals("Boisson non trouvée avec l'ID: 999", exception.getMessage());
+        verify(drinkRepository, never()).addDrinkToBar(anyInt(), anyInt(), anyDouble(), anyDouble());
+    }
+
+    @Test
+    void addDrinkToBar_KO_Database_Error() {
+        // Arrange
+        when(drinkRepository.getDrinkById(1)).thenReturn(testDrink);
+        doThrow(new RuntimeException("Database error")).when(drinkRepository)
+            .addDrinkToBar(anyInt(), anyInt(), anyDouble(), anyDouble());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () ->
+            drinkBusiness.addDrinkToBar(1, 1, 0.33, 5.0)
+        );
+    }
+
+    @Test
+    void updateDrinkBar_Success() {
+        // Arrange
+        when(drinkRepository.getDrinkById(1)).thenReturn(testDrink);
+        doNothing().when(drinkRepository).updateDrinkBar(1, 1, 0.33, 6.0);
+
+        // Act
+        Drink result = drinkBusiness.updateDrinkBar(1, 1, 0.33, 6.0);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(testDrink.getId(), result.getId());
+        verify(drinkRepository).updateDrinkBar(1, 1, 0.33, 6.0);
+    }
+
+    @Test
+    void updateDrinkBar_KO_Volume_Invalid() {
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.updateDrinkBar(1, 1, 0.0, 6.0)
+        );
+        assertEquals("Le volume doit être supérieur à 0", exception.getMessage());
+        verify(drinkRepository, never()).updateDrinkBar(anyInt(), anyInt(), anyDouble(), anyDouble());
+    }
+
+    @Test
+    void updateDrinkBar_KO_Price_Negative() {
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.updateDrinkBar(1, 1, 0.33, -1.0)
+        );
+        assertEquals("Le prix ne peut pas être négatif", exception.getMessage());
+        verify(drinkRepository, never()).updateDrinkBar(anyInt(), anyInt(), anyDouble(), anyDouble());
+    }
+
+    @Test
+    void deleteDrinkBar_Success() {
+        // Arrange
+        when(drinkRepository.getDrinkById(1)).thenReturn(testDrink);
+        doNothing().when(drinkRepository).deleteDrinkBar(1, 1, 0.33);
+
+        // Act
+        Drink result = drinkBusiness.deleteDrinkBar(1, 1, 0.33);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(testDrink.getId(), result.getId());
+        verify(drinkRepository).deleteDrinkBar(1, 1, 0.33);
+    }
+
+    @Test
+    void deleteDrinkBar_KO_Volume_Invalid() {
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.deleteDrinkBar(1, 1, -0.33)
+        );
+        assertEquals("Le volume doit être supérieur à 0", exception.getMessage());
+        verify(drinkRepository, never()).deleteDrinkBar(anyInt(), anyInt(), anyDouble());
+    }
+
+    @Test
+    void deleteDrinkBar_KO_Drink_Not_Found() {
+        // Arrange
+        when(drinkRepository.getDrinkById(999)).thenReturn(null);
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            drinkBusiness.deleteDrinkBar(1, 999, 0.33)
+        );
+        assertEquals("Boisson non trouvée avec l'ID: 999", exception.getMessage());
+        verify(drinkRepository, never()).deleteDrinkBar(anyInt(), anyInt(), anyDouble());
+    }
 
 }
