@@ -72,4 +72,20 @@ public class BarBusinessImpl implements BarBusiness {
         
         return this.barRepository.modifyBar(bar);
     }
+
+    @Override
+    public Bar deleteBar(Integer barId) {
+        if (barId == null) {
+            throw new IllegalArgumentException("L'ID du bar ne peut pas être null");
+        }
+        
+        // Récupérer le bar avant suppression pour le retourner
+        Bar bar = this.barRepository.getBarById(barId);
+        if (bar == null) {
+            throw new BarNotFoundException(barId.toString());
+        }
+        
+        this.barRepository.deleteBar(barId);
+        return bar;
+    }
 }

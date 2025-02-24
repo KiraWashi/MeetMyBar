@@ -54,7 +54,12 @@ public interface BarController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = org.meetmybar.api.model.Bar.class))
-                    })
+                    }),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
     @RequestMapping(
@@ -62,8 +67,8 @@ public interface BarController {
             value = "/bar/{barId}",
             produces = { "application/json" }
     )
-    default ResponseEntity<org.meetmybar.api.model.Bar> deleteBarBarId(
-            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") Object barId
+    default ResponseEntity<Bar> deleteBarBarId(
+            @Parameter(name = "barId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("barId") Integer barId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
