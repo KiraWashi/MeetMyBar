@@ -34,7 +34,8 @@ dependencies {
 	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 	implementation("org.springframework.boot:spring-boot-starter-cache:3.3.5")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis:3.3.5")
-	compileOnly("org.projectlombok:lombok:1.18.34")
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.2.0")
 	implementation("io.github.resilience4j:resilience4j-feign:2.2.0")
 
@@ -42,6 +43,8 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("io.rest-assured:rest-assured:5.5.0")
 	testImplementation("io.rest-assured:json-path:5.5.0")
+	testCompileOnly("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 val spec = File(projectDir, "src/main/resources/swagger/meetMyBarSwagger.yaml")
