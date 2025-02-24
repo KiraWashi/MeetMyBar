@@ -63,4 +63,13 @@ public interface BarBusiness {
      * @return Bar Le bar modifié
      */
     public Bar modifyBar(Bar bar);
+
+    /**
+     * deleteBar
+     * Supprime un bar de la base de données
+     *
+     * @param barId L'identifiant du bar à supprimer
+     * @return Bar Le bar supprimé
+     */
+    public Bar deleteBar(Integer barId);
 }

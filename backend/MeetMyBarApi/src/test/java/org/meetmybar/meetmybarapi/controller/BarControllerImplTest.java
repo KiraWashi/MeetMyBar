@@ -133,4 +133,130 @@ class BarControllerImplTest {
         
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
+
+    /**
+     * Teste la récupération d'un bar par son adresse avec succès
+     */
+    @Test
+    void getBarByAddress_Success() {
+        when(barBusiness.getBarByAddress("123 Test St")).thenReturn(testBar);
+        
+        ResponseEntity<Bar> response = barController.getBarByAddress("123 Test St");
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(testBar, response.getBody());
+        verify(barBusiness).getBarByAddress("123 Test St");
+    }
+
+    /**
+     * Teste la récupération d'un bar par son adresse avec une erreur système
+     */
+    @Test
+    void getBarByAddress_SystemError() {
+        when(barBusiness.getBarByAddress(anyString())).thenThrow(new RuntimeException());
+        
+        ResponseEntity<Bar> response = barController.getBarByAddress("123 Test St");
+        
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    /**
+     * Teste la récupération d'un bar par ID avec succès
+     */
+    @Test
+    void getBarById_Success() {
+        when(barBusiness.getBarById(1)).thenReturn(testBar);
+        
+        ResponseEntity<Bar> response = barController.getBarById(1);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(testBar, response.getBody());
+    }
+
+    /**
+     * Teste la récupération d'un bar par ID non trouvé
+     */
+    @Test
+    void getBarById_NotFound() {
+        when(barBusiness.getBarById(999)).thenThrow(new BarNotFoundException("999"));
+        
+        ResponseEntity<Bar> response = barController.getBarById(999);
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    /**
+     * Teste la suppression d'un bar avec succès
+     */
+    @Test
+    void deleteBarBarId_Success() {
+        when(barBusiness.deleteBar(1)).thenReturn(testBar);
+        
+        ResponseEntity<Bar> response = barController.deleteBarBarId(1);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(testBar, response.getBody());
+    }
+
+    /**
+     * Teste la suppression d'un bar avec ID null
+     */
+    @Test
+    void deleteBarBarId_NullId() {
+        ResponseEntity<Bar> response = barController.deleteBarBarId(null);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        verify(barBusiness, never()).deleteBar(any());
+    }
+
+    /**
+     * Teste la suppression d'un bar non trouvé
+     */
+    @Test
+    void deleteBarBarId_NotFound() {
+        when(barBusiness.deleteBar(999)).thenThrow(new BarNotFoundException("999"));
+        
+        ResponseEntity<Bar> response = barController.deleteBarBarId(999);
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    /**
+     * Teste la récupération de tous les bars avec erreur système
+     */
+    @Test
+    void getBar_SystemError() {
+        when(barBusiness.getBar()).thenThrow(new RuntimeException());
+        
+        ResponseEntity<List<Bar>> response = barController.getBar();
+        
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    /**
+     * Teste la mise à jour d'un bar non trouvé
+     */
+    @Test
+    void updateBar_NotFound() {
+        when(barBusiness.modifyBar(any())).thenThrow(new BarNotFoundException("1"));
+        
+        ResponseEntity<Bar> response = barController.updateBar(testBar);
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    /**
+     * Teste la mise à jour d'un bar avec erreur système
+     */
+    @Test
+    void updateBar_SystemError() {
+        when(barBusiness.modifyBar(any())).thenThrow(new RuntimeException());
+        
+        ResponseEntity<Bar> response = barController.updateBar(testBar);
+        
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
 }

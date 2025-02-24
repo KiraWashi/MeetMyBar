@@ -3,6 +3,7 @@ package org.meetmybar.meetmybarapi.repository;
 import jakarta.inject.Inject;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
 import org.meetmybar.meetmybarapi.models.modif.Drink;
+import org.meetmybar.meetmybarapi.exception.BarNotFoundException;
 import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -47,6 +48,18 @@ public class BarRepository {
     private static final String SQL_UPDATE_BAR =
             "UPDATE BAR SET name = :name, capacity = :capacity, address = :address, " +
             "city = :city, postal_code = :postal_code WHERE id = :id";
+
+    private static final String SQL_DELETE_BAR_PHOTOS = 
+            "DELETE FROM LINK_BAR_PHOTO WHERE id_bar = :id";
+
+    private static final String SQL_DELETE_BAR_DRINKS = 
+            "DELETE FROM LINK_BAR_DRINK WHERE id_bar = :id";
+
+    private static final String SQL_DELETE_BAR_SCHEDULES = 
+            "DELETE FROM LINK_BAR_SCHEDULE_DAY WHERE id_bar = :id";
+
+    private static final String SQL_DELETE_BAR = 
+            "DELETE FROM BAR WHERE id = :id";
 
     @Inject
     private NamedParameterJdbcTemplate barTemplate;
@@ -272,6 +285,36 @@ public class BarRepository {
             System.err.println("Erreur lors de la modification: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error updating bar: " + e.getMessage(), e);
+        }
+    }
+
+    public void deleteBar(Integer barId) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("id", barId);
+            
+            // Vérifier d'abord si le bar existe
+            try {
+                getBarById(barId);
+            } catch (Exception e) {
+                throw new BarNotFoundException("Bar non trouvé avec l'id: " + barId);
+            }
+            
+            // Supprimer les liens dans les tables de liaison
+            barTemplate.update(SQL_DELETE_BAR_PHOTOS, params);
+            barTemplate.update(SQL_DELETE_BAR_DRINKS, params);
+            barTemplate.update(SQL_DELETE_BAR_SCHEDULES, params);
+            
+            // Supprimer le bar
+            int rowsAffected = barTemplate.update(SQL_DELETE_BAR, params);
+            
+            if (rowsAffected == 0) {
+                throw new BarNotFoundException("Échec de la suppression du bar avec l'id: " + barId);
+            }
+        } catch (BarNotFoundException e) {
+            throw e; // Propager l'exception BarNotFoundException
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la suppression du bar: " + e.getMessage(), e);
         }
     }
 }

@@ -105,6 +105,24 @@ public class BarControllerImpl implements BarController {
     }
 
     @Override
+    public ResponseEntity<Bar> deleteBarBarId(Integer barId) {
+        try {
+            if (!(barId instanceof Integer)) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            Bar deletedBar = barBusiness.deleteBar(barId);
+            return ResponseEntity.ok(deletedBar);
+        } catch (BarNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
     public ResponseEntity<List<Photo>> getPhotoByBar(Integer barId) {
         try {
             if(this.getBarById(barId).getBody() == null) {

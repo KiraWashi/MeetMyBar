@@ -166,4 +166,93 @@ class BarBusinessImplTest {
         );
         verify(barRepository).getBarById(999);
     }
+
+    /**
+     * Teste la suppression d'un bar avec succès
+     */
+    @Test
+    void deleteBar_Success() {
+        when(barRepository.getBarById(1)).thenReturn(testBar);
+        doNothing().when(barRepository).deleteBar(1);
+        
+        Bar result = barBusiness.deleteBar(1);
+        
+        assertEquals(testBar, result);
+        verify(barRepository).deleteBar(1);
+    }
+
+    /**
+     * Teste la suppression d'un bar avec ID null
+     */
+    @Test
+    void deleteBar_NullId() {
+        assertThrows(IllegalArgumentException.class, () ->
+            barBusiness.deleteBar(null)
+        );
+        
+        verify(barRepository, never()).deleteBar(any());
+    }
+
+    /**
+     * Teste la suppression d'un bar non trouvé
+     */
+    @Test
+    void deleteBar_NotFound() {
+        when(barRepository.getBarById(999)).thenReturn(null);
+        
+        assertThrows(BarNotFoundException.class, () ->
+            barBusiness.deleteBar(999)
+        );
+    }
+
+    /**
+     * Teste la modification d'un bar non trouvé
+     */
+    @Test
+    void modifyBar_NotFound() {
+        when(barRepository.getBarById(5)).thenReturn(null);
+        
+        assertThrows(BarNotFoundException.class, () ->
+            barBusiness.modifyBar(testBar)
+        );
+        
+        verify(barRepository, never()).modifyBar(any());
+    }
+
+    /**
+     * Teste la modification d'un bar avec une erreur système
+     */
+    @Test
+    void modifyBar_SystemError() {
+        when(barRepository.getBarById(1)).thenReturn(testBar);
+        when(barRepository.modifyBar(testBar)).thenThrow(new RuntimeException());
+        
+        assertThrows(RuntimeException.class, () ->
+            barBusiness.modifyBar(testBar)
+        );
+    }
+
+    /**
+     * Teste la création d'un bar avec erreur système
+     */
+    @Test
+    void createBar_SystemError() {
+        when(barRepository.createBar(testBar)).thenThrow(new RuntimeException());
+        
+        assertThrows(RuntimeException.class, () ->
+            barBusiness.createBar(testBar)
+        );
+    }
+
+    /**
+     * Teste la récupération de tous les bars avec erreur système
+     */
+    @Test
+    void getBar_SystemError() {
+        when(barRepository.getBar()).thenThrow(new RuntimeException());
+        
+        assertThrows(RuntimeException.class, () ->
+            barBusiness.getBar()
+        );
+    }
 }
