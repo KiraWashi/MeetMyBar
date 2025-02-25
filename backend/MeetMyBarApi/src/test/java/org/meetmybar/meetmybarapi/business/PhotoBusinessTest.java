@@ -256,4 +256,68 @@ public class PhotoBusinessTest {
         verify(barRepository, times(1)).getBarById(1);
         verify(photoRepository, never()).downloadPhotosByBar(anyInt());
     }
+
+    @Test
+    void deletePhotoBarLink_Success() {
+        // Arrange
+        when(barRepository.getBarById(1)).thenReturn(mockBar);
+        when(photoRepository.findById(1)).thenReturn(mockPhoto);
+        doNothing().when(photoRepository).deletePhotoBarLink(1, 1);
+
+        // Act
+        Photo result = photoBusiness.deletePhotoBarLink(1, 1);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(mockPhoto.getId(), result.getId());
+        assertEquals(mockPhoto.getDescription(), result.getDescription());
+        verify(barRepository).getBarById(1);
+        verify(photoRepository).findById(1);
+        verify(photoRepository).deletePhotoBarLink(1, 1);
+    }
+
+    @Test
+    void deletePhotoBarLink_BarNotFound() {
+        // Arrange
+        when(barRepository.getBarById(1)).thenReturn(null);
+
+        // Act & Assert
+        PhotoNotFoundException exception = assertThrows(PhotoNotFoundException.class, 
+            () -> photoBusiness.deletePhotoBarLink(1, 1));
+        assertEquals("Photo non trouvée avec l'ID: Bar non trouvé avec l'id: 1", exception.getMessage());
+        verify(barRepository).getBarById(1);
+        verify(photoRepository, never()).findById(anyInt());
+        verify(photoRepository, never()).deletePhotoBarLink(anyInt(), anyInt());
+    }
+
+    @Test
+    void deletePhotoBarLink_PhotoNotFound() {
+        // Arrange
+        when(barRepository.getBarById(1)).thenReturn(mockBar);
+        when(photoRepository.findById(1)).thenReturn(null);
+
+        // Act & Assert
+        PhotoNotFoundException exception = assertThrows(PhotoNotFoundException.class, 
+            () -> photoBusiness.deletePhotoBarLink(1, 1));
+        assertEquals("Photo non trouvée avec l'ID: Photo non trouvée avec l'id: 1", exception.getMessage());
+        verify(barRepository).getBarById(1);
+        verify(photoRepository).findById(1);
+        verify(photoRepository, never()).deletePhotoBarLink(anyInt(), anyInt());
+    }
+
+    @Test
+    void deletePhotoBarLink_DatabaseError() {
+        // Arrange
+        when(barRepository.getBarById(1)).thenReturn(mockBar);
+        when(photoRepository.findById(1)).thenReturn(mockPhoto);
+        doThrow(new RuntimeException("DB Error")).when(photoRepository).deletePhotoBarLink(1, 1);
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, 
+            () -> photoBusiness.deletePhotoBarLink(1, 1));
+        assertTrue(exception.getMessage().contains("Erreur lors de la suppression du lien photo-bar"));
+        verify(barRepository).getBarById(1);
+        verify(photoRepository).findById(1);
+        verify(photoRepository).deletePhotoBarLink(1, 1);
+    }
 }

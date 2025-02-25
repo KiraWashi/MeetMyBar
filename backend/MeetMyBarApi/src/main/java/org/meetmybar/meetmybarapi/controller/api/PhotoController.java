@@ -229,4 +229,29 @@ public interface PhotoController {
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
+
+     /**
+     * DELETE /photos/bar : Supprime une photo d'un bar
+     *
+     * @param barId Identifiant du bar (required)
+     * @param photoId Identifiant de la photo (required)
+     * @return Suppression réussie (status code 204)
+     */
+    @Operation(
+            operationId = "deletePhotoBarLink",
+            summary = "Supprime une photo d'un bar",
+            tags = { "Photos" },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Association non trouvée"),
+                    @ApiResponse(responseCode = "500", description = "Erreur serveur interne")
+            }
+    )
+    @DeleteMapping("/bar")
+    default ResponseEntity<Photo> deletePhotoBarLink(
+        @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+        @Parameter(name = "idPhoto", description = "ID de la photo", required = true) @RequestParam("idPhoto") int idPhoto
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
 }

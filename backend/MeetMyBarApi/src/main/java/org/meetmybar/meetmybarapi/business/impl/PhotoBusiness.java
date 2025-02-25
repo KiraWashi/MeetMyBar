@@ -108,4 +108,24 @@ public class PhotoBusiness {
         photoRepository.addPhotoBar(idBar, idPhoto);
         return photoRepository.findById(idPhoto);
     }
+
+    public Photo deletePhotoBarLink(int idBar, int idPhoto) {
+        // Vérification de l'existence du bar
+        if (barRepository.getBarById(idBar) == null) {
+            throw new PhotoNotFoundException("Bar non trouvé avec l'id: " + idBar);
+        }
+
+        // Vérification de l'existence de la photo
+        Photo photo = photoRepository.findById(idPhoto);
+        if (photo == null) {
+            throw new PhotoNotFoundException("Photo non trouvée avec l'id: " + idPhoto);
+        }
+
+        try {
+            photoRepository.deletePhotoBarLink(idBar, idPhoto);
+            return photo;
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la suppression du lien photo-bar: " + e.getMessage(), e);
+        }
+    }
 }
