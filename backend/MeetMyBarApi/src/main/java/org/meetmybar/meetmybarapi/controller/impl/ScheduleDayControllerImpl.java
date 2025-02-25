@@ -82,6 +82,33 @@ public class ScheduleDayControllerImpl implements ScheduleDayController {
         }
     }
 
+    @Override
+    public ResponseEntity<ScheduleDay> postScheduledayBarLink(int idBar, int idScheduleDay) {
+        try {
+            ScheduleDay createdScheduleDay = scheduleDayBusiness.createBarScheduleDayLink(idBar, idScheduleDay);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdScheduleDay);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid parameters: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            logger.error("Error creating bar-scheduleday link: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<ScheduleDay> deleteScheduledayBarLink(int idBar, int idScheduleDay) {
+        try {
+            ScheduleDay deletedScheduleDay = scheduleDayBusiness.deleteBarScheduleDayLink(idBar, idScheduleDay);
+            return ResponseEntity.ok(deletedScheduleDay);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid parameters: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            logger.error("Error deleting bar-scheduleday link: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
 }
