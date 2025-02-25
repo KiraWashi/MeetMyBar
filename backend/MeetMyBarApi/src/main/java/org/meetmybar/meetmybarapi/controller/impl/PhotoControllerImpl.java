@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.meetmybar.meetmybarapi.business.impl.PhotoBusiness;
 import org.meetmybar.meetmybarapi.controller.api.PhotoController;
+import org.meetmybar.meetmybarapi.exception.PhotoNotFoundException;
 import org.meetmybar.meetmybarapi.models.dto.Photo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -101,7 +102,23 @@ public class PhotoControllerImpl implements PhotoController {
             @RequestParam("idBar") int idBar,
             @RequestParam("idPhoto") int idPhoto) {
         log.info("Associating photo {} to bar {}", idPhoto, idBar);
-        photoBusiness.addPhotoBar(idBar, idPhoto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(photoBusiness.addPhotoBar(idBar, idPhoto));
+    }
+
+    @Override
+    public ResponseEntity<Photo> deletePhotoBarLink(
+            @RequestParam("idBar") int idBar,
+            @RequestParam("idPhoto") int idPhoto) {
+        try {
+            log.info("Suppression de l'association entre la photo {} et le bar {}", idPhoto, idBar);
+            Photo photo = photoBusiness.deletePhotoBarLink(idBar, idPhoto);
+            return ResponseEntity.ok(photo);
+        } catch (PhotoNotFoundException e) {
+            log.warn("Ressource non trouvée: {}", e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("Erreur lors de la suppression de l'association photo-bar", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

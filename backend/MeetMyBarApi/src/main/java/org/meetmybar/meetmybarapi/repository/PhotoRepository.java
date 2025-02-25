@@ -42,6 +42,9 @@ public class PhotoRepository{
     private static final String SQL_ADD_PHOTO_BAR = 
         "INSERT INTO LINK_BAR_PHOTO (id_bar, id_photo) VALUES (:idBar, :idPhoto)";
 
+    private static final String SQL_DELETE_PHOTO_BAR_LINK = 
+        "DELETE FROM LINK_BAR_PHOTO WHERE id_bar = :idBar AND id_photo = :idPhoto";
+
     @Autowired
     private NamedParameterJdbcTemplate photoTemplate;
 
@@ -243,6 +246,22 @@ public class PhotoRepository{
             }
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de l'association de la photo au bar: " + e.getMessage(), e);
+        }
+    }
+
+    public void deletePhotoBarLink(int idBar, int idPhoto) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("idBar", idBar);
+            params.put("idPhoto", idPhoto);
+
+            int rowsAffected = photoTemplate.update(SQL_DELETE_PHOTO_BAR_LINK, params);
+            
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Association non trouvée entre le bar " + idBar + " et la photo " + idPhoto);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la suppression du lien photo-bar: " + e.getMessage(), e);
         }
     }
 }
