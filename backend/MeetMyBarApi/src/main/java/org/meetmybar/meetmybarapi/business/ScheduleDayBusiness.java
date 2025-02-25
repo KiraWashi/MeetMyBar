@@ -50,4 +50,18 @@ public interface ScheduleDayBusiness {
      * @return le ScheduleDay modifié
      */
     public ScheduleDay updateScheduleDay(ScheduleDay scheduleDay);
+    /**
+     * Crée une association entre un bar et un horaire
+     * @param barId Identifiant du bar
+     * @param scheduleDayId Identifiant de l'horaire
+     */
+    public ScheduleDay createBarScheduleDayLink(int barId, int scheduleDayId);
+
+    /**
+     * Supprime une association entre un bar et un horaire
+     * @param barId Identifiant du bar
+     * @param scheduleDayId Identifiant de l'horaire
+     */
+    public ScheduleDay deleteBarScheduleDayLink(int barId, int scheduleDayId);
+
 }

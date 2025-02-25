@@ -30,6 +30,14 @@ public class ScheduleDayRepository {
     private static final String SQL_UPDATE_SCHEDULEDAY =
             "UPDATE SCHEDULE_DAY SET day = :day, opening = :opening, closing = :closing WHERE id = :id";
 
+    private static final String SQL_INSERT_BAR_SCHEDULEDAY_LINK =
+            "INSERT INTO LINK_BAR_SCHEDULE_DAY (id_bar, id_schedule_day) VALUES (:barId, :scheduleDayId)";
+
+    private static final String SQL_DELETE_BAR_SCHEDULEDAY_LINK =
+            "DELETE FROM LINK_BAR_SCHEDULE_DAY WHERE id_bar = :barId AND id_schedule_day = :scheduleDayId";
+
+    private static final String SQL_DELETE_ALL_SCHEDULEDAY_LINKS =
+            "DELETE FROM LINK_BAR_SCHEDULE_DAY WHERE id_schedule_day = :scheduleDayId";
 
     @Inject
     private NamedParameterJdbcTemplate scheduleDayTemplate;
@@ -73,18 +81,23 @@ public class ScheduleDayRepository {
         }
     }
 
-    public ScheduleDay deleteScheduleDayById(int id){
+    public ScheduleDay deleteScheduleDayById(int id) {
         try {
-            // On récupère d'abord l'horraire pour pouvoir la retourner après suppression
+            // On récupère d'abord l'horaire pour pouvoir le retourner après suppression
             ScheduleDay existingScheduleDay = getScheduleDayById(id);
 
             if (existingScheduleDay == null) {
                 throw new RuntimeException("ScheduleDay not found with id: " + id);
             }
 
+            // Supprime d'abord les liens dans la table de liaison
+            HashMap<String, Object> linkParams = new HashMap<>();
+            linkParams.put("scheduleDayId", id);
+            scheduleDayTemplate.update(SQL_DELETE_ALL_SCHEDULEDAY_LINKS, linkParams);
+
+            // Supprime ensuite le ScheduleDay
             HashMap<String, Object> params = new HashMap<>();
             params.put("id", id);
-
             int rowsAffected = scheduleDayTemplate.update(SQL_DELETE_SCHEDULEDAY, params);
 
             if (rowsAffected > 0) {
@@ -146,5 +159,42 @@ public class ScheduleDayRepository {
             throw new RuntimeException("Error updating ScheduleDay: " + e.getMessage(), e);
         }
     }
+
+    public ScheduleDay createBarScheduleDayLink(int barId, int scheduleDayId) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("barId", barId);
+            params.put("scheduleDayId", scheduleDayId);
+
+            int rowsAffected = scheduleDayTemplate.update(SQL_INSERT_BAR_SCHEDULEDAY_LINK, params);
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Failed to create link between bar " + barId + " and schedule day " + scheduleDayId);
+            }
+            
+            return getScheduleDayById(scheduleDayId);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating bar-scheduleday link: " + e.getMessage(), e);
+        }
+    }
+
+    public ScheduleDay deleteBarScheduleDayLink(int barId, int scheduleDayId) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("barId", barId);
+            params.put("scheduleDayId", scheduleDayId);
+
+            int rowsAffected = scheduleDayTemplate.update(SQL_DELETE_BAR_SCHEDULEDAY_LINK, params);
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Link not found between bar " + barId + " and schedule day " + scheduleDayId);
+            }
+            
+            return getScheduleDayById(scheduleDayId);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting bar-scheduleday link: " + e.getMessage(), e);
+        }
+    }
+
 
 }

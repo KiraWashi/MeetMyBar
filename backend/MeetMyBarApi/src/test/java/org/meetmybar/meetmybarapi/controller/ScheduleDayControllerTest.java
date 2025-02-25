@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
@@ -199,6 +200,79 @@ public class ScheduleDayControllerTest {
         Assertions.assertEquals(500, response.getStatusCode());
         verify(scheduleDayBusinessMock).deleteScheduleDayById(-1);
     }
+
+
+    @Test
+    void testCreateBarScheduleDayLink_Success() {
+        // Arrange
+        int barId = 1;
+        int scheduleDayId = 1;
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .queryParam("idBar", barId)
+                .queryParam("idScheduleDay", scheduleDayId)
+                .post("/scheduleday/bar");
+
+        // Assert
+        Assertions.assertEquals(201, response.getStatusCode());
+        verify(scheduleDayBusinessMock).createBarScheduleDayLink(barId, scheduleDayId);
+    }
+
+    @Test
+    void testCreateBarScheduleDayLink_BadRequest() {
+        // Arrange
+        doThrow(new IllegalArgumentException("Invalid IDs"))
+                .when(scheduleDayBusinessMock).createBarScheduleDayLink(anyInt(), anyInt());
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .queryParam("idBar", -1)
+                .queryParam("idScheduleDay", 1)
+                .post("/scheduleday/bar");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    @Test
+    void testDeleteBarScheduleDayLink_Success() {
+        // Arrange
+        int barId = 1;
+        int scheduleDayId = 1;
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .queryParam("idBar", barId)
+                .queryParam("idScheduleDay", scheduleDayId)
+                .delete("/scheduleday/bar");
+
+        // Assert
+        Assertions.assertEquals(200, response.getStatusCode());
+        verify(scheduleDayBusinessMock).deleteBarScheduleDayLink(barId, scheduleDayId);
+    }
+
+    @Test
+    void testDeleteBarScheduleDayLink_BadRequest() {
+        // Arrange
+        doThrow(new IllegalArgumentException("Invalid IDs"))
+                .when(scheduleDayBusinessMock).deleteBarScheduleDayLink(anyInt(), anyInt());
+
+        // Act
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .queryParam("idBar", -1)
+                .queryParam("idScheduleDay", 1)
+                .delete("/scheduleday/bar");
+
+        // Assert
+        Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+      
 
     private ScheduleDay createTestScheduleDay() {
         ScheduleDay scheduleDay = new ScheduleDay();

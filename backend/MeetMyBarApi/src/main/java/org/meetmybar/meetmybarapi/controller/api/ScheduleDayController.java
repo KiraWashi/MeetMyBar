@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import org.meetmybar.api.controller.ApiUtil;
+import org.meetmybar.api.model.Bar;
 import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.List;
@@ -223,5 +225,63 @@ public interface ScheduleDayController {
 
     }
 
+
+    /**
+     * DELETE /scheduleday/bar : Supprime un horaire d'un bar
+     *
+     * @param barId Identifiant du bar (required)
+     * @param scheduleDayId Identifiant de l'horaire (required)
+     * @return Suppression réussie (status code 200)
+     */
+    @Operation(
+            operationId = "deleteScheduledayBarLink",
+            summary = "Supprime un horaire d'un bar",
+            tags = { },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Association non trouvée"),
+                    @ApiResponse(responseCode = "500", description = "Erreur serveur interne")
+            }
+    )
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/scheduleday/bar"
+    )
+    default ResponseEntity<ScheduleDay> deleteScheduledayBarLink(
+        @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+        @Parameter(name = "idScheduleDay", description = "ID du schedule day", required = true) @RequestParam("idScheduleDay") int idScheduleDay
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * POST /scheduleday/bar : Ajoute un horaire à un bar
+     *
+     * @param barId Identifiant du bar (required)
+     * @param scheduleDayId Identifiant de l'horaire (required)
+     * @return Association créée avec succès (status code 201)
+     */
+    @Operation(
+            operationId = "postScheduledayBarLink",
+            summary = "Ajoute un horaire à un bar",
+            tags = { },
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Created"),
+                    @ApiResponse(responseCode = "400", description = "Association déjà existante"),
+                    @ApiResponse(responseCode = "404", description = "Bar ou horaire non trouvé"),
+                    @ApiResponse(responseCode = "409", description = "Conflit - L'association existe déjà"),
+                    @ApiResponse(responseCode = "500", description = "Erreur serveur interne")
+            }
+    )
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/scheduleday/bar"
+    )
+    default ResponseEntity<ScheduleDay> postScheduledayBarLink(
+        @Parameter(name = "idBar", description = "ID du bar", required = true) @RequestParam("idBar") int idBar,
+        @Parameter(name = "idScheduleDay", description = "ID du schedule day", required = true) @RequestParam("idScheduleDay") int idScheduleDay
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
 
 }

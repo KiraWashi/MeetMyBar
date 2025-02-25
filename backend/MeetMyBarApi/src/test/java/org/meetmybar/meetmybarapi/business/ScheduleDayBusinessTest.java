@@ -206,6 +206,66 @@ class ScheduleDayBusinessTest {
         verify(scheduleDayRepository, never()).updateScheduleDay(any());
     }
 
+
+    @Test
+    void createBarScheduleDayLink_ShouldCreateLink() {
+        // Arrange
+        int barId = 1;
+        int scheduleDayId = 1;
+
+        // Act
+        scheduleDayBusiness.createBarScheduleDayLink(barId, scheduleDayId);
+
+        // Assert
+        verify(scheduleDayRepository).createBarScheduleDayLink(barId, scheduleDayId);
+    }
+
+    @Test
+    void createBarScheduleDayLink_ShouldThrowException_WhenBarIdIsNegative() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, 
+            () -> scheduleDayBusiness.createBarScheduleDayLink(-1, 1));
+        verify(scheduleDayRepository, never()).createBarScheduleDayLink(anyInt(), anyInt());
+    }
+
+    @Test
+    void createBarScheduleDayLink_ShouldThrowException_WhenScheduleDayIdIsNegative() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, 
+            () -> scheduleDayBusiness.createBarScheduleDayLink(1, -1));
+        verify(scheduleDayRepository, never()).createBarScheduleDayLink(anyInt(), anyInt());
+    }
+
+    @Test
+    void deleteBarScheduleDayLink_ShouldDeleteLink() {
+        // Arrange
+        int barId = 1;
+        int scheduleDayId = 1;
+
+        // Act
+        scheduleDayBusiness.deleteBarScheduleDayLink(barId, scheduleDayId);
+
+        // Assert
+        verify(scheduleDayRepository).deleteBarScheduleDayLink(barId, scheduleDayId);
+    }
+
+    @Test
+    void deleteBarScheduleDayLink_ShouldThrowException_WhenBarIdIsNegative() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, 
+            () -> scheduleDayBusiness.deleteBarScheduleDayLink(-1, 1));
+        verify(scheduleDayRepository, never()).deleteBarScheduleDayLink(anyInt(), anyInt());
+    }
+
+    @Test
+    void deleteBarScheduleDayLink_ShouldThrowException_WhenScheduleDayIdIsNegative() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, 
+            () -> scheduleDayBusiness.deleteBarScheduleDayLink(1, -1));
+        verify(scheduleDayRepository, never()).deleteBarScheduleDayLink(anyInt(), anyInt());
+    }
+
+
     private ScheduleDay createTestScheduleDay() {
         ScheduleDay scheduleDay = new ScheduleDay();
         scheduleDay.setId(1);
