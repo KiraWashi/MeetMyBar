@@ -42,7 +42,7 @@ public class BarRepository {
                     "JOIN LINK_BAR_SCHEDULE_DAY lbs ON sd.id = lbs.id_schedule_day " +
                     "WHERE lbs.id_bar = :barId";
 
-    private static final String SQL_INSERT_BAR =
+    static final String SQL_INSERT_BAR =
             "INSERT INTO BAR (name, capacity, address, city, postal_code) VALUES (:name, :capacity, :address, :city, :postal_code)";
 
     private static final String SQL_UPDATE_BAR =
@@ -64,6 +64,8 @@ public class BarRepository {
     @Inject
     private NamedParameterJdbcTemplate barTemplate;
 
+    @Inject
+    private ScheduleDayRepository scheduleDayRepository;
 
     public List<Bar> getBar() {
         try {
@@ -207,6 +209,25 @@ public class BarRepository {
             Number newId = keyHolder.getKey();
             if (newId != null) {
                 bar.setId(newId.intValue());
+                
+                // Création et liaison des ScheduleDay si présents
+                if (bar.getPlanning() != null && !bar.getPlanning().isEmpty()) {
+                    List<ScheduleDay> createdScheduleDays = new ArrayList<>();
+                    
+                    for (ScheduleDay scheduleDay : bar.getPlanning()) {
+                        // Créer le ScheduleDay
+                        ScheduleDay createdScheduleDay = scheduleDayRepository.createScheduleDay(scheduleDay);
+                        
+                        // Créer le lien entre le bar et le ScheduleDay
+                        scheduleDayRepository.createBarScheduleDayLink(bar.getId(), createdScheduleDay.getId());
+                        
+                        createdScheduleDays.add(createdScheduleDay);
+                    }
+                    
+                    // Mettre à jour la liste des ScheduleDay dans l'objet bar
+                    bar.setPlanning(createdScheduleDays);
+                }
+                
                 return bar;
             } else {
                 throw new RuntimeException("Failed to create bar - no ID returned");

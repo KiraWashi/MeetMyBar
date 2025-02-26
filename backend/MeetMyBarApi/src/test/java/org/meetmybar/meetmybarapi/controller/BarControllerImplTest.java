@@ -7,6 +7,7 @@ import org.meetmybar.meetmybarapi.business.BarBusiness;
 import org.meetmybar.meetmybarapi.controller.impl.BarControllerImpl;
 import org.meetmybar.meetmybarapi.exception.BarNotFoundException;
 import org.meetmybar.meetmybarapi.models.modif.Bar;
+import org.meetmybar.meetmybarapi.models.dto.ScheduleDay;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -258,5 +260,271 @@ class BarControllerImplTest {
         ResponseEntity<Bar> response = barController.updateBar(testBar);
         
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    /**
+     * Teste la création d'un bar avec planning
+     */
+    @Test
+    void addBar_WithPlanning_Success() {
+        // Création d'un bar avec planning
+        Bar barWithPlanning = new Bar();
+        barWithPlanning.setName("Bar avec planning");
+        barWithPlanning.setAddress("123 Test St");
+        barWithPlanning.setCapacity(100);
+        barWithPlanning.setCity("Test City");
+        barWithPlanning.setPostalCode("12345");
+        
+        List<ScheduleDay> planning = new ArrayList<>();
+        ScheduleDay scheduleDay = new ScheduleDay();
+        scheduleDay.setDay("LUNDI");
+        scheduleDay.setOpening("09:00");
+        scheduleDay.setClosing("18:00");
+        planning.add(scheduleDay);
+        
+        barWithPlanning.setPlanning(planning);
+        
+        // Configuration du mock
+        Bar createdBar = new Bar();
+        createdBar.setId(2);
+        createdBar.setName("Bar avec planning");
+        createdBar.setAddress("123 Test St");
+        createdBar.setCapacity(100);
+        createdBar.setCity("Test City");
+        createdBar.setPostalCode("12345");
+        
+        List<ScheduleDay> createdPlanning = new ArrayList<>();
+        ScheduleDay createdScheduleDay = new ScheduleDay();
+        createdScheduleDay.setId(5);
+        createdScheduleDay.setDay("LUNDI");
+        createdScheduleDay.setOpening("09:00");
+        createdScheduleDay.setClosing("18:00");
+        createdPlanning.add(createdScheduleDay);
+        
+        createdBar.setPlanning(createdPlanning);
+        
+        when(barBusiness.createBar(barWithPlanning)).thenReturn(createdBar);
+        
+        // Exécution
+        ResponseEntity<Bar> response = barController.addBar(barWithPlanning);
+        
+        // Vérifications
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().getId());
+        assertNotNull(response.getBody().getPlanning());
+        assertEquals(1, response.getBody().getPlanning().size());
+        assertEquals(5, response.getBody().getPlanning().get(0).getId());
+        assertEquals("LUNDI", response.getBody().getPlanning().get(0).getDay());
+        
+        verify(barBusiness).createBar(barWithPlanning);
+    }
+
+    /**
+     * Teste la création d'un bar avec planning vide
+     */
+    @Test
+    void addBar_WithEmptyPlanning_Success() {
+        // Création d'un bar avec planning vide
+        Bar barWithEmptyPlanning = new Bar();
+        barWithEmptyPlanning.setName("Bar avec planning vide");
+        barWithEmptyPlanning.setAddress("123 Test St");
+        barWithEmptyPlanning.setCapacity(100);
+        barWithEmptyPlanning.setCity("Test City");
+        barWithEmptyPlanning.setPostalCode("12345");
+        barWithEmptyPlanning.setPlanning(new ArrayList<>());
+        
+        // Configuration du mock
+        Bar createdBar = new Bar();
+        createdBar.setId(3);
+        createdBar.setName("Bar avec planning vide");
+        createdBar.setAddress("123 Test St");
+        createdBar.setCapacity(100);
+        createdBar.setCity("Test City");
+        createdBar.setPostalCode("12345");
+        createdBar.setPlanning(new ArrayList<>());
+        
+        when(barBusiness.createBar(barWithEmptyPlanning)).thenReturn(createdBar);
+        
+        // Exécution
+        ResponseEntity<Bar> response = barController.addBar(barWithEmptyPlanning);
+        
+        // Vérifications
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(3, response.getBody().getId());
+        assertNotNull(response.getBody().getPlanning());
+        assertTrue(response.getBody().getPlanning().isEmpty());
+        
+        verify(barBusiness).createBar(barWithEmptyPlanning);
+    }
+
+    /**
+     * Teste la création d'un bar avec planning null
+     */
+    @Test
+    void addBar_WithNullPlanning_Success() {
+        // Création d'un bar avec planning null
+        Bar barWithNullPlanning = new Bar();
+        barWithNullPlanning.setName("Bar sans planning");
+        barWithNullPlanning.setAddress("123 Test St");
+        barWithNullPlanning.setCapacity(100);
+        barWithNullPlanning.setCity("Test City");
+        barWithNullPlanning.setPostalCode("12345");
+        barWithNullPlanning.setPlanning(null);
+        
+        // Configuration du mock
+        Bar createdBar = new Bar();
+        createdBar.setId(4);
+        createdBar.setName("Bar sans planning");
+        createdBar.setAddress("123 Test St");
+        createdBar.setCapacity(100);
+        createdBar.setCity("Test City");
+        createdBar.setPostalCode("12345");
+        createdBar.setPlanning(null);
+        
+        when(barBusiness.createBar(barWithNullPlanning)).thenReturn(createdBar);
+        
+        // Exécution
+        ResponseEntity<Bar> response = barController.addBar(barWithNullPlanning);
+        
+        // Vérifications
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(4, response.getBody().getId());
+        assertNull(response.getBody().getPlanning());
+        
+        verify(barBusiness).createBar(barWithNullPlanning);
+    }
+
+    /**
+     * Teste la création d'un bar avec plusieurs jours de planning
+     */
+    @Test
+    void addBar_WithMultipleDaysPlanning_Success() {
+        // Création d'un bar avec plusieurs jours de planning
+        Bar barWithMultipleDays = new Bar();
+        barWithMultipleDays.setName("Bar avec plusieurs jours");
+        barWithMultipleDays.setAddress("123 Test St");
+        barWithMultipleDays.setCapacity(100);
+        barWithMultipleDays.setCity("Test City");
+        barWithMultipleDays.setPostalCode("12345");
+        
+        List<ScheduleDay> planning = new ArrayList<>();
+        
+        ScheduleDay monday = new ScheduleDay();
+        monday.setDay("LUNDI");
+        monday.setOpening("09:00");
+        monday.setClosing("18:00");
+        
+        ScheduleDay tuesday = new ScheduleDay();
+        tuesday.setDay("MARDI");
+        tuesday.setOpening("10:00");
+        tuesday.setClosing("20:00");
+        
+        ScheduleDay friday = new ScheduleDay();
+        friday.setDay("VENDREDI");
+        friday.setOpening("14:00");
+        friday.setClosing("02:00");
+        
+        planning.add(monday);
+        planning.add(tuesday);
+        planning.add(friday);
+        
+        barWithMultipleDays.setPlanning(planning);
+        
+        // Configuration du mock
+        Bar createdBar = new Bar();
+        createdBar.setId(5);
+        createdBar.setName("Bar avec plusieurs jours");
+        createdBar.setAddress("123 Test St");
+        createdBar.setCapacity(100);
+        createdBar.setCity("Test City");
+        createdBar.setPostalCode("12345");
+        
+        List<ScheduleDay> createdPlanning = new ArrayList<>();
+        
+        ScheduleDay createdMonday = new ScheduleDay();
+        createdMonday.setId(10);
+        createdMonday.setDay("LUNDI");
+        createdMonday.setOpening("09:00");
+        createdMonday.setClosing("18:00");
+        
+        ScheduleDay createdTuesday = new ScheduleDay();
+        createdTuesday.setId(11);
+        createdTuesday.setDay("MARDI");
+        createdTuesday.setOpening("10:00");
+        createdTuesday.setClosing("20:00");
+        
+        ScheduleDay createdFriday = new ScheduleDay();
+        createdFriday.setId(12);
+        createdFriday.setDay("VENDREDI");
+        createdFriday.setOpening("14:00");
+        createdFriday.setClosing("02:00");
+        
+        createdPlanning.add(createdMonday);
+        createdPlanning.add(createdTuesday);
+        createdPlanning.add(createdFriday);
+        
+        createdBar.setPlanning(createdPlanning);
+        
+        when(barBusiness.createBar(barWithMultipleDays)).thenReturn(createdBar);
+        
+        // Exécution
+        ResponseEntity<Bar> response = barController.addBar(barWithMultipleDays);
+        
+        // Vérifications
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(5, response.getBody().getId());
+        assertNotNull(response.getBody().getPlanning());
+        assertEquals(3, response.getBody().getPlanning().size());
+        
+        // Vérifier que chaque jour a été créé avec son ID
+        assertEquals(10, response.getBody().getPlanning().get(0).getId());
+        assertEquals("LUNDI", response.getBody().getPlanning().get(0).getDay());
+        
+        assertEquals(11, response.getBody().getPlanning().get(1).getId());
+        assertEquals("MARDI", response.getBody().getPlanning().get(1).getDay());
+        
+        assertEquals(12, response.getBody().getPlanning().get(2).getId());
+        assertEquals("VENDREDI", response.getBody().getPlanning().get(2).getDay());
+        
+        verify(barBusiness).createBar(barWithMultipleDays);
+    }
+
+    /**
+     * Teste la création d'un bar avec erreur système lors de la création du planning
+     */
+    @Test
+    void addBar_WithPlanningSystemError() {
+        // Création d'un bar avec planning
+        Bar barWithPlanning = new Bar();
+        barWithPlanning.setName("Bar avec planning");
+        barWithPlanning.setAddress("123 Test St");
+        barWithPlanning.setCapacity(100);
+        barWithPlanning.setCity("Test City");
+        barWithPlanning.setPostalCode("12345");
+        
+        List<ScheduleDay> planning = new ArrayList<>();
+        ScheduleDay scheduleDay = new ScheduleDay();
+        scheduleDay.setDay("LUNDI");
+        scheduleDay.setOpening("09:00");
+        scheduleDay.setClosing("18:00");
+        planning.add(scheduleDay);
+        
+        barWithPlanning.setPlanning(planning);
+        
+        // Configuration du mock pour simuler une erreur système
+        when(barBusiness.createBar(barWithPlanning)).thenThrow(new RuntimeException("Erreur lors de la création du planning"));
+        
+        // Exécution
+        ResponseEntity<Bar> response = barController.addBar(barWithPlanning);
+        
+        // Vérifications
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
+        
+        verify(barBusiness).createBar(barWithPlanning);
     }
 }
