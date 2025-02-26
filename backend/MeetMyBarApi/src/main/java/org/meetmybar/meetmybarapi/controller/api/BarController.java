@@ -384,10 +384,10 @@ public interface BarController {
      */
     @Operation(
         operationId = "addBar",
-        summary = "Your POST endpoint",
+        summary = "Créer un nouveau bar avec son planning",
         tags = {  },
         responses = {
-            @ApiResponse(responseCode = "201", description = "Created", content = {
+            @ApiResponse(responseCode = "201", description = "Bar créé avec succès", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Bar.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
@@ -404,19 +404,19 @@ public interface BarController {
         consumes = { "application/json" }
     )
     default ResponseEntity<Bar> addBar(
-        @Parameter(name = "Bar", description = "") @RequestBody(required = false) Bar bar
+        @Parameter(name = "Bar", description = "Le bar à créer avec sa liste de jours d'ouverture") 
+        @Valid @RequestBody(required = false) Bar bar
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" }, { \"closing\" : \"closing\", \"id\" : 5, \"opening\" : \"opening\", \"day\" : \"day\" } ], \"address\" : \"address\", \"beers\" : [ { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 }, { \"name\" : \"name\", \"id\" : 1, \"brand\" : \"brand\", \"alcohol_degree\" : 5.962133916683182 } ], \"name\" : \"name\", \"id\" : 0, \"capacity\" : 6 }";
+                    String exampleString = "{ \"planning\" : [ { \"closing\" : \"18:00\", \"id\" : 5, \"opening\" : \"09:00\", \"day\" : \"LUNDI\" }, { \"closing\" : \"22:00\", \"id\" : 6, \"opening\" : \"14:00\", \"day\" : \"MARDI\" } ], \"address\" : \"123 rue de la Soif\", \"city\" : \"Paris\", \"drinks\" : [ { \"name\" : \"Blonde Artisanale\", \"id\" : 1, \"type\" : \"biere_blonde\", \"brand\" : \"Brasserie Locale\", \"alcohol_degree\" : 5.5 }, { \"name\" : \"IPA\", \"id\" : 2, \"type\" : \"biere_ipa\", \"brand\" : \"Craft Beer\", \"alcohol_degree\" : 6.2 } ], \"name\" : \"Le Bar des Amis\", \"id\" : 0, \"postal_code\" : \"75001\", \"capacity\" : 50 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
     }
 
 }

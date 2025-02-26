@@ -56,7 +56,6 @@ public class Bar {
    * Unique identifier for the given bar.
    * @return id
   */
-  @NotNull 
   @Schema(name = "id", description = "Unique identifier for the given bar.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
