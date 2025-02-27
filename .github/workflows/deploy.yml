@@ -16,8 +16,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
+            # Configurer le répertoire Git comme sûr
+            sudo git config --global --add safe.directory ${{ secrets.PROJECT_PATH }}
+            
+            # Se déplacer dans le répertoire du projet
             cd ${{ secrets.PROJECT_PATH }}
-            git pull
-            docker-compose down
-            docker-compose build
-            docker-compose up -d 
+            
+            # Pull des changements
+            sudo git pull
+            
+            # Utiliser docker compose (nouvelle syntaxe sans tiret)
+            sudo docker compose down
+            sudo docker compose build
+            sudo docker compose up -d
