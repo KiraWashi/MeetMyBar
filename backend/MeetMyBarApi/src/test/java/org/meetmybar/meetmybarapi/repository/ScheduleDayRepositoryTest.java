@@ -193,6 +193,68 @@ public class ScheduleDayRepositoryTest {
         assertThrows(RuntimeException.class, () -> scheduleDayRepository.deleteScheduleDayById(999));
     }
 
+
+    @Test
+    void createBarScheduleDayLink_Success() {
+        // Arrange
+        int barId = 1;
+        int scheduleDayId = 1;
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(1);
+
+        // Act
+        scheduleDayRepository.createBarScheduleDayLink(barId, scheduleDayId);
+
+        // Assert
+        verify(jdbcTemplate).update(
+                eq("INSERT INTO LINK_BAR_SCHEDULE_DAY (id_bar, id_schedule_day) VALUES (:barId, :scheduleDayId)"),
+                argThat((Map<String, ?> map) -> 
+                    map.get("barId").equals(barId) && 
+                    map.get("scheduleDayId").equals(scheduleDayId)
+                )
+        );
+    }
+
+    @Test
+    void createBarScheduleDayLink_Failure() {
+        // Arrange
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(0);
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, 
+            () -> scheduleDayRepository.createBarScheduleDayLink(1, 1));
+    }
+
+    @Test
+    void deleteBarScheduleDayLink_Success() {
+        // Arrange
+        int barId = 1;
+        int scheduleDayId = 1;
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(1);
+
+        // Act
+        scheduleDayRepository.deleteBarScheduleDayLink(barId, scheduleDayId);
+
+        // Assert
+        verify(jdbcTemplate).update(
+                eq("DELETE FROM LINK_BAR_SCHEDULE_DAY WHERE id_bar = :barId AND id_schedule_day = :scheduleDayId"),
+                argThat((Map<String, ?> map) -> 
+                    map.get("barId").equals(barId) && 
+                    map.get("scheduleDayId").equals(scheduleDayId)
+                )
+        );
+    }
+
+    @Test
+    void deleteBarScheduleDayLink_Failure() {
+        // Arrange
+        when(jdbcTemplate.update(anyString(), any(Map.class))).thenReturn(0);
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, 
+            () -> scheduleDayRepository.deleteBarScheduleDayLink(1, 1));
+    }
+
+
     private ScheduleDay createTestScheduleDay() {
         ScheduleDay scheduleDay = new ScheduleDay();
         scheduleDay.setId(1);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 
 import static org.meetmybar.meetmybarapi.models.dto.Drink.TypeEnum.NON_DEFINI;
@@ -34,6 +35,20 @@ public class DrinkRepository {
 
     private static final String SQL_UPDATE_DRINK =
             "UPDATE DRINK SET name = :name, brand = :brand, degree = :degree, type = :type WHERE id = :id";
+
+    // SQL pour la table LINK_BAR_DRINK
+
+    private static final String SQL_INSERT_DRINK_BAR = 
+        "INSERT INTO LINK_BAR_DRINK (id_bar, id_drink, volume, price) VALUES (:idBar, :idDrink, :volume, :price)";
+
+    private static final String SQL_UPDATE_DRINK_BAR_PRICE = 
+    "UPDATE LINK_BAR_DRINK SET price = :price WHERE id_bar = :idBar AND id_drink = :idDrink AND volume = :volume";
+
+    private static final String SQL_DELETE_DRINK_BAR = 
+        "DELETE FROM LINK_BAR_DRINK WHERE id_bar = :idBar AND id_drink = :idDrink AND volume = :volume";
+
+    private static final String SQL_DELETE_DRINK_LINKS = 
+        "DELETE FROM LINK_BAR_DRINK WHERE id_drink = :id";
 
     @Inject
     private NamedParameterJdbcTemplate drinkTemplate;
@@ -114,6 +129,10 @@ public class DrinkRepository {
             HashMap<String, Object> params = new HashMap<>();
             params.put("id", drinkId);
 
+            // Supprimer d'abord les liens dans la table de liaison
+            drinkTemplate.update(SQL_DELETE_DRINK_LINKS, params);
+
+            // Ensuite supprimer la boisson
             int rowsAffected = drinkTemplate.update(SQL_DELETE_DRINK, params);
 
             if (rowsAffected > 0) {
@@ -176,5 +195,57 @@ public class DrinkRepository {
         }
     }
 
+    public void addDrinkToBar(int idBar, int idDrink, double volume, double price) {
+        try {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("idBar", idBar);
+            params.put("idDrink", idDrink);
+            params.put("volume", volume);
+            params.put("price", price);
+
+            int rowsAffected = drinkTemplate.update(SQL_INSERT_DRINK_BAR, params);
+            
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Échec de l'association boisson-bar");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'association boisson-bar: " + e.getMessage(), e);
+        }
+    }
+    
+    public void updateDrinkBar(int idBar, int idDrink, double volume, double newPrice) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("idBar", idBar);
+            params.put("idDrink", idDrink);
+            params.put("volume", volume);
+            params.put("price", newPrice);
+
+            int rowsAffected = drinkTemplate.update(SQL_UPDATE_DRINK_BAR_PRICE, params);
+            
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Association bar-boisson non trouvée");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la mise à jour du prix: " + e.getMessage(), e);
+        }
+    }
+
+    public void deleteDrinkBar(int idBar, int idDrink, double volume) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("idBar", idBar);
+            params.put("idDrink", idDrink);
+            params.put("volume", volume);
+
+            int rowsAffected = drinkTemplate.update(SQL_DELETE_DRINK_BAR, params);
+            
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Association bar-boisson non trouvée");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la suppression de l'association: " + e.getMessage(), e);
+        }
+    }
 
 }

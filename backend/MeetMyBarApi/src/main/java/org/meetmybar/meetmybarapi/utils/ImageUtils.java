@@ -29,17 +29,27 @@ public class ImageUtils {
     }
 
     public static byte[] decompressImage(byte[] data) throws DataFormatException, IOException {
+        if (data == null || data.length == 0) {
+            throw new IllegalArgumentException("Les données compressées ne peuvent pas être nulles ou vides");
+        }
+
         Inflater inflater = new Inflater();
         inflater.setInput(data);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
         byte[] tmp = new byte[BITE_SIZE];
 
-        while (!inflater.finished()) {
-            int count = inflater.inflate(tmp);
-            outputStream.write(tmp, 0, count);
+        try {
+            while (!inflater.finished()) {
+                int count = inflater.inflate(tmp);
+                if (count == 0 && inflater.needsInput()) {
+                    throw new DataFormatException("Format de données compressées invalide");
+                }
+                outputStream.write(tmp, 0, count);
+            }
+        } finally {
+            inflater.end();
+            outputStream.close();
         }
-
-        outputStream.close();
 
         return outputStream.toByteArray();
     }

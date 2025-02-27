@@ -72,4 +72,27 @@ public class ScheduleDayBusinessImpl implements ScheduleDayBusiness {
 
         return scheduleDayRepository.updateScheduleDay(scheduleDay);
     }
+    
+    @Override
+    public ScheduleDay createBarScheduleDayLink(int barId, int scheduleDayId) {
+        if (barId <= 0) {
+            throw new IllegalArgumentException("Bar ID must be positive");
+        }
+        if (scheduleDayId <= 0) {
+            throw new IllegalArgumentException("Schedule Day ID must be positive");
+        }
+        return scheduleDayRepository.createBarScheduleDayLink(barId, scheduleDayId);
+    }
+
+    @Override
+    public ScheduleDay deleteBarScheduleDayLink(int barId, int scheduleDayId) {
+        if (barId <= 0) {
+            throw new IllegalArgumentException("Bar ID must be positive");
+        }
+        if (scheduleDayId <= 0) {
+            throw new IllegalArgumentException("Schedule Day ID must be positive");
+        }
+        return scheduleDayRepository.deleteBarScheduleDayLink(barId, scheduleDayId);
+    }
+
 }
