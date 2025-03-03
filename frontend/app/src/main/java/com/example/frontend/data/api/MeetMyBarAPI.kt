@@ -1,7 +1,8 @@
 package com.example.frontend.data.api
 
+import android.util.Log
+import com.example.frontend.data.repository.photo.BarPhoto
 import com.example.frontend.data.vo.DrinkVo
-import com.example.frontend.data.vo.PhotoVo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -14,7 +15,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import io.ktor.http.headers
+import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import java.io.File
 
@@ -54,10 +55,24 @@ class MeetMyBarAPI(
                 })
             }
         )
-
         return client.post("$baseUrl/photos") {
             setBody(formData)
         }
     }
+
+    suspend fun getPhotosByBar( barId: Int): List<BarPhoto> {
+        return runCatching {
+            val responseText: String = client.get("$baseUrl/photos/bar/$barId") {
+                contentType(ContentType.Application.Json)
+            }.body()
+
+            Json { isLenient = true; ignoreUnknownKeys = true }
+                .decodeFromString<List<BarPhoto>>(responseText)
+        }.getOrElse {
+            Log.e("MeetMyBarAPI", "Erreur de parsing JSON: ${it.message}")
+            emptyList()
+        }
+    }
+
 
 }

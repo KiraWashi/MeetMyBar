@@ -1,31 +1,36 @@
 package com.example.frontend.data.repository.photo
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import com.example.frontend.data.api.MeetMyBarAPI
 import com.example.frontend.data.utils.Resource
-import com.example.frontend.domain.model.PhotoModel
 import com.example.frontend.domain.repository.PhotoRepositoryInterface
 import io.ktor.util.InternalAPI
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.koin.core.component.KoinComponent
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import com.example.frontend.data.utils.Resource.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+
+import android.util.Base64
+import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class BarPhoto(
+    val description: String,
+    val id: Int,
+)
 
 class PhotoRepository(
     private val meetMyBarAPI: MeetMyBarAPI,
+    private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO,
 ) : PhotoRepositoryInterface, KoinComponent {
+
+    private val imageCache: MutableMap<String, ByteArray> = mutableMapOf()
 
     override suspend fun getPhotoById(id: Int): Flow<Resource<ByteArray>> = flow {
         emit(Resource.Loading())
@@ -48,6 +53,20 @@ class PhotoRepository(
             emit(Resource.Success(response.content.toString()))
         } catch (e: Exception) {
             emit(Resource.Error(message = e.message ?: "Erreur lors de l'upload"))
+        }
+    }
+    override suspend fun getPhotosByBar(barId: Int): List<BarPhoto> {
+        return try {
+            // Appel de l'API pour obtenir les photos du bar
+            val photos = meetMyBarAPI.getPhotosByBar(barId)
+
+            // Optionnel : Si tu veux effectuer un traitement sur les données avant de les retourner
+            // Par exemple, filtrer ou transformer les données.
+            photos
+        } catch (exception: Exception) {
+            // Optionnel : Gestion d'erreurs, tu peux logger ou renvoyer une valeur par défaut
+            Log.e("BarRepository", "Erreur lors de la récupération des photos : ${exception.message}")
+            emptyList()
         }
     }
 

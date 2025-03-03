@@ -13,6 +13,7 @@ import com.example.frontend.presentation.feature.biere.AddBiere
 import com.example.frontend.presentation.feature.biere.ListBiere
 import com.example.frontend.presentation.feature.home.HomeScreen
 import com.example.frontend.presentation.feature.biere.TestApiScreen
+import com.example.frontend.presentation.feature.photo.BarPhotosScreen
 import com.example.frontend.presentation.feature.photo.PhotoScreen
 
 @ExperimentalAnimationApi
@@ -24,7 +25,7 @@ fun SetupNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.PhotoScreen.route
+        startDestination = Screen.BarPhotosScreen.route
     ) {
         composable(
             route = Screen.SplachScreenBeer.route
@@ -74,6 +75,11 @@ fun SetupNavGraph(
         ) {
             PhotoScreen()
         }
+        composable(
+            route = Screen.BarPhotosScreen.route,
+        ) {
+            BarPhotosScreen(3)
+        }
     }
 }
 
@@ -85,4 +91,5 @@ sealed class Screen(val route: String) {
     object AddBiere : Screen("AddBiere")
     object TestApiScreen : Screen("TestApiScreen")
     object PhotoScreen : Screen("PhotoScreen")
+    object BarPhotosScreen : Screen("BarPhotosScreen")
 }
