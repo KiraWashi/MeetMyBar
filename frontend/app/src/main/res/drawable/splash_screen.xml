@@ -1,0 +1,21 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Logo SVG -->
+    <item
+        android:width="60dp"
+        android:height="60dp"
+        android:gravity="center_horizontal|top"
+        android:drawable="@drawable/beer" />
+
+    <!-- Texte "MeetMyBar" -->
+    <item>
+        <bitmap
+            android:src="@drawable/meet_my_bar_title"
+            android:gravity="center_horizontal|bottom"
+            android:width="150dp"
+            android:height="30dp"
+            android:tileMode="disabled"
+            android:alpha="0.9" />
+    </item>
+
+</layer-list>

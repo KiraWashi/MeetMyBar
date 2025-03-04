@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.biere
+package com.example.frontend.presentation.feature.biere
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,96 +34,55 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.frontend.data.utils.Resource
+import com.example.frontend.presentation.biere.Popup
 import com.example.frontend.presentation.navigation.Screen
-import com.example.frontend.ui.theme.SpritzClairColor
-import com.example.frontend.ui.theme.SpritzColor
 import org.koin.androidx.compose.koinViewModel
 
+data class AddBeerState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val success: Boolean = false
+)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModifyBiere(navHostController: NavHostController, modifier: Modifier = Modifier,drinkId : Int) {
+fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<ListBiereViewModel>()
-    val drinkState by viewModel.selectedBeer.collectAsState()
+    val (name, setName) = remember { mutableStateOf("") }
+    val (alcoholDegree, setAlcoholDegree) = remember { mutableStateOf("") }
+    val (type, setType) = remember { mutableStateOf("") }
+    val (quantity, setQuantity) = remember { mutableStateOf("") }
+    val (prix, setPrix) = remember { mutableStateOf("") }
+    val (brand, setBrand) = remember { mutableStateOf("") }
 
     val updateState by viewModel.createBiereViewModel.collectAsState()
-    val deleteState by viewModel.deleteBiereState.collectAsState()
     var showPopup by remember { mutableStateOf(false) }
-    var showPopupDelete by remember { mutableStateOf(false) }
-    var showError by remember { mutableStateOf(false) }
-
-    LaunchedEffect(drinkId) {
-        viewModel.getDrink(drinkId)
-    }
 
     LaunchedEffect(updateState.success) {
         if (updateState.success) {
             showPopup = true
         }
     }
-
-    LaunchedEffect(deleteState) {
-        when (deleteState) {
-            is Resource.Success -> {
-                showPopupDelete = true
-            }
-            is Resource.Error -> {
-                showPopupDelete = true
-            }
-            else -> {}
-        }
-    }
-    val drink = drinkState.data
-    if (drinkState is Resource.Loading || drink == null) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text("Chargement...")
-        }
-        return
-    }
-
-    val (name, setName) = remember { mutableStateOf(drink.name) }
-    val (alcoholDegree, setAlcoholDegree) = remember { mutableStateOf(drink.alcoholDegree) }
-    val (type, setType) = remember { mutableStateOf(drink.type) }
-    val (quantity, setQuantity) = remember { mutableStateOf("") }
-    val (prix, setPrix) = remember { mutableStateOf("") }
-    val (brand, setBrand) = remember { mutableStateOf(drink.brand) }
-
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize().background(mapBeerColor(type)),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SpritzClairColor,
-                    titleContentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.tertiary,
 
-                    ),
+                ),
                 title = {
                     Text("Ajouter une boisson")
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navHostController.navigate(Screen.ListBiere.route)
+                        // Ajouter une action pour sauvegarder les informations
+                        navHostController.popBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Retour"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { viewModel.deleteBiere(drink.id) }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Supprimer",
-                            tint = Color.Black
                         )
                     }
                 },
@@ -177,35 +136,24 @@ fun ModifyBiere(navHostController: NavHostController, modifier: Modifier = Modif
 
             Button(
                 onClick = {
-                    viewModel.updateBeer(id = drink.id,
+                    viewModel.createBeer(
                         name = name,
                         alcoholDegree = alcoholDegree,
                         brand = brand,
                         type = type
                     )
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SpritzColor),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("Modifier")
+                Text("Ajouter")
             }
-
             if (showPopup) {
                 Popup(onDismiss = {
                     showPopup = false
                     navHostController.navigate(Screen.ListBiere.route)
                 },"Modification réussie","La bière a été mise à jour avec succès !")
 
-            }
-            if (showPopupDelete) {
-                Popup(onDismiss = {
-                    showPopup = false
-                    navHostController.navigate(Screen.ListBiere.route)
-                }, "Suppression réussie", "La bière a été supprimée avec succès !")
-            }
-
-            if (showError) {
-                Popup(onDismiss = { showError = false }, "Erreur", "Échec de la suppression.")
             }
         }
     }

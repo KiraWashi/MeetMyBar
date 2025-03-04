@@ -1,13 +1,17 @@
 [versions]
 agp = "8.6.0"
+coreSplashscreen = "1.0.1"
+datastorePreferences = "1.1.2"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesAndroid = "1.8.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.04.01"
+lottieComposeVersion = "6.1.0"
 map-compose="2.11.4"
 play-service-map="19.0.0"
 secrets = "2.0.1"
@@ -22,6 +26,8 @@ gson="2.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -40,6 +46,7 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 #map
+kotlinx-coroutines-android-v180 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 play-service-map = { module = "com.google.android.gms:play-services-maps", version.ref = "play-service-map" }
 compose-map = { module = "com.google.maps.android:maps-compose", version.ref = "map-compose" }
 androidx-games-activity = { group = "androidx.games", name = "games-activity", version.ref = "gamesActivity" }
@@ -66,6 +73,9 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 
 #gson
 android-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+# Lottie animation
+android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
