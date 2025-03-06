@@ -10,13 +10,16 @@ import com.example.frontend.data.api.MeetMyBarAPI
 import com.example.frontend.data.repository.DrinkRepository
 import com.example.frontend.data.repository.PreferencesRepository
 import com.example.frontend.data.repository.bar.BarRepository
+import com.example.frontend.data.repository.photo.PhotoRepository
 import com.example.frontend.domain.repository.BarRepositoryInterface
 import com.example.frontend.domain.repository.DrinkRepositoryInterface
+import com.example.frontend.domain.repository.PhotoRepositoryInterface
 import com.example.frontend.domain.repository.PreferencesRepositoryInterface
 import com.example.frontend.presentation.feature.addbar.AddBarViewModel
 import com.example.frontend.presentation.feature.bar.BarScreenViewModel
 import com.example.frontend.presentation.feature.biere.ListBiereViewModel
 import com.example.frontend.presentation.feature.home.HomeViewModel
+import com.example.frontend.presentation.feature.photo.PhotoViewModel
 import com.example.frontend.presentation.feature.settings.SettingsViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
@@ -52,6 +55,7 @@ val appModule = module {
     single<DrinkRepositoryInterface> { DrinkRepository(get()) }
     single<BarRepositoryInterface> { BarRepository(get()) }
     single<PreferencesRepositoryInterface> { PreferencesRepository(get()) }
+    single<PhotoRepositoryInterface> { PhotoRepository(get()) }
 
     // View Model
     viewModel { HomeViewModel(get(), get()) }
@@ -59,6 +63,7 @@ val appModule = module {
     viewModel { SettingsViewModel(get()) }
     viewModel { AddBarViewModel(get()) }
     viewModel { BarScreenViewModel(get()) }
+    viewModel { PhotoViewModel(get()) }
 }
 
 fun createJson() = Json { isLenient = true; ignoreUnknownKeys = true }

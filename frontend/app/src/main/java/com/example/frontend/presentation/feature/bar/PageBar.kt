@@ -173,7 +173,7 @@ fun PageBar(
                 )
 
                 // TODO
-                Caroussel()
+                Caroussel(bar.id)
             }
         }
     }
