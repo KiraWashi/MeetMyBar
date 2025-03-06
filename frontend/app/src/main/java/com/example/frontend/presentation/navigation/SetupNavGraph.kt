@@ -9,24 +9,26 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.frontend.data.vo.DrinkVo
-import com.example.frontend.presentation.splashscreen.SplashScreenBeer
-import com.example.frontend.presentation.bar.PageBar
-import com.example.frontend.presentation.biere.AddBiere
-import com.example.frontend.presentation.biere.ListBiere
-import com.example.frontend.presentation.biere.ModifyBiere
-import com.example.frontend.presentation.home.HomeScreen
-import com.example.frontend.presentation.biere.TestApiScreen
+import com.example.frontend.presentation.feature.bar.PageBar
+import com.example.frontend.presentation.feature.biere.AddBiere
+import com.example.frontend.presentation.feature.biere.ListBiere
+import com.example.frontend.presentation.feature.biere.ModifyBiere
+import com.example.frontend.presentation.feature.addbar.AddBarScreen
+import com.example.frontend.presentation.feature.splashscreen.SplashScreenBeer
+import com.example.frontend.presentation.feature.home.HomeScreen
+import com.example.frontend.presentation.feature.editbarmenu.EditBarMenuScreen
+import com.example.frontend.presentation.feature.settings.SettingsScreen
 
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
 fun SetupNavGraph(
     modifier: Modifier,
-    navHostController: NavHostController) {
+    navHostController: NavHostController
+) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.SplachScreenBeer.route
+        startDestination = Screen.HomeScreen.route
     ) {
         composable(
             route = Screen.SplachScreenBeer.route
@@ -36,11 +38,16 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.PageBar.route
-        ) {
+            route = Screen.PageBar.route,
+            arguments = listOf(navArgument("barId") { type = NavType.IntType })
+        ) { backStackEntry ->
+
+            val barId = backStackEntry.arguments?.getInt("barId") ?: -1
+
             PageBar(
                 modifier = modifier,
-                navHostController = navHostController
+                navHostController = navHostController,
+                barId = barId
             )
         }
         composable(
@@ -78,16 +85,43 @@ fun SetupNavGraph(
                 drinkId = drinkId
             )
         }
+        composable(
+            route = Screen.AddBarScreen.route
+        ) {
+            AddBarScreen(
+                navHostController = navHostController,
+            )
+        }
+        composable(
+            route = Screen.SettingsScreen.route
+        ) {
+            SettingsScreen(
+                navHostController = navHostController,
+            )
+        }
+        composable(
+            route = Screen.EditBarMenuScreen.route
+        ) {
+            EditBarMenuScreen(
+                navHostController = navHostController,
+            )
+        }
     }
 }
 
 sealed class Screen(val route: String) {
     object SplachScreenBeer : Screen("SplashScreenBeer")
-    object PageBar : Screen("PageBar")
+    object PageBar : Screen("PageBar/{barId}") {
+        fun createRoute(barId: Int) = "PageBar/$barId"
+    }
     object HomeScreen : Screen("HomeScreen")
     object ListBiere : Screen("ListBiere")
     object AddBiere : Screen("AddBiere")
     object ModifyBiere : Screen("ModifyBiere/{drinkId}") {
         fun createRoute(drinkId: Int) = "ModifyBiere/$drinkId"
     }
+    object TestApiScreen : Screen("TestApiScreen")
+    object AddBarScreen : Screen("AddBarScreen")
+    object SettingsScreen : Screen("SettingsScreen")
+    object EditBarMenuScreen : Screen("EditBarMenuScreen")
 }

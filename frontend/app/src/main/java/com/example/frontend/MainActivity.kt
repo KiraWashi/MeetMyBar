@@ -14,16 +14,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.core.appModule
+import com.example.frontend.presentation.feature.settings.SettingsViewModel
 import com.example.frontend.presentation.navigation.SetupNavGraph
 import com.example.frontend.ui.theme.FrontendTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalAnimationApi::class,ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+
+        var keepSplash = true
+        splashScreen.setKeepOnScreenCondition { keepSplash }
+
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            delay(1000)
+            keepSplash = false
+        }
+
         enableEdgeToEdge()
         setContent {
             FrontendTheme {

@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.biere
+package com.example.frontend.presentation.feature.biere
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +23,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -35,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.frontend.presentation.navigation.Screen
-import com.example.frontend.ui.theme.SpritzClairColor
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -55,8 +55,7 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SpritzClairColor,
-                    titleContentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.tertiary,
                 ),
                 title = {
                     Text("The Shark Pool")
@@ -74,7 +73,6 @@ fun ListBiere(navHostController: NavHostController, modifier: Modifier) {
                         Icon(
                             imageVector = Icons.Filled.Add,
                             contentDescription = "Add a beer",
-                            tint = Color.Black,
                         )
                     }
                 },

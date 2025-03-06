@@ -92,4 +92,15 @@ dependencies {
 
     // GSON
     implementation(libs.android.gson)
+
+    // Data Store
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android.v180)
+
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
+    // Lottie animation
+    implementation(libs.android.lottie.compose)
+
 }

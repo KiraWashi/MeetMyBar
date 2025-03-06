@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.biere
+package com.example.frontend.presentation.feature.biere
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,10 +59,12 @@ fun TestApiScreen() {
                                     text = "${drink.alcoholDegree}°",
                                     style = MaterialTheme.typography.bodyMedium
                                 )
-                                Text(
-                                    text = drink.type,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
+                                drink.type?.let {
+                                    Text(
+                                        text = it,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
                             }
                         }
                     }
