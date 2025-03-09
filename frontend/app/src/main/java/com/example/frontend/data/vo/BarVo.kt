@@ -9,7 +9,7 @@ data class BarVo(
     val address: String,
     val name: String,
     val capacity: Int,
-    val drinks: List<DrinkVo>,
+    val drinks: List<DrinkOfBarVo>,
     val planning: List<ScheduleDayVo>,
     val city: String,
     @SerialName("postal_code")

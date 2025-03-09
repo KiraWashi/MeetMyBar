@@ -58,7 +58,7 @@ fun HorraireOuverture(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = currentDay,
+                    text = currentDay.translateDayToFrench(),
                     style = TextStyle(
                         fontSize = 16.sp,
                     )
@@ -67,7 +67,7 @@ fun HorraireOuverture(
                 Spacer(modifier = Modifier.width(70.dp))
 
                 Text(
-                    text = (currentSchedule?.opening + "-" + currentSchedule?.closing) ?: "",
+                    text = (currentSchedule?.opening?.formatTime() + "-" + currentSchedule?.closing?.formatTime()) ?: "",
                     style = TextStyle(
                         fontSize = 16.sp,
                     )
@@ -103,13 +103,13 @@ fun HorraireOuverture(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = schedule.day,
+                                text = schedule.day.translateDayToFrench(),
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                 )
                             )
                             Text(
-                                text = (currentSchedule?.opening + "-" + currentSchedule?.closing) ?: "",
+                                text = (currentSchedule?.opening?.formatTime() + "-" + currentSchedule?.closing?.formatTime()) ?: "",
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                 )
@@ -119,5 +119,31 @@ fun HorraireOuverture(
                 }
             }
         }
+    }
+}
+
+fun String.formatTime(): String {
+    return if (this.contains(":")) {
+        val parts = this.split(":")
+        if (parts.size >= 2) {
+            "${parts[0]}:${parts[1]}"
+        } else {
+            this
+        }
+    } else {
+        this
+    }
+}
+
+fun String.translateDayToFrench(): String {
+    return when (this.lowercase().trim()) {
+        "monday" -> "Lundi"
+        "tuesday" -> "Mardi"
+        "wednesday" -> "Mercredi"
+        "thursday" -> "Jeudi"
+        "friday" -> "Vendredi"
+        "saturday" -> "Samedi"
+        "sunday" -> "Dimanche"
+        else -> this // Retourne le jour original si non reconnu
     }
 }

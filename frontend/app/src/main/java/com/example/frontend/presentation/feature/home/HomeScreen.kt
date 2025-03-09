@@ -72,6 +72,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.frontend.R
@@ -156,7 +157,8 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navHostController.navigate(route = Screen.PageBar.route) }) {
+                    // TODO
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Filled.List,
                             contentDescription = stringResource(id = R.string.home_account),
@@ -198,52 +200,49 @@ fun HomeScreen(
                 }
 
                 else -> {
-                    HomeMap(
-                        userLocation = homeViewModelState.value.userLocation,
-                        barsSearch = homeViewModelState.value.barsSearch,
-                        selectedBar = homeViewModelState.value.selectedBar,
-                        getLatLngFromAddress = { bar, context ->
-                            viewModel.getLatLngFromAddress(
-                                context = context,
-                                barModel = bar
-                            )
-                        },
-                        onClickBar = { bar ->
-                            viewModel.onClickBar(bar)
-                        },
-                        onClickSeeMore = { barId ->
-                            navHostController.navigate(
-                                Screen.PageBar.createRoute(barId)
-                            )
-                        },
-                        isOpen = { bar ->
-                            viewModel.isOpen(bar)
-                        },
-                        isAppInDarkTheme = homeViewModelState.value.isAppInDarkTheme
-                    )
-                    HomeSearchBar(
-                        onSearchChange = { viewModel.onSearchChange(it) },
-                    )
-                    FloatingActionButton(
-                        onClick = {
-                            navHostController.navigate(Screen.EditBarMenuScreen.route)
-                        },
-                        modifier = Modifier
-                            .padding(24.dp)
-                            .align(Alignment.BottomStart),
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.inversePrimary,
-                    ) {
-                        Icon(Icons.Filled.Edit, "Add bar")
-                    }
-                    if (homeViewModelState.value.homeStatus == HomeStatus.LOADING) {
-                        Loader(modifier = Modifier.align(Alignment.Center))
-                    }
+                    when (homeViewModelState.value.homeStatus) {
+                        HomeStatus.LOADING ->
+                            Loader(modifier = Modifier.align(Alignment.Center))
 
-                    if (homeViewModelState.value.showDialog) {
-                        ErrorDialog(
-                            onDismissDialog = { viewModel.hideDialog() }
-                        )
+                        HomeStatus.ERROR, HomeStatus.SUCCESS -> {
+                            HomeMap(
+                                userLocation = homeViewModelState.value.userLocation,
+                                barsSearch = homeViewModelState.value.barsSearch,
+                                selectedBar = homeViewModelState.value.selectedBar,
+                                onClickBar = { bar ->
+                                    viewModel.onClickBar(bar)
+                                },
+                                onClickSeeMore = { barId ->
+                                    navHostController.navigate(
+                                        Screen.PageBar.createRoute(barId)
+                                    )
+                                },
+                                isOpen = { bar ->
+                                    viewModel.isOpen(bar)
+                                },
+                                isAppInDarkTheme = homeViewModelState.value.isAppInDarkTheme
+                            )
+                            HomeSearchBar(
+                                onSearchChange = { viewModel.onSearchChange(it) },
+                            )
+                            FloatingActionButton(
+                                onClick = {
+                                    navHostController.navigate(Screen.EditBarMenuScreen.route)
+                                },
+                                modifier = Modifier
+                                    .padding(24.dp)
+                                    .align(Alignment.BottomStart),
+                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                contentColor = MaterialTheme.colorScheme.inversePrimary,
+                            ) {
+                                Icon(Icons.Filled.Edit, "Add bar")
+                            }
+                            if (homeViewModelState.value.showDialog) {
+                                ErrorDialog(
+                                    onDismissDialog = { viewModel.hideDialog() }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -256,7 +255,6 @@ fun HomeMap(
     userLocation: LatLng?,
     barsSearch: List<BarModel>?,
     selectedBar: BarModel?,
-    getLatLngFromAddress: (BarModel, Context) -> LatLng?,
     onClickBar: (BarModel?) -> Unit,
     onClickSeeMore: (Int) -> Unit,
     isOpen: (BarModel) -> Boolean,
@@ -278,47 +276,49 @@ fun HomeMap(
     }
 
     GoogleMap(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         cameraPositionState = cameraPositionState,
         properties = MapProperties(
             isMyLocationEnabled = true,
-        )
+        ),
     ) {
         barsSearch?.forEach { bar ->
-            val latLong = getLatLngFromAddress(bar, LocalContext.current)
-            latLong?.let {
-                if (selectedBar?.name == bar.name) {
-                    MarkerInfoWindow(
-                        state = MarkerState(position = it),
-                        icon = bitmapDescriptorFromVector(
-                            LocalContext.current, R.drawable.location_bar
-                        ),
-                        content = {
-                            MapInfoWindow(
-                                bar = bar,
-                                onClickSeeMore = { barId ->
-                                    onClickSeeMore(barId)
-                                },
-                                isOpen = { bar ->
-                                    isOpen(bar)
-                                }
-                            )
-                        },
-                        onInfoWindowClick = {
-                            onClickSeeMore(bar.id)
-                        },
-                    )
-                } else {
-                    Marker(
-                        state = MarkerState(position = it),
-                        icon = bitmapDescriptorFromVector(
-                            LocalContext.current, R.drawable.location_bar
-                        ),
-                        onClick = {
-                            onClickBar(bar)
-                            true
-                        }
-                    )
+            bar.latitude?.let { latitude ->
+                bar.longitude?.let { longitude ->
+                    if (selectedBar?.name == bar.name) {
+                        MarkerInfoWindow(
+                            state = MarkerState(position = LatLng(latitude, longitude)),
+                            icon = bitmapDescriptorFromVector(
+                                LocalContext.current, R.drawable.location_bar
+                            ),
+                            content = {
+                                MapInfoWindow(
+                                    bar = bar,
+                                    onClickSeeMore = { barId ->
+                                        onClickSeeMore(barId)
+                                    },
+                                    isOpen = { bar ->
+                                        isOpen(bar)
+                                    }
+                                )
+                            },
+                            onInfoWindowClick = {
+                                onClickSeeMore(bar.id)
+                            },
+                        )
+                    } else {
+                        Marker(
+                            state = MarkerState(position = LatLng(latitude, longitude)),
+                            icon = bitmapDescriptorFromVector(
+                                LocalContext.current, R.drawable.location_bar
+                            ),
+                            onClick = {
+                                onClickBar(bar)
+                                true
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -421,7 +421,7 @@ fun HomeSearchBar(
 
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                focusedTextColor = Color.Black,
                 focusedBorderColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
                 focusedLabelColor = MaterialTheme.colorScheme.secondary,

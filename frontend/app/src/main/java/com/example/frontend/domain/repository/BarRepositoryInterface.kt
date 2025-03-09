@@ -10,4 +10,5 @@ interface BarRepositoryInterface {
     suspend fun getBars(): Flow<Resource<List<BarModel>?>>
     suspend fun addBars(bar: SimpleBarModel): Flow<Resource<HttpResponse>>
     suspend fun getBarsById(barId: Int): Flow<Resource<BarModel>>
+    suspend fun deleteBarById(barId: Int): Flow<Resource<HttpResponse>>
 }

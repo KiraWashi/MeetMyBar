@@ -25,6 +25,9 @@
     <string name="add_bar_label_button_label">Ajouter</string>
     <string name="add_bar_success_message">Le bar a été ajouté avec succès.</string>
 
+    <!-- DELETE BAR Screen -->
+    <string name="delete_bar_title">Supprimer un bar</string>
+
     <!-- SETTINGS Screen -->
     <string name="settings_title">Paramétres</string>
     <string name="settings_theme_preference_title">Theme Mode</string>
@@ -34,5 +37,6 @@
     <string name="edit_bar_menu_add">Ajouter un bar</string>
     <string name="edit_bar_menu_delete">Supprimer un bar</string>
     <string name="edit_bar_menu_update">Modifier un bar</string>
+    <string name="edit_bar_menu_add_drink_type">Ajouter un type de boisson</string>
 
 </resources>

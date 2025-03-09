@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,10 +24,12 @@ import androidx.navigation.NavHostController
 import com.example.frontend.R
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -39,12 +40,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
 import com.example.frontend.presentation.navigation.Screen
 import com.example.frontend.presentation.components.Caroussel
-import com.example.frontend.presentation.feature.biere.mapBeerColor
-import com.example.frontend.presentation.feature.biere.mapFontOverBeer
-import com.example.frontend.presentation.feature.home.HomeViewModel
+import com.example.frontend.presentation.components.mapBeerColor
+import com.example.frontend.presentation.components.mapFontOverBeer
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -70,12 +69,12 @@ fun PageBar(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                 ),
                 title = {
-                    Text("The Shark Pool")
+                    Text(homeViewModelState.value.bar?.name ?: "")
                 },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.navigate(Screen.HomeScreen.route) }) {
                         Icon(
-                            imageVector = Icons.Filled.Search,
+                            imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Settings",
                         )
                     }
@@ -93,6 +92,7 @@ fun PageBar(
     ) {innerPadding ->
         Column(
             modifier = Modifier
+                .padding(16.dp)
                 .fillMaxSize()
                 .fillMaxHeight()
                 .verticalScroll(scrollState).padding(innerPadding),
@@ -103,27 +103,26 @@ fun PageBar(
 
                     // TODO
                     Image(
-                        painter = painterResource(id = R.drawable.sharkpool), // Utilisez le nom sans extension
+                        painter = painterResource(id = R.drawable.sharkpool),
                         contentDescription = "Shark Pool Image",
-                        contentScale = ContentScale.FillWidth, // Ajuste l'image
+                        contentScale = ContentScale.FillWidth,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = bar.name,
-                    style = androidx.compose.ui.text.TextStyle(
+                    style = TextStyle(
                         fontSize = 24.sp,
                     ),
-                    modifier = Modifier.padding(10.dp)
                 )
-
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = bar.address + " " + bar.postalCode + bar.city,
-                    style = androidx.compose.ui.text.TextStyle(
-                        fontSize = 12.sp,
+                    text = bar.address + ", " + bar.postalCode + " " + bar.city,
+                    style = TextStyle(
+                        fontSize = 18.sp,
                     ),
-                    modifier = Modifier.padding(bottom = 10.dp)// Navigue vers la route
+                    modifier = Modifier.padding( bottom = 10.dp)
                 )
 
                 // TODO
@@ -168,7 +167,9 @@ fun PageBar(
                         fontSize = 18.sp
                     ),
                     modifier = Modifier.padding(4.dp).clickable {
-                        navHostController.navigate(Screen.ListBiere.route)
+                        navHostController.navigate(
+                            Screen.ListBiere.createRoute(barId)
+                        )
                     },
                 )
 

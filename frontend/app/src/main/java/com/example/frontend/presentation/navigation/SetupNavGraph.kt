@@ -10,10 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.frontend.presentation.feature.bar.PageBar
-import com.example.frontend.presentation.feature.biere.AddBiere
-import com.example.frontend.presentation.feature.biere.ListBiere
-import com.example.frontend.presentation.feature.biere.ModifyBiere
+import com.example.frontend.presentation.feature.addbiere.AddBiere
+import com.example.frontend.presentation.feature.listebiere.ListBiere
+import com.example.frontend.presentation.feature.modifybiere.ModifyBiere
 import com.example.frontend.presentation.feature.addbar.AddBarScreen
+import com.example.frontend.presentation.feature.adddrink.AddDrinkScreen
+import com.example.frontend.presentation.feature.deletebar.DeleteBarScreen
 import com.example.frontend.presentation.feature.splashscreen.SplashScreenBeer
 import com.example.frontend.presentation.feature.home.HomeScreen
 import com.example.frontend.presentation.feature.editbarmenu.EditBarMenuScreen
@@ -58,11 +60,28 @@ fun SetupNavGraph(
             )
         }
         composable(
-            route = Screen.ListBiere.route
-        ) {
+            route = Screen.ListBiere.route,
+            arguments = listOf(navArgument("barId") { type = NavType.IntType })
+        ) { backStackEntry ->
+
+            val barId = backStackEntry.arguments?.getInt("barId") ?: -1
+
             ListBiere(
+                barId = barId,
                 navHostController = navHostController,
-                modifier = modifier
+                modifier = modifier,
+            )
+        }
+        composable(
+            route = Screen.AddDrinkScreen.route,
+            arguments = listOf(navArgument("barId") { type = NavType.IntType })
+        ) { backStackEntry ->
+
+            val barId = backStackEntry.arguments?.getInt("barId") ?: -1
+
+            AddDrinkScreen(
+                barId = barId,
+                navHostController = navHostController,
             )
         }
         composable(
@@ -106,6 +125,14 @@ fun SetupNavGraph(
                 navHostController = navHostController,
             )
         }
+
+        composable(
+            route = Screen.DeleteBarScreen.route
+        ) {
+            DeleteBarScreen(
+                navHostController = navHostController
+            )
+        }
     }
 }
 
@@ -115,13 +142,18 @@ sealed class Screen(val route: String) {
         fun createRoute(barId: Int) = "PageBar/$barId"
     }
     object HomeScreen : Screen("HomeScreen")
-    object ListBiere : Screen("ListBiere")
+    object ListBiere : Screen("ListBiere/{barId}"){
+        fun createRoute(barId: Int) = "ListBiere/$barId"
+    }
     object AddBiere : Screen("AddBiere")
     object ModifyBiere : Screen("ModifyBiere/{drinkId}") {
         fun createRoute(drinkId: Int) = "ModifyBiere/$drinkId"
     }
-    object TestApiScreen : Screen("TestApiScreen")
     object AddBarScreen : Screen("AddBarScreen")
     object SettingsScreen : Screen("SettingsScreen")
     object EditBarMenuScreen : Screen("EditBarMenuScreen")
+    object DeleteBarScreen : Screen("DeleteBarScreen")
+    object AddDrinkScreen : Screen("AddDrinkScreen/{barId}"){
+        fun createRoute(barId: Int) = "AddDrinkScreen/$barId"
+    }
 }

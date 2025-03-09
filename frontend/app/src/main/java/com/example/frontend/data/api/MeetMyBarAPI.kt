@@ -3,7 +3,7 @@ package com.example.frontend.data.api
 import android.util.Log
 import com.example.frontend.data.repository.photo.BarPhoto
 import com.example.frontend.data.vo.BarVo
-import com.example.frontend.data.vo.DrinkVo
+import com.example.frontend.data.vo.DrinkTypeVo
 import com.example.frontend.data.vo.SimpleBarVo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -25,33 +25,33 @@ class MeetMyBarAPI(
 ) : KoinComponent {
 
     //GET - Toutes les boissons de la base
-    suspend fun getDrinks(): List<DrinkVo> {
+    suspend fun getDrinks(): List<DrinkTypeVo> {
         return client.get("$baseUrl/drink") {
             contentType(ContentType.Application.Json)
-        }.body<List<DrinkVo>>()
+        }.body<List<DrinkTypeVo>>()
     }
 
     //GET - Une boisson selon sont id
-    suspend fun getDrink(id : Int): DrinkVo {
+    suspend fun getDrink(id : Int): DrinkTypeVo {
         return client.get("$baseUrl/drink/$id") {
             contentType(ContentType.Application.Json)
-        }.body<DrinkVo>()
+        }.body<DrinkTypeVo>()
     }
 
     // POST - Créer une nouvelle boisson
-    suspend fun createDrink(drink: DrinkVo): DrinkVo {
+    suspend fun createDrink(drink: DrinkTypeVo): DrinkTypeVo {
         return client.post("$baseUrl/drink") {
             contentType(ContentType.Application.Json)
             setBody(drink)
-        }.body<DrinkVo>()
+        }.body<DrinkTypeVo>()
     }
 
     // PUT - Mettre à jour une boisson existante
-    suspend fun updateDrink( drink: DrinkVo): DrinkVo {
+    suspend fun updateDrink( drink: DrinkTypeVo): DrinkTypeVo {
         return client.patch("$baseUrl/drink") {
             contentType(ContentType.Application.Json)
             setBody(drink)
-        }.body<DrinkVo>()
+        }.body<DrinkTypeVo>()
     }
 
     // DELETE - Supprimer une boisson
@@ -80,6 +80,12 @@ class MeetMyBarAPI(
         }.body<BarVo>()
     }
 
+    suspend fun deleteBarById(barId: Int): HttpResponse {
+        return client.delete("$baseUrl/bar/$barId") {
+            contentType(ContentType.Application.Json)
+        }.body<HttpResponse>()
+    }
+
     suspend fun getPhotosByBar( barId: Int): List<BarPhoto> {
         return runCatching {
             val responseText: String = client.get("$baseUrl/photos/bar/$barId") {
@@ -98,5 +104,11 @@ class MeetMyBarAPI(
         return client.get("$baseUrl/photos/download/$id") {
             contentType(ContentType.Image.JPEG)
         }.body<ByteArray>()
+    }
+
+    suspend fun addDrinkToBar(idBar: Int, idDrink: Int, volume: String, price: String): HttpResponse {
+        return client.post("$baseUrl/drink/bar?idBar=$idBar&idDrink=$idDrink&volume=$volume&price=$price") {
+            contentType(ContentType.Application.Json)
+        }.body<HttpResponse>()
     }
 }

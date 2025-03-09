@@ -143,14 +143,6 @@ fun PhotoItem(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                // Optionnel: Afficher la description sous l'image
-                if (description.isNotEmpty()) {
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
             }
         }
     }

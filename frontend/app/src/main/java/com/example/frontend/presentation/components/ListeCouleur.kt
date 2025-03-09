@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.feature.biere
+package com.example.frontend.presentation.components
 
 import androidx.compose.ui.graphics.Color
 

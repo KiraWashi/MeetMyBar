@@ -21,22 +21,9 @@ fun BarVo.toModel() = BarModel(
         day.toModel()
     },
     city = city,
-    postalCode = postalCode
-)
-
-fun BarModel.toVo() = BarVo(
-    id = id,
-    address = address,
-    name = name,
-    capacity = capacity,
-    drinks = drinks.map { drinkModel ->
-        drinkModel.toVo()
-    },
-    planning = planning.map { planningModel ->
-        planningModel.toVo()
-    },
-    city = city,
-    postalCode = postalCode
+    postalCode = postalCode,
+    latitude = null,
+    longitude = null
 )
 
 fun SimpleBarVo.toModel() = SimpleBarModel(
