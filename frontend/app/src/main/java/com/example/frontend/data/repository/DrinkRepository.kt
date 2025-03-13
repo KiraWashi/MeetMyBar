@@ -103,4 +103,15 @@ class DrinkRepository(
             emit(Resource.Error(e))
         }
     }
+
+    override suspend fun updateDrinkPrice(idBar: Int, idDrink: Int, volume: Float, newPrice: Float): Flow<Resource<Unit>> = flow {
+        emit(Loading())
+        try {
+            // Conversion en String pour l'API
+            meetMyBarAPI.updateDrinkPrice(idBar, idDrink, volume.toString(), newPrice.toString())
+            emit(Success(Unit))
+        } catch (e: Exception) {
+            emit(Error(e))
+        }
+    }
 }

@@ -12,4 +12,5 @@ interface DrinkRepositoryInterface {
     suspend fun deleteDrink(id: Int): Flow<Resource<Unit>>
     suspend fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Double): Flow<Resource<Unit>>
     suspend fun addDrinkToBar(idBar: Int, idDrink: Int, volume: Double, price: Double): Flow<Resource<Unit>>
+    suspend fun updateDrinkPrice(idBar: Int, idDrink: Int, volume: Float, newPrice: Float): Flow<Resource<Unit>>
 }
