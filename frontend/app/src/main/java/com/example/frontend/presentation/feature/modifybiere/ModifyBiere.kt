@@ -155,6 +155,7 @@ fun ModifyBiere(
                 onTextFieldValueChange = { },
                 label = "Nom de la bière",
                 modifier = Modifier.fillMaxWidth(),
+                enabled = false,
             )
 
             MeetMyBarTextField(
@@ -162,18 +163,21 @@ fun ModifyBiere(
                 onTextFieldValueChange = { },
                 label = "Degré d'alcool",
                 modifier = Modifier.fillMaxWidth(),
+                enabled = false,
             )
 
             ColorPicker(
                 selectedColor = type,
-                onColorSelected = {}
+                onColorSelected = {},
+                enabled = false,
             )
 
             MeetMyBarTextField(
                 value = brand,
                 onTextFieldValueChange = { },
                 label = "Marque",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = false,
             )
 
             // Champs modifiables (prix et volume)

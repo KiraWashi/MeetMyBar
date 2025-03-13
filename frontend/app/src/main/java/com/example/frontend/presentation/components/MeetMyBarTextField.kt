@@ -35,7 +35,8 @@ fun MeetMyBarTextField(
     label: String,
     value: String,
     onTextFieldValueChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    enabled: Boolean = true  // Nouveau paramètre avec true par défaut
 ) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = MaterialTheme.colorScheme.secondary,
@@ -49,15 +50,18 @@ fun MeetMyBarTextField(
             onValueChange = {
                 onTextFieldValueChange(it)
             },
+            enabled = enabled,  // Utilisation du paramètre
             trailingIcon = {
-                IconButton(onClick = {
-                    onTextFieldValueChange("")
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = stringResource(id = R.string.home_search),
-                        tint = MaterialTheme.colorScheme.secondary,
-                    )
+                if (enabled) {  // N'afficher l'icône de suppression que si le champ est activé
+                    IconButton(onClick = {
+                        onTextFieldValueChange("")
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = stringResource(id = R.string.home_search),
+                            tint = MaterialTheme.colorScheme.secondary,
+                        )
+                    }
                 }
             },
             label = {
@@ -65,11 +69,18 @@ fun MeetMyBarTextField(
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                unfocusedTextColor = if (enabled)
+                    MaterialTheme.colorScheme.inversePrimary
+                else
+                    MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
                 focusedBorderColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                disabledBorderColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                 focusedLabelColor = MaterialTheme.colorScheme.secondary,
                 unfocusedLabelColor = MaterialTheme.colorScheme.inversePrimary,
+                disabledLabelColor = MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
                 cursorColor = MaterialTheme.colorScheme.secondary,
+                disabledTextColor = MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
             ),
             shape = RoundedCornerShape(7.dp),
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
@@ -84,5 +95,16 @@ fun MeetMyBarTextFieldPreview() {
         label = "Nom",
         value = "",
         onTextFieldValueChange = {},
+    )
+}
+
+@Preview
+@Composable
+fun MeetMyBarTextFieldDisabledPreview() {
+    MeetMyBarTextField(
+        label = "Nom",
+        value = "Valeur non modifiable",
+        onTextFieldValueChange = {},
+        enabled = false
     )
 }

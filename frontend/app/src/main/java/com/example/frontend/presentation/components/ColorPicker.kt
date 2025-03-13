@@ -42,7 +42,8 @@ object BeerColorTranslator {
 fun ColorPicker(
     selectedColor: String,
     onColorSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true // Nouveau paramètre avec true par défaut
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -54,13 +55,14 @@ fun ColorPicker(
     }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
+        expanded = expanded && enabled, // N'activer l'expansion que si le composant est activé
+        onExpandedChange = { if (enabled) expanded = it } // N'autoriser le changement d'état que si activé
     ) {
         OutlinedTextField(
             value = displayColor,
             onValueChange = {},
             readOnly = true,
+            enabled = enabled, // Utiliser le paramètre enabled
             label = { Text("Couleur de la bière") },
             leadingIcon = {
                 Box(
@@ -69,15 +71,25 @@ fun ColorPicker(
                         .size(24.dp)
                         .clip(CircleShape)
                         .background(mapBeerColor(BeerColorTranslator.toDbName(displayColor)))
-                        .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f), CircleShape)
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = if (enabled) 0.3f else 0.15f
+                            ),
+                            CircleShape
+                        )
                 )
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                disabledTextColor = MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
                 focusedBorderColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                disabledBorderColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                 focusedLabelColor = MaterialTheme.colorScheme.secondary,
                 unfocusedLabelColor = MaterialTheme.colorScheme.inversePrimary,
+                disabledLabelColor = MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
                 cursorColor = MaterialTheme.colorScheme.secondary,
             ),
             modifier = modifier
@@ -85,16 +97,18 @@ fun ColorPicker(
                 .menuAnchor()
         )
 
-        StyledColorMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            items = BeerColorTranslator.allDisplayNames,
-            onItemSelected = { color ->
-                // Convertir le nom d'affichage en nom de BDD avant de le passer au callback
-                onColorSelected(BeerColorTranslator.toDbName(color))
-                expanded = false
-            }
-        )
+        if (enabled) { // Afficher le menu de sélection uniquement si le composant est activé
+            StyledColorMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                items = BeerColorTranslator.allDisplayNames,
+                onItemSelected = { color ->
+                    // Convertir le nom d'affichage en nom de BDD avant de le passer au callback
+                    onColorSelected(BeerColorTranslator.toDbName(color))
+                    expanded = false
+                }
+            )
+        }
     }
 }
 

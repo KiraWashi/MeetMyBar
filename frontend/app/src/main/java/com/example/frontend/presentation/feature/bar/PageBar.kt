@@ -133,11 +133,10 @@ fun PageBar(
                 )
                 if(!bar.drinks.isEmpty()){
                     val firstDrink = bar.drinks.get(0);
-                    // TODO
                     Card(
                         modifier = Modifier
                             .fillMaxWidth() // La Card occupe toute la largeur de l'écran
-                            .padding(8.dp), // Ajoute un peu d'espace autour de la carte
+                            .padding(2.dp), // Ajoute un peu d'espace autour de la carte
                         shape = RoundedCornerShape(8.dp), // Coins arrondis
                         colors = CardDefaults.cardColors(
                             containerColor = mapBeerColor(firstDrink.type), //Card background color
@@ -173,8 +172,6 @@ fun PageBar(
                         )
                     },
                 )
-
-                // TODO
                 Caroussel(bar.id)
             }
         }

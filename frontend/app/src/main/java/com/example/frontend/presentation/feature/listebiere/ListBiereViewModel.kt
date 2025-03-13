@@ -1,5 +1,6 @@
 package com.example.frontend.presentation.feature.listebiere
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontend.data.utils.Status
@@ -24,16 +25,57 @@ class ListBiereViewModel(
 
     fun getDrinks(barId: Int) {
         viewModelScope.launch {
-            _listeBiereViewModelState.update { it.copy(isLoading = true) }
+            try {
+                // Mettre à jour l'état pour indiquer le chargement
+                _listeBiereViewModelState.update {
+                    it.copy(
+                        isLoading = true,
+                       )
+                }
 
-            barRepository.getBarsById(barId).collect { resource ->
-                if (resource.status == Status.SUCCESS && resource.data != null) {
-                    _listeBiereViewModelState.update {
-                        it.copy(
-                            drinks = resource.data.drinks,
-                            isLoading = false
-                        )
+                // Récupérer les données du repository
+                barRepository.getBarsById(barId).collect { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            if (resource.data != null) {
+                                val drinks = resource.data.drinks
+
+                                _listeBiereViewModelState.update {
+                                    it.copy(
+                                        drinks = drinks,
+                                        isLoading = false,)
+                                }
+
+                                // Vérifier l'état après mise à jour
+                                val currentState = _listeBiereViewModelState.value
+                            } else {
+                                _listeBiereViewModelState.update {
+                                    it.copy(
+                                        isLoading = false,)
+                                }
+                            }
+                        }
+                        Status.ERROR -> {
+                            _listeBiereViewModelState.update {
+                                it.copy(
+                                    isLoading = false,
+                                )
+                            }
+                        }
+                        Status.LOADING -> {
+                            _listeBiereViewModelState.update {
+                                it.copy(
+                                    isLoading = true,
+                                )
+                            }
+                        }
                     }
+                }
+            } catch (e: Exception) {
+                _listeBiereViewModelState.update {
+                    it.copy(
+                        isLoading = false,
+                    )
                 }
             }
         }
