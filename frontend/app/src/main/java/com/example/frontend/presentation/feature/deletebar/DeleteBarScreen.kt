@@ -31,7 +31,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +60,7 @@ import com.example.frontend.R
 import com.example.frontend.domain.model.BarModel
 import com.example.frontend.presentation.components.Error
 import com.example.frontend.presentation.components.ErrorDialog
-import com.example.frontend.presentation.components.Loader
+import com.example.frontend.presentation.components.MeetMyBarLoader
 import com.example.frontend.presentation.components.MeetMyBarButton
 import com.example.frontend.presentation.components.MeetMyBarSecondaryButton
 import com.example.frontend.presentation.feature.home.HomeStatus
@@ -139,7 +138,7 @@ fun DeleteBarScreen(
         ) {
             when (state.value.deleteBarScreenStatus) {
                 HomeStatus.LOADING -> {
-                    Loader(modifier = Modifier.align(Alignment.Center))
+                    MeetMyBarLoader(modifier = Modifier.align(Alignment.Center))
                 }
                 HomeStatus.ERROR -> {
                     Column(

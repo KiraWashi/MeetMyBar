@@ -269,7 +269,6 @@ fun AddNewBeerScreen(
                 viewModel.onNameTextFieldChange(newValue)
             },
             label =  "Nom de la bière",
-            modifier = Modifier.fillMaxWidth()
         )
         MeetMyBarTextField(
             value = state.value.alcoholDegreeTextField,
@@ -277,7 +276,6 @@ fun AddNewBeerScreen(
                 viewModel.onAlcoholDegreeTextFieldChange(newValue)
             },
             label =  "Degré d'alcool",
-            modifier = Modifier.fillMaxWidth()
         )
 
         ColorPicker(

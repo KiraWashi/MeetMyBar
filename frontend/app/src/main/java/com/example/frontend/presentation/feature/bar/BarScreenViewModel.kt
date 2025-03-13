@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.frontend.data.utils.Status
 import com.example.frontend.domain.model.BarModel
 import com.example.frontend.domain.repository.BarRepositoryInterface
-import com.example.frontend.presentation.feature.home.HomeStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,7 +22,7 @@ class BarScreenViewModel(
 
     fun getBarsById(barId: Int) {
         viewModelScope.launch {
-            barRepository.getBarsById(barId = barId).collect { resource ->
+            barRepository.getBarById(barId = barId).collect { resource ->
                 if (resource.status == Status.SUCCESS) {
                     _barScreenViewModelState.update {
                         it.copy(
