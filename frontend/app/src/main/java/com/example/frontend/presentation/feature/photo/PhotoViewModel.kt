@@ -1,9 +1,7 @@
 package com.example.frontend.presentation.feature.photo
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontend.data.repository.photo.BarPhoto

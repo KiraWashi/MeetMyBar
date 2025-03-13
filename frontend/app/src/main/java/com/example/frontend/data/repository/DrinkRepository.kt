@@ -16,7 +16,7 @@ class DrinkRepository(
     override suspend fun getDrinks(): Flow<Resource<List<DrinkTypeModel>?>> = flow {
         try{
             emit(Loading())
-            var drinksModel = meetMyBarAPI.getDrinks().map { drinkVo ->
+            val drinksModel = meetMyBarAPI.getDrinks().map { drinkVo ->
                 drinkVo.toModel() }
             emit(Success(drinksModel))
         } catch (e: Exception) {
@@ -26,7 +26,7 @@ class DrinkRepository(
     override suspend fun getDrink(id : Int):  Flow<Resource<DrinkTypeModel?>> = flow {
        try{
            emit(Loading())
-            var drinkModel = meetMyBarAPI.getDrink(id).toModel()
+            val drinkModel = meetMyBarAPI.getDrink(id).toModel()
             emit(Success(drinkModel))
         } catch (e: Exception) {
             emit(Error(e))

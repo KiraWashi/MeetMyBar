@@ -29,7 +29,7 @@ import com.example.frontend.presentation.navigation.Screen
 @Composable
 fun SplashScreenBeer(navHostController: NavHostController) {
     val raw = R.raw.biere
-    val darkMode = !isSystemInDarkTheme();
+    val darkMode = !isSystemInDarkTheme()
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(raw))
     val progress by animateLottieCompositionAsState(composition = composition)
 

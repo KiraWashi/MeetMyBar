@@ -1,11 +1,8 @@
 package com.example.frontend.presentation.feature.home
 
 import android.content.Context
-import android.location.Geocoder
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.frontend.data.datastore.ThemeMode
 import com.example.frontend.data.utils.Status
 import com.example.frontend.domain.model.BarModel
 import com.example.frontend.domain.repository.BarRepositoryInterface

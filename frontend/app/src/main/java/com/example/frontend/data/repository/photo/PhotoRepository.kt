@@ -6,10 +6,8 @@ import com.example.frontend.data.utils.Resource
 import com.example.frontend.domain.repository.PhotoRepositoryInterface
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.koin.core.component.KoinComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
+import org.koin.core.component.KoinComponent
 
 @Serializable
 data class BarPhoto(

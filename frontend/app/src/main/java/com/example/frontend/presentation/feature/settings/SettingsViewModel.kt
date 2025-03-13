@@ -3,7 +3,6 @@ package com.example.frontend.presentation.feature.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontend.data.datastore.ThemeMode
-import com.example.frontend.data.repository.PreferencesRepository
 import com.example.frontend.domain.repository.PreferencesRepositoryInterface
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

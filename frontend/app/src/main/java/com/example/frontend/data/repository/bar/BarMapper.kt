@@ -1,7 +1,6 @@
 package com.example.frontend.data.repository.bar
 
 import com.example.frontend.data.repository.toModel
-import com.example.frontend.data.repository.toVo
 import com.example.frontend.data.vo.BarVo
 import com.example.frontend.data.vo.BasicBarVo
 import com.example.frontend.data.vo.ScheduleDayVo
