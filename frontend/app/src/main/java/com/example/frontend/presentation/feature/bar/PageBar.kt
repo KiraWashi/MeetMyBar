@@ -1,5 +1,9 @@
 package com.example.frontend.presentation.feature.bar
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.material3.CircularProgressIndicator
+import com.example.frontend.presentation.feature.photo.PhotoViewModel
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,10 +28,13 @@ import androidx.navigation.NavHostController
 import com.example.frontend.R
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -38,15 +44,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import com.example.frontend.presentation.navigation.Screen
 import com.example.frontend.presentation.components.Caroussel
-import com.example.frontend.presentation.feature.biere.mapBeerColor
-import com.example.frontend.presentation.feature.biere.mapFontOverBeer
-import com.example.frontend.presentation.feature.home.HomeViewModel
+import com.example.frontend.presentation.components.mapBeerColor
+import com.example.frontend.presentation.components.mapFontOverBeer
 import org.koin.androidx.compose.koinViewModel
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,21 +76,27 @@ fun PageBar(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                 ),
                 title = {
-                    Text("The Shark Pool")
+                    Text(homeViewModelState.value.bar?.name ?: "")
                 },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.navigate(Screen.HomeScreen.route) }) {
                         Icon(
-                            imageVector = Icons.Filled.Search,
+                            imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Settings",
                         )
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        navHostController.navigate(
+                            Screen.ModifyBar.createRoute(
+                                homeViewModelState.value.bar?.id ?: -1
+                            )
+                        )
+                    }) {
                         Icon(
-                            imageVector = Icons.Filled.FavoriteBorder,
-                            contentDescription = "Add a beer",
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Modify bar",
                         )
                     }
                 },
@@ -93,6 +105,7 @@ fun PageBar(
     ) {innerPadding ->
         Column(
             modifier = Modifier
+                .padding(16.dp)
                 .fillMaxSize()
                 .fillMaxHeight()
                 .verticalScroll(scrollState).padding(innerPadding),
@@ -100,80 +113,118 @@ fun PageBar(
         ) {
             homeViewModelState.value.bar?.let { bar ->
                 Box() {
+                    // Utiliser PhotoViewModel pour charger la photo principale du bar
+                    val photoViewModel = koinViewModel<PhotoViewModel>()
+                    val photos by photoViewModel.photos.collectAsState()
+                    val isLoading by photoViewModel.isLoading.collectAsState()
 
-                    // TODO
-                    Image(
-                        painter = painterResource(id = R.drawable.sharkpool), // Utilisez le nom sans extension
-                        contentDescription = "Shark Pool Image",
-                        contentScale = ContentScale.FillWidth, // Ajuste l'image
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // Charger les photos du bar lors de la composition initiale
+                    LaunchedEffect(bar.id) {
+                        photoViewModel.getPhotosByBar(bar.id)
+                    }
+
+                    // Si des photos sont disponibles, utiliser la première comme photo principale
+                    if (photos.isNotEmpty() && !isLoading) {
+                        val mainPhotoId = photos.first().id
+                        val photoState = photoViewModel.getPhotoState(mainPhotoId).collectAsState().value
+
+                        LaunchedEffect(mainPhotoId) {
+                            photoViewModel.loadPhoto(mainPhotoId)
+                        }
+
+                        if (photoState.isLoading) {
+                            Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator()
+                            }
+                        } else if (photoState.photo != null) {
+                            Image(
+                                bitmap = photoState.photo.asImageBitmap(),
+                                contentDescription = "${bar.name} Image",
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        } else {
+                            // Utiliser l'image par défaut si la photo ne peut pas être chargée
+                            Image(
+                                painter = painterResource(id = R.drawable.default_bar_image),
+                                contentDescription = "${bar.name} Image (Default)",
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    } else {
+                        // Aucune photo disponible, utiliser l'image par défaut
+                        Image(
+                            painter = painterResource(id = R.drawable.default_bar_image),
+                            contentDescription = "${bar.name} Image (Default)",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
-
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = bar.name,
-                    style = androidx.compose.ui.text.TextStyle(
+                    style = TextStyle(
                         fontSize = 24.sp,
                     ),
-                    modifier = Modifier.padding(10.dp)
                 )
-
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = bar.address + " " + bar.postalCode + bar.city,
-                    style = androidx.compose.ui.text.TextStyle(
-                        fontSize = 12.sp,
+                    text = bar.address + ", " + bar.postalCode + " " + bar.city,
+                    style = TextStyle(
+                        fontSize = 18.sp,
                     ),
-                    modifier = Modifier.padding(bottom = 10.dp)// Navigue vers la route
+                    modifier = Modifier.padding( bottom = 10.dp)
                 )
 
-                // TODO
                 HorraireOuverture(
                     modifier = Modifier.fillMaxWidth(),
                     darkMode = darkMode,
                     planning = bar.planning
                 )
-
-                // TODO
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth() // La Card occupe toute la largeur de l'écran
-                        .padding(8.dp), // Ajoute un peu d'espace autour de la carte
-                    shape = RoundedCornerShape(8.dp), // Coins arrondis
-                    colors = CardDefaults.cardColors(
-                        containerColor = mapBeerColor("biere_blonde"), //Card background color
-                        contentColor = mapFontOverBeer("biere_blonde")  //Card content color,e.g.text
-                    )
-                ) {
-                    Row(
+                if(!bar.drinks.isEmpty()){
+                    val firstDrink = bar.drinks.get(0);
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp), // Ajoute un espace intérieur pour le contenu
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .padding(2.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = mapBeerColor(firstDrink.type),
+                            contentColor = mapFontOverBeer(firstDrink.type)
+                        )
                     ) {
-                        Column {
-                            Text(text = "Chimay Bleue")
-                            Text(text = "Biere Blonde")
-                        }
-                        Text(text = "9" + "°")
-                        Column {
-                            Text(text = "8" + " €")
-                            Text(text = "1" + "L")
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(text = firstDrink.brand)
+                                Text(text = firstDrink.name)
+                            }
+                            Text(text = firstDrink.alcoholDegree + "°")
+                            Column {
+                                Text(text = firstDrink.price.toString() + " €")
+                                Text(text = firstDrink.volume.toString() + "L")
+                            }
                         }
                     }
                 }
-
                 Text(
                     text = "Voir toutes les bières diponibles",
                     style = TextStyle(
                         fontSize = 18.sp
                     ),
                     modifier = Modifier.padding(4.dp).clickable {
-                        navHostController.navigate(Screen.ListBiere.route)
+                        navHostController.navigate(
+                            Screen.ListBiere.createRoute(barId)
+                        )
                     },
                 )
-
-                // TODO
-                Caroussel()
+                Caroussel(bar.id)
             }
         }
     }

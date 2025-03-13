@@ -1,6 +1,5 @@
 package com.example.frontend.presentation.feature.editbarmenu
 
-import android.graphics.drawable.VectorDrawable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +10,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -66,24 +64,24 @@ fun EditBarMenuScreen(
                 .padding(horizontal = 24.dp, vertical = 24.dp)
         ) {
             EditBarMenuItem(
-                navHostController = navHostController,
                 title = stringResource(id = R.string.edit_bar_menu_add),
                 icon = Icons.Filled.Add,
-                screen = Screen.AddBarScreen
+                screen = Screen.AddBarScreen,
+                onClick = { navHostController.navigate(Screen.AddBarScreen.route) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             EditBarMenuItem(
-                navHostController = navHostController,
                 title = stringResource(id = R.string.edit_bar_menu_delete),
                 icon = Icons.Filled.Delete,
-                screen = Screen.AddBarScreen
+                screen = Screen.AddBarScreen,
+                onClick = { navHostController.navigate(Screen.DeleteBarScreen.route) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             EditBarMenuItem(
-                navHostController = navHostController,
-                title = stringResource(id = R.string.edit_bar_menu_update),
-                icon = Icons.Filled.Edit,
-                screen = Screen.AddBarScreen
+                title = stringResource(id = R.string.delete_biere_type_title),
+                icon = Icons.Filled.Delete,
+                screen = Screen.AddBarScreen,
+                onClick = { navHostController.navigate(Screen.DeleteTypeBiereScreen.route) }
             )
         }
     }
@@ -91,18 +89,19 @@ fun EditBarMenuScreen(
 
 @Composable
 fun EditBarMenuItem(
-    navHostController: NavHostController,
     title: String,
     icon: ImageVector,
-    screen: Screen
+    screen: Screen,
+    onClick: () -> Unit,
 ) {
     Card(
-        onClick = { navHostController.navigate(screen.route) }
+        onClick = { onClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row (
+        Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 24.dp)
-        ){
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = "",

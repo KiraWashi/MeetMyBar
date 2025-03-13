@@ -1,4 +1,4 @@
-package com.example.frontend.presentation.biere
+package com.example.frontend.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog

@@ -80,24 +80,6 @@ class HomeViewModel(
         }
     }
 
-    fun getLatLngFromAddress(context: Context, barModel: BarModel): LatLng? {
-        return try {
-            val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses = geocoder.getFromLocationName(
-                barModel.address + ", " + barModel.city + ", " + barModel.postalCode,
-                1
-            )
-            if (!addresses.isNullOrEmpty()) {
-                LatLng(addresses[0].latitude, addresses[0].longitude)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            Log.e("Geocoding", "Erreur lors de la conversion de l'adresse", e)
-            null
-        }
-    }
-
     fun onSearchChange(
         search: String,
     ) {

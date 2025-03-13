@@ -4,14 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BarVo(
+data class BasicBarVo(
     val id: Int,
-    val address: String,
     val name: String,
     val capacity: Int,
-    val drinks: List<DrinkOfBarVo>,
-    val planning: List<ScheduleDayVo>,
+    val address: String,
     val city: String,
     @SerialName("postal_code")
-    val postalCode: String
+    val postalCode: String,
 )

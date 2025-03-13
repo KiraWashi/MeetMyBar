@@ -4,10 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,20 +20,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -66,19 +57,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.frontend.R
 import com.example.frontend.domain.model.BarModel
-import com.example.frontend.presentation.components.Error
 import com.example.frontend.presentation.components.ErrorDialog
-import com.example.frontend.presentation.components.Loader
+import com.example.frontend.presentation.components.MeetMyBarLoader
 import com.example.frontend.presentation.components.MeetMyBarButton
 import com.example.frontend.presentation.navigation.Screen
 import com.example.frontend.ui.theme.SpritzColorLight
@@ -91,7 +77,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerInfoWindow
-import com.google.maps.android.compose.MarkerInfoWindowContent
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import org.koin.androidx.compose.koinViewModel
@@ -156,7 +141,8 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navHostController.navigate(route = Screen.PageBar.route) }) {
+                    // TODO
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Filled.List,
                             contentDescription = stringResource(id = R.string.home_account),
@@ -198,52 +184,49 @@ fun HomeScreen(
                 }
 
                 else -> {
-                    HomeMap(
-                        userLocation = homeViewModelState.value.userLocation,
-                        barsSearch = homeViewModelState.value.barsSearch,
-                        selectedBar = homeViewModelState.value.selectedBar,
-                        getLatLngFromAddress = { bar, context ->
-                            viewModel.getLatLngFromAddress(
-                                context = context,
-                                barModel = bar
-                            )
-                        },
-                        onClickBar = { bar ->
-                            viewModel.onClickBar(bar)
-                        },
-                        onClickSeeMore = { barId ->
-                            navHostController.navigate(
-                                Screen.PageBar.createRoute(barId)
-                            )
-                        },
-                        isOpen = { bar ->
-                            viewModel.isOpen(bar)
-                        },
-                        isAppInDarkTheme = homeViewModelState.value.isAppInDarkTheme
-                    )
-                    HomeSearchBar(
-                        onSearchChange = { viewModel.onSearchChange(it) },
-                    )
-                    FloatingActionButton(
-                        onClick = {
-                            navHostController.navigate(Screen.EditBarMenuScreen.route)
-                        },
-                        modifier = Modifier
-                            .padding(24.dp)
-                            .align(Alignment.BottomStart),
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.inversePrimary,
-                    ) {
-                        Icon(Icons.Filled.Edit, "Add bar")
-                    }
-                    if (homeViewModelState.value.homeStatus == HomeStatus.LOADING) {
-                        Loader(modifier = Modifier.align(Alignment.Center))
-                    }
+                    when (homeViewModelState.value.homeStatus) {
+                        HomeStatus.LOADING ->
+                            MeetMyBarLoader(modifier = Modifier.align(Alignment.Center))
 
-                    if (homeViewModelState.value.showDialog) {
-                        ErrorDialog(
-                            onDismissDialog = { viewModel.hideDialog() }
-                        )
+                        HomeStatus.ERROR, HomeStatus.SUCCESS -> {
+                            HomeMap(
+                                userLocation = homeViewModelState.value.userLocation,
+                                barsSearch = homeViewModelState.value.barsSearch,
+                                selectedBar = homeViewModelState.value.selectedBar,
+                                onClickBar = { bar ->
+                                    viewModel.onClickBar(bar)
+                                },
+                                onClickSeeMore = { barId ->
+                                    navHostController.navigate(
+                                        Screen.PageBar.createRoute(barId)
+                                    )
+                                },
+                                isOpen = { bar ->
+                                    viewModel.isOpen(bar)
+                                },
+                                isAppInDarkTheme = homeViewModelState.value.isAppInDarkTheme
+                            )
+                            HomeSearchBar(
+                                onSearchChange = { viewModel.onSearchChange(it) },
+                            )
+                            FloatingActionButton(
+                                onClick = {
+                                    navHostController.navigate(Screen.EditBarMenuScreen.route)
+                                },
+                                modifier = Modifier
+                                    .padding(24.dp)
+                                    .align(Alignment.BottomStart),
+                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                contentColor = MaterialTheme.colorScheme.inversePrimary,
+                            ) {
+                                Icon(Icons.Filled.Edit, "Add bar")
+                            }
+                            if (homeViewModelState.value.showDialog) {
+                                ErrorDialog(
+                                    onDismissDialog = { viewModel.hideDialog() }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -256,7 +239,6 @@ fun HomeMap(
     userLocation: LatLng?,
     barsSearch: List<BarModel>?,
     selectedBar: BarModel?,
-    getLatLngFromAddress: (BarModel, Context) -> LatLng?,
     onClickBar: (BarModel?) -> Unit,
     onClickSeeMore: (Int) -> Unit,
     isOpen: (BarModel) -> Boolean,
@@ -278,47 +260,49 @@ fun HomeMap(
     }
 
     GoogleMap(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         cameraPositionState = cameraPositionState,
         properties = MapProperties(
             isMyLocationEnabled = true,
-        )
+        ),
     ) {
         barsSearch?.forEach { bar ->
-            val latLong = getLatLngFromAddress(bar, LocalContext.current)
-            latLong?.let {
-                if (selectedBar?.name == bar.name) {
-                    MarkerInfoWindow(
-                        state = MarkerState(position = it),
-                        icon = bitmapDescriptorFromVector(
-                            LocalContext.current, R.drawable.location_bar
-                        ),
-                        content = {
-                            MapInfoWindow(
-                                bar = bar,
-                                onClickSeeMore = { barId ->
-                                    onClickSeeMore(barId)
-                                },
-                                isOpen = { bar ->
-                                    isOpen(bar)
-                                }
-                            )
-                        },
-                        onInfoWindowClick = {
-                            onClickSeeMore(bar.id)
-                        },
-                    )
-                } else {
-                    Marker(
-                        state = MarkerState(position = it),
-                        icon = bitmapDescriptorFromVector(
-                            LocalContext.current, R.drawable.location_bar
-                        ),
-                        onClick = {
-                            onClickBar(bar)
-                            true
-                        }
-                    )
+            bar.latitude?.let { latitude ->
+                bar.longitude?.let { longitude ->
+                    if (selectedBar?.name == bar.name) {
+                        MarkerInfoWindow(
+                            state = MarkerState(position = LatLng(latitude, longitude)),
+                            icon = bitmapDescriptorFromVector(
+                                LocalContext.current, R.drawable.location_bar
+                            ),
+                            content = {
+                                MapInfoWindow(
+                                    bar = bar,
+                                    onClickSeeMore = { barId ->
+                                        onClickSeeMore(barId)
+                                    },
+                                    isOpen = { bar ->
+                                        isOpen(bar)
+                                    }
+                                )
+                            },
+                            onInfoWindowClick = {
+                                onClickSeeMore(bar.id)
+                            },
+                        )
+                    } else {
+                        Marker(
+                            state = MarkerState(position = LatLng(latitude, longitude)),
+                            icon = bitmapDescriptorFromVector(
+                                LocalContext.current, R.drawable.location_bar
+                            ),
+                            onClick = {
+                                onClickBar(bar)
+                                true
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -421,7 +405,7 @@ fun HomeSearchBar(
 
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                focusedTextColor = Color.Black,
                 focusedBorderColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
                 focusedLabelColor = MaterialTheme.colorScheme.secondary,

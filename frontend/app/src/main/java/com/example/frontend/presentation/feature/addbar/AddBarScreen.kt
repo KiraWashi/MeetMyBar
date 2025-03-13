@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,12 +15,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -72,6 +75,7 @@ fun AddBarScreen(
     val state = viewModel.addBarViewModelState.collectAsState()
 
     var showScheduleDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmDialog by remember { mutableStateOf<ScheduleDayModel?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -88,7 +92,7 @@ fun AddBarScreen(
                     IconButton(onClick = { navHostController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Retour",
+                            contentDescription = stringResource(id = R.string.back),
                             tint = MaterialTheme.colorScheme.inversePrimary,
                         )
                     }
@@ -102,14 +106,19 @@ fun AddBarScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            // Champ Nom avec gestion d'erreur
             MeetMyBarTextField(
                 label = stringResource(id = R.string.add_bar_label_text_field_name),
                 value = state.value.nameTextFieldValue,
                 onTextFieldValueChange = {
                     viewModel.onNameTextFieldValueChange(newValue = it)
                 },
+                showError = state.value.nameFieldError.hasError,
+                errorMessage = state.value.nameFieldError.errorMessage
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            // Champ Capacité avec gestion d'erreur
             MeetMyBarTextField(
                 label = stringResource(id = R.string.add_bar_label_text_field_capacity),
                 value = state.value.capacityTextFieldValue,
@@ -117,16 +126,24 @@ fun AddBarScreen(
                     viewModel.onCapacityTextFieldValueChange(newValue = it)
                 },
                 keyboardType = KeyboardType.Number,
+                showError = state.value.capacityFieldError.hasError,
+                errorMessage = state.value.capacityFieldError.errorMessage
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            // Champ Adresse avec gestion d'erreur
             MeetMyBarTextField(
                 label = stringResource(id = R.string.add_bar_label_text_field_address),
                 value = state.value.addressTextFieldValue,
                 onTextFieldValueChange = {
                     viewModel.onAddressTextFieldValueChange(newValue = it)
                 },
+                showError = state.value.addressFieldError.hasError,
+                errorMessage = state.value.addressFieldError.errorMessage
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            // Champ Code Postal avec gestion d'erreur
             MeetMyBarTextField(
                 label = stringResource(id = R.string.add_bar_label_text_field_postal_code),
                 value = state.value.postalCodeTextFieldValue,
@@ -134,23 +151,46 @@ fun AddBarScreen(
                     viewModel.onPostalCodeTextFieldValueChange(newValue = it)
                 },
                 keyboardType = KeyboardType.Number,
+                showError = state.value.postalCodeFieldError.hasError,
+                errorMessage = state.value.postalCodeFieldError.errorMessage
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            // Champ Ville avec gestion d'erreur
             MeetMyBarTextField(
                 label = stringResource(id = R.string.add_bar_label_text_field_city),
                 value = state.value.cityTextFieldValue,
                 onTextFieldValueChange = {
                     viewModel.onCityTextFieldValueChange(newValue = it)
                 },
+                showError = state.value.cityFieldError.hasError,
+                errorMessage = state.value.cityFieldError.errorMessage
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            BarScheduleSection(planning = state.value.planning,
+            // Section des horaires avec indication d'erreur si nécessaire
+            BarScheduleSection(
+                planning = state.value.planning,
                 onAddScheduleClick = { showScheduleDialog = true },
                 getFrenshDay = { englishDay ->
                     viewModel.getFrenchDay(englishDay = englishDay)
-                })
+                },
+                onDeleteSchedule = { scheduleDay ->
+                    showDeleteConfirmDialog = scheduleDay
+                },
+                hasError = state.value.planningError.hasError
+            )
+
+            // Affichage du message d'erreur pour les horaires si nécessaire
+            if (state.value.planningError.hasError) {
+                Text(
+                    text = state.value.planningError.errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
             MeetMyBarButton(modifier = Modifier
@@ -174,6 +214,7 @@ fun AddBarScreen(
         }
     }
 
+    // Dialogue d'ajout d'horaire
     if (showScheduleDialog) {
         AddScheduleDialog(onDismiss = { showScheduleDialog = false },
             onAddSchedule = { opening, closing, day ->
@@ -186,6 +227,39 @@ fun AddBarScreen(
                 viewModel.getEnglishDay(frenchDay = frenchDay)
             })
     }
+
+    // Dialogue de confirmation de suppression
+    showDeleteConfirmDialog?.let { scheduleDay ->
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmDialog = null },
+            title = { Text(stringResource(id = R.string.delete_schedule_confirmation_title)) },
+            text = {
+                Text(
+                    stringResource(
+                        id = R.string.delete_schedule_confirmation_message,
+                        viewModel.getFrenchDay(scheduleDay.day),
+                        scheduleDay.opening,
+                        scheduleDay.closing
+                    )
+                )
+            },
+            confirmButton = {
+                MeetMyBarButton(
+                    text = stringResource(id = R.string.delete),
+                    onClick = {
+                        viewModel.removeScheduleDay(scheduleDay)
+                        showDeleteConfirmDialog = null
+                    }
+                )
+            },
+            dismissButton = {
+                MeetMyBarSecondaryButton(
+                    text = stringResource(id = R.string.cancel),
+                    onClick = { showDeleteConfirmDialog = null }
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -193,15 +267,17 @@ fun BarScheduleSection(
     planning: List<ScheduleDayModel>,
     onAddScheduleClick: () -> Unit,
     getFrenshDay: (String) -> String,
+    onDeleteSchedule: (ScheduleDayModel) -> Unit,
+    hasError: Boolean = false // Nouveau paramètre pour indiquer une erreur
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Horaires d'ouverture",
+                text = stringResource(id = R.string.opening_hours),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.inversePrimary,
             )
@@ -212,32 +288,52 @@ fun BarScheduleSection(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(horizontal = 12.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = "${getFrenshDay(scheduleDay.day)}: ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.inversePrimary
-                        )
-                        Text(
-                            text = "${scheduleDay.opening} - ${scheduleDay.closing}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.inversePrimary
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "${getFrenshDay(scheduleDay.day)}: ",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.inversePrimary
+                            )
+                            Text(
+                                text = "${scheduleDay.opening} - ${scheduleDay.closing}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.inversePrimary
+                            )
+                        }
+
+                        // Bouton de suppression
+                        IconButton(
+                            onClick = { onDeleteSchedule(scheduleDay) },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = stringResource(id = R.string.delete_schedule),
+                                tint = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 }
             } else {
                 Text(
-                    text = "Aucun horaire défini",
+                    text = stringResource(id = R.string.no_schedule_defined),
                     style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
             MeetMyBarSecondaryButton(
-                onClick = onAddScheduleClick, text = "Ajouter un horaire"
+                onClick = onAddScheduleClick,
+                text = stringResource(id = R.string.add_schedule)
             )
         }
     }
@@ -272,7 +368,7 @@ fun AddScheduleDialog(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Ajouter un horaire",
+                    text = stringResource(id = R.string.add_schedule_title),
                     style = MaterialTheme.typography.titleMedium,
                 )
 
@@ -287,11 +383,12 @@ fun AddScheduleDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Jour: $selectedDay", modifier = Modifier.weight(1f)
+                            text = stringResource(id = R.string.day_colon, selectedDay),
+                            modifier = Modifier.weight(1f)
                         )
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "Sélectionner jour"
+                            contentDescription = stringResource(id = R.string.select_day)
                         )
                     }
 
@@ -316,7 +413,8 @@ fun AddScheduleDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Heure d'ouverture: ", modifier = Modifier.weight(1f)
+                        text = stringResource(id = R.string.opening_time),
+                        modifier = Modifier.weight(1f)
                     )
                     Text(text = openingTime,
                         modifier = Modifier
@@ -332,7 +430,8 @@ fun AddScheduleDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Heure de fermeture: ", modifier = Modifier.weight(1f)
+                        text = stringResource(id = R.string.closing_time),
+                        modifier = Modifier.weight(1f)
                     )
                     Text(text = closingTime,
                         modifier = Modifier
@@ -347,7 +446,7 @@ fun AddScheduleDialog(
                     modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
                 ) {
                     MeetMyBarSecondaryButton(
-                        onClick = onDismiss, text = "Annuler"
+                        onClick = onDismiss, text = stringResource(id = R.string.cancel)
                     )
 
                     Spacer(modifier = Modifier.padding(8.dp))
@@ -355,7 +454,7 @@ fun AddScheduleDialog(
                     MeetMyBarButton(
                         onClick = {
                             onAddSchedule(openingTime, closingTime, getEnglishDay(selectedDay))
-                        }, text = "Ajouter"
+                        }, text = stringResource(id = R.string.add)
                     )
                 }
             }
@@ -393,7 +492,7 @@ fun TimePickerDialogCustom(
         AlertDialog(
             onDismissRequest = { onDismiss() },
             confirmButton = {
-                MeetMyBarButton(text = "OK", onClick = {
+                MeetMyBarButton(text = stringResource(id = R.string.ok), onClick = {
                     val selectedHour = timePickerState.hour
                     val selectedMinute = timePickerState.minute
                     val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
@@ -402,7 +501,7 @@ fun TimePickerDialogCustom(
                 })
             },
             dismissButton = {
-                MeetMyBarSecondaryButton(text = "Annuler", onClick = { onDismiss() })
+                MeetMyBarSecondaryButton(text = stringResource(id = R.string.cancel), onClick = { onDismiss() })
             },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
