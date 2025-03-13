@@ -148,7 +148,7 @@ fun ListBiere(
                                         Screen.ModifyBiere.createRoute(
                                             beer.id,
                                             barId,
-                                            beer.volume,
+                                            beer.volume.toString(),
                                             beer.price,
                                         )
                                     )

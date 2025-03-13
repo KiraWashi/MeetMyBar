@@ -88,7 +88,7 @@ class DrinkRepository(
     override suspend fun deleteBarDrinkLink(
         idBar: Int,
         idDrink: Int,
-        volume: Int
+        volume: Double
     ): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {

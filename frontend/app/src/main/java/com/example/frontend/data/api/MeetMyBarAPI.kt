@@ -116,7 +116,7 @@ class MeetMyBarAPI(
     /**
      * Supprime un lien entre un bar et une boisson avec un volume spécifique
      */
-    suspend fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Int): HttpResponse {
+    suspend fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Double): HttpResponse {
         return client.delete("$baseUrl/drink/bar?idBar=$idBar&idDrink=$idDrink&volume=$volume") {
             contentType(ContentType.Application.Json)
         }.body<HttpResponse>()

@@ -91,7 +91,7 @@ class ModifyBiereViewModel (
     /**
      * Supprime un lien entre un bar et une boisson avec un volume spécifique
      */
-    fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Int) {
+    fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Double) {
         viewModelScope.launch {
             _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState(isLoading = true)
             _deleteBarDrinkResult.value = Resource.Loading()

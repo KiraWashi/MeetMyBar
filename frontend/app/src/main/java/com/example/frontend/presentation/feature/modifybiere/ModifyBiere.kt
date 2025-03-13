@@ -47,7 +47,7 @@ fun ModifyBiere(
     modifier: Modifier = Modifier,
     drinkId: Int,
     barId: Int,
-    volume: Float,
+    volume: Double,
     price:Float
 ) {
     val viewModel = koinViewModel<ModifyBiereViewModel>()
@@ -131,7 +131,7 @@ fun ModifyBiere(
                         viewModel.deleteBarDrinkLink(
                             idBar = barId,
                             idDrink = drinkId,
-                            volume = volume.toInt()
+                            volume = volume
                         )
                     }) {
                         Icon(
