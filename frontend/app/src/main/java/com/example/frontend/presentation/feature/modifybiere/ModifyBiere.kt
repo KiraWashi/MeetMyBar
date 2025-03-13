@@ -7,18 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -31,17 +27,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.frontend.data.utils.Resource
 import com.example.frontend.presentation.components.ColorPicker
 import com.example.frontend.presentation.components.ErrorDialog
+import com.example.frontend.presentation.components.MeetMyBarButton
 import com.example.frontend.presentation.components.MeetMyBarTextField
 import com.example.frontend.presentation.components.SuccessDialog
 import com.example.frontend.presentation.components.mapBeerColor
 import org.koin.androidx.compose.koinViewModel
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +47,7 @@ fun ModifyBiere(
     drinkId: Int,
     barId: Int,
     volume: Float,
+    price:Float
 ) {
     val viewModel = koinViewModel<ModifyBiereViewModel>()
     val drinkState by viewModel.selectedBeer.collectAsState()
@@ -96,12 +92,15 @@ fun ModifyBiere(
         return
     }
 
-    val (name, setName) = remember { mutableStateOf(drink.name) }
-    val (alcoholDegree, setAlcoholDegree) = remember { mutableStateOf(drink.alcoholDegree) }
-    val (type, setType) = remember { mutableStateOf(drink.type) }
-    val (quantity, setQuantity) = remember { mutableStateOf("") }
-    val (prix, setPrix) = remember { mutableStateOf("") }
-    val (brand, setBrand) = remember { mutableStateOf(drink.brand) }
+    // Pour les champs qui doivent être affichés mais non modifiables
+    val name = drink.name
+    val alcoholDegree = drink.alcoholDegree
+    val type = drink.type
+    val brand = drink.brand
+
+    // Pour les champs modifiables (prix et volume)
+    val (quantity, setQuantity) = remember { mutableStateOf(volume.toString()) }
+    val (prix, setPrix) = remember { mutableStateOf(price.toString()) }
 
     Scaffold(
         modifier = Modifier
@@ -150,67 +149,65 @@ fun ModifyBiere(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Section de modification de la boisson
+            // Champs en lecture seule (non modifiables)
             MeetMyBarTextField(
                 value = name,
-                onTextFieldValueChange = setName,
+                onTextFieldValueChange = { },
                 label = "Nom de la bière",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
-            OutlinedTextField(
+            MeetMyBarTextField(
                 value = alcoholDegree,
-                onValueChange = setAlcoholDegree,
-                label = { Text("Degré d'alcool") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                onTextFieldValueChange = { },
+                label = "Degré d'alcool",
+                modifier = Modifier.fillMaxWidth(),
             )
 
             ColorPicker(
                 selectedColor = type,
-                onColorSelected = setType
+                onColorSelected = {}
             )
-            OutlinedTextField(
-                value = quantity,
-                onValueChange = setQuantity,
-                label = { Text("Quantité (en litres)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = prix,
-                onValueChange = setPrix,
-                label = { Text("Prix (€)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
+
+            MeetMyBarTextField(
                 value = brand,
-                onValueChange = setBrand,
-                label = { Text("Marque") },
+                onTextFieldValueChange = { },
+                label = "Marque",
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Button(
-                onClick = {
-                    viewModel.updateBeer(
-                        id = drink.id,
-                        name = name,
-                        alcoholDegree = alcoholDegree,
-                        brand = brand,
-                        type = type
-                    )
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+            // Champs modifiables (prix et volume)
+            MeetMyBarTextField(
+                value = quantity,
+                onTextFieldValueChange = setQuantity,
+                label = "Quantité (en litres)",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            MeetMyBarTextField(
+                value = prix,
+                onTextFieldValueChange = setPrix,
+                label = "Prix (€)",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            MeetMyBarButton(
+                text ="Modifier",
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("Modifier")
+                viewModel.updateBeer(
+                    id = drink.id,
+                    name = name,
+                    alcoholDegree = alcoholDegree,
+                    brand = brand,
+                    type = type
+                )
             }
 
             // Dialogues pour les résultats
             if (showUpdateSuccess) {
                 SuccessDialog(
-                    successMessage = "La bière a été mise à jour avec succès !",
+                    successMessage = "La boisson a été mise à jour avec succès !",
                     onDismissDialog = {
                         showUpdateSuccess = false
                         navHostController.popBackStack()
@@ -220,7 +217,7 @@ fun ModifyBiere(
 
             if (showDeleteSuccess) {
                 SuccessDialog(
-                    successMessage = "Cette bière à été supprimer du bar !",
+                    successMessage = "Cette boisson a été supprimée du bar !",
                     onDismissDialog = {
                         showDeleteSuccess = false
                         viewModel.resetDeleteBarDrinkLinkState()

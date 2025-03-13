@@ -49,13 +49,13 @@ fun ListBiere(
     navHostController: NavHostController,
     modifier: Modifier
 ) {
-
     val viewModel = koinViewModel<ListBiereViewModel>()
     val homeViewModelState = viewModel.listeBiereViewModelState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(barId) {
         viewModel.getDrinks(barId = barId)
     }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -101,7 +101,17 @@ fun ListBiere(
                 CircularProgressIndicator()
             }
         } else {
-            homeViewModelState.value.drinks?.let { drinksList ->
+            // Correction : Gestion améliorée de l'affichage de la liste
+            val drinksList = homeViewModelState.value.drinks
+            if (drinksList.isEmpty()) {
+                // Afficher un message si la liste est vide
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Aucune bière disponible pour ce bar")
+                }
+            } else {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -112,12 +122,12 @@ fun ListBiere(
                     items(drinksList) { beer ->
                         Card(
                             modifier = Modifier
-                                .fillMaxWidth() // La Card occupe toute la largeur de l'écran
-                                .padding(8.dp), // Ajoute un peu d'espace autour de la carte
-                            shape = RoundedCornerShape(8.dp), // Coins arrondis
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            shape = RoundedCornerShape(8.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = mapBeerColor(beer.type), //Card background color
-                                contentColor = mapFontOverBeer(beer.type)  //Card content color,e.g.text
+                                containerColor = mapBeerColor(beer.type),
+                                contentColor = mapFontOverBeer(beer.type)
                             ),
                             onClick = {
                                 navHostController.navigate(
@@ -125,6 +135,7 @@ fun ListBiere(
                                         beer.id,
                                         barId,
                                         beer.volume,
+                                        beer.price,
                                     )
                                 )
                             }
@@ -132,7 +143,7 @@ fun ListBiere(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp), // Ajoute un espace intérieur pour le contenu
+                                    .padding(8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column {

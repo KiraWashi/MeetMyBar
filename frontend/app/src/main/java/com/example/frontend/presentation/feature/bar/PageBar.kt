@@ -131,36 +131,37 @@ fun PageBar(
                     darkMode = darkMode,
                     planning = bar.planning
                 )
-
-                // TODO
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth() // La Card occupe toute la largeur de l'écran
-                        .padding(8.dp), // Ajoute un peu d'espace autour de la carte
-                    shape = RoundedCornerShape(8.dp), // Coins arrondis
-                    colors = CardDefaults.cardColors(
-                        containerColor = mapBeerColor("biere_blonde"), //Card background color
-                        contentColor = mapFontOverBeer("biere_blonde")  //Card content color,e.g.text
-                    )
-                ) {
-                    Row(
+                if(!bar.drinks.isEmpty()){
+                    val firstDrink = bar.drinks.get(0);
+                    // TODO
+                    Card(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp), // Ajoute un espace intérieur pour le contenu
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .fillMaxWidth() // La Card occupe toute la largeur de l'écran
+                            .padding(8.dp), // Ajoute un peu d'espace autour de la carte
+                        shape = RoundedCornerShape(8.dp), // Coins arrondis
+                        colors = CardDefaults.cardColors(
+                            containerColor = mapBeerColor(firstDrink.type), //Card background color
+                            contentColor = mapFontOverBeer(firstDrink.type)  //Card content color,e.g.text
+                        )
                     ) {
-                        Column {
-                            Text(text = "Chimay Bleue")
-                            Text(text = "Biere Blonde")
-                        }
-                        Text(text = "9" + "°")
-                        Column {
-                            Text(text = "8" + " €")
-                            Text(text = "1" + "L")
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp), // Ajoute un espace intérieur pour le contenu
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(text = firstDrink.brand)
+                                Text(text = firstDrink.name)
+                            }
+                            Text(text = firstDrink.alcoholDegree + "°")
+                            Column {
+                                Text(text = firstDrink.price.toString() + " €")
+                                Text(text = firstDrink.volume.toString() + "L")
+                            }
                         }
                     }
                 }
-
                 Text(
                     text = "Voir toutes les bières diponibles",
                     style = TextStyle(

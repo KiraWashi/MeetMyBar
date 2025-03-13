@@ -97,19 +97,22 @@ fun SetupNavGraph(
             arguments = listOf(
                 navArgument("drinkId") { type = NavType.IntType },
                 navArgument("barId") { type = NavType.IntType },
-                navArgument("volume") { type = NavType.FloatType }
+                navArgument("volume") { type = NavType.FloatType },
+                navArgument("price") { type = NavType.FloatType }
             )
         ) { backStackEntry ->
             val drinkId = backStackEntry.arguments?.getInt("drinkId") ?: -1
             val barId = backStackEntry.arguments?.getInt("barId") ?: -1
             val volume = backStackEntry.arguments?.getFloat("volume") ?: 0f
+            val price = backStackEntry.arguments?.getFloat("price")?:0f
 
             ModifyBiere(
                 navHostController = navHostController,
                 modifier = modifier,
                 drinkId = drinkId,
                 barId = barId,
-                volume=volume
+                volume=volume,
+                price= price,
             )
         }
         composable(
@@ -154,9 +157,9 @@ sealed class Screen(val route: String) {
         fun createRoute(barId: Int) = "ListBiere/$barId"
     }
     object AddBiere : Screen("AddBiere")
-    object ModifyBiere : Screen("modifyBiere/{drinkId}/{barId}/{volume}") {
-        fun createRoute(drinkId: Int, barId: Int, volume: Double): String {
-            return "modifyBiere/$drinkId/$barId/$volume"
+    object ModifyBiere : Screen("modifyBiere/{drinkId}/{barId}/{volume}/{price}") {
+        fun createRoute(drinkId: Int, barId: Int, volume: Double,price: Double): String {
+            return "modifyBiere/$drinkId/$barId/$volume/$price"
         }
     }
     object AddBarScreen : Screen("AddBarScreen")

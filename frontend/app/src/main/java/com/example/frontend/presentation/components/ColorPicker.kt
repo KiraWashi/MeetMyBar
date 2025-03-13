@@ -72,6 +72,14 @@ fun ColorPicker(
                         .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f), CircleShape)
                 )
             },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.inversePrimary,
+                cursorColor = MaterialTheme.colorScheme.secondary,
+            ),
             modifier = modifier
                 .fillMaxWidth()
                 .menuAnchor()

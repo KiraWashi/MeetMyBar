@@ -227,7 +227,7 @@ fun AddExixtingBeerScreen(
         }
 
         MeetMyBarTextField(
-            label = "Prix",
+            label = "Prix ( € )",
             value = state.value.priceTextField,
             onTextFieldValueChange = { newPrice ->
                 viewModel.onPriceTextFieldChange(newPrice)
@@ -235,7 +235,7 @@ fun AddExixtingBeerScreen(
         )
 
         MeetMyBarTextField(
-            label = "Volume",
+            label = "Volume ( en litre )",
             value = state.value.volumeTextField,
             onTextFieldValueChange = { newVolume ->
                 viewModel.onVolumeTextFieldChange(newVolume)
@@ -287,14 +287,14 @@ fun AddNewBeerScreen(
             }
         )
         MeetMyBarTextField(
-            label = "Volume",
+            label = "Volume ( en litre )",
             value = state.value.volumeTextField,
             onTextFieldValueChange = { newVolume ->
                 viewModel.onVolumeTextFieldChange(newVolume)
             },
         )
         MeetMyBarTextField(
-            label = "Prix",
+            label = "Prix ( € )",
             value = state.value.priceTextField,
             onTextFieldValueChange = { newPrice ->
                 viewModel.onPriceTextFieldChange(newPrice)

@@ -55,6 +55,7 @@ fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier
     var showPopup by remember { mutableStateOf(false) }
 
     LaunchedEffect(updateState.success) {
+        System.out.println(updateState);
         if (updateState.success) {
             showPopup = true
         }
