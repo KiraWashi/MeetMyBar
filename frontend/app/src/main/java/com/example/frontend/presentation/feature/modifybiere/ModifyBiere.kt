@@ -194,7 +194,8 @@ fun ModifyBiere(
                 label = "Prix (€)",
                 modifier = Modifier.fillMaxWidth()
             )
-            MeetMyBarButton(
+/*
+remplacer par MeetMyBarButton(
                 text = "Mettre à jour"
             ) {
                 viewModel.updateDrinkPrice(
@@ -202,6 +203,19 @@ fun ModifyBiere(
                     idDrink = drinkId,
                     volume = quantity,
                     newPrice = prix
+                )
+            }
+ */
+            MeetMyBarButton(
+                text ="Modifier",
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                viewModel.updateBeer( //pas le bon appel
+                    id = drink.id,
+                    name = name,
+                    alcoholDegree = alcoholDegree,
+                    brand = brand,
+                    type = type,
                 )
             }
 
