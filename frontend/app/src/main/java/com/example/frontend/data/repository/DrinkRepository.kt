@@ -1,5 +1,6 @@
 package com.example.frontend.data.repository
 
+import android.util.Log
 import com.example.frontend.data.utils.Resource
 import com.example.frontend.data.utils.Resource.*
 import com.example.frontend.data.api.MeetMyBarAPI
@@ -81,6 +82,25 @@ class DrinkRepository(
             emit(Success(Unit))
         } catch (e: Exception) {
             emit(Error(e))
+        }
+    }
+
+    override suspend fun deleteBarDrinkLink(
+        idBar: Int,
+        idDrink: Int,
+        volume: Int
+    ): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = meetMyBarAPI.deleteBarDrinkLink(
+                idBar = idBar,
+                idDrink = idDrink,
+                volume = volume
+            )
+            emit(Resource.Success(Unit))
+        } catch (e: Exception) {
+            Log.e("DrinkBarLinkRepository", "Erreur lors de la suppression du lien: ${e.message}")
+            emit(Resource.Error(e))
         }
     }
 }

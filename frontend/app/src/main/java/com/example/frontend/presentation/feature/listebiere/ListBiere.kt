@@ -122,7 +122,9 @@ fun ListBiere(
                             onClick = {
                                 navHostController.navigate(
                                     Screen.ModifyBiere.createRoute(
-                                        beer.id
+                                        beer.id,
+                                        barId,
+                                        beer.volume,
                                     )
                                 )
                             }

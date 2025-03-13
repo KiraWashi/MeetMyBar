@@ -16,6 +16,12 @@ data class ModifyBiereState(
     val success: Boolean = false
 )
 
+data class DeleteBarDrinkLinkState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val success: Boolean = false
+)
+
 class ModifyBiereViewModel (
     private val drinkRepository: DrinkRepositoryInterface,
 ): ViewModel() {
@@ -28,6 +34,13 @@ class ModifyBiereViewModel (
 
     private val _selectedBeer = MutableStateFlow<Resource<DrinkTypeModel?>>(Resource.Loading())
     val selectedBeer = _selectedBeer.asStateFlow()
+
+    // Nouveaux états pour la suppression d'un lien bar-boisson
+    private val _deleteBarDrinkLinkState = MutableStateFlow(DeleteBarDrinkLinkState())
+    val deleteBarDrinkLinkState = _deleteBarDrinkLinkState.asStateFlow()
+
+    private val _deleteBarDrinkResult = MutableStateFlow<Resource<Unit>>(Resource.Loading())
+    val deleteBarDrinkResult: StateFlow<Resource<Unit>> = _deleteBarDrinkResult
 
     fun deleteBiere(id: Int) {
         viewModelScope.launch {
@@ -73,5 +86,49 @@ class ModifyBiereViewModel (
                 _selectedBeer.value = result
             }
         }
+    }
+
+    /**
+     * Supprime un lien entre un bar et une boisson avec un volume spécifique
+     */
+    fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Int) {
+        viewModelScope.launch {
+            _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState(isLoading = true)
+            _deleteBarDrinkResult.value = Resource.Loading()
+
+            try {
+                drinkRepository.deleteBarDrinkLink(idBar, idDrink, volume).collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            _deleteBarDrinkResult.value = Resource.Success(Unit)
+                            _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState(success = true)
+                        }
+                        is Resource.Error -> {
+                            _deleteBarDrinkResult.value = Resource.Error(result.error ?: Throwable("Échec de la suppression du lien"))
+                            _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState(
+                                error = result.error?.message ?: "Une erreur est survenue lors de la suppression du lien"
+                            )
+                        }
+                        is Resource.Loading -> {
+                            _deleteBarDrinkResult.value = Resource.Loading()
+                            _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState(isLoading = true)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                _deleteBarDrinkResult.value = Resource.Error(Throwable("Erreur lors de la suppression du lien"))
+                _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState(
+                    error = e.message ?: "Une erreur inattendue est survenue"
+                )
+            }
+        }
+    }
+
+    /**
+     * Réinitialise l'état de suppression du lien bar-boisson
+     */
+    fun resetDeleteBarDrinkLinkState() {
+        _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState()
+        _deleteBarDrinkResult.value = Resource.Loading()
     }
 }

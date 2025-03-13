@@ -10,5 +10,6 @@ interface DrinkRepositoryInterface {
     suspend fun createDrink(drink: DrinkTypeModel): Flow<Resource<DrinkTypeModel?>>
     suspend fun updateDrink(drink: DrinkTypeModel): Flow<Resource<DrinkTypeModel?>>
     suspend fun deleteDrink(id: Int): Flow<Resource<Unit>>
+    suspend fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Int): Flow<Resource<Unit>>
     suspend fun addDrinkToBar(idBar: Int, idDrink: Int, volume: String, price: String): Flow<Resource<Unit>>
 }

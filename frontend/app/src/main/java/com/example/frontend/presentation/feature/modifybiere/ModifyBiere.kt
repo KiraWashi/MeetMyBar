@@ -31,16 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.frontend.data.utils.Resource
-import com.example.frontend.presentation.components.Popup
 import com.example.frontend.presentation.components.ColorPicker
+import com.example.frontend.presentation.components.ErrorDialog
 import com.example.frontend.presentation.components.MeetMyBarTextField
+import com.example.frontend.presentation.components.SuccessDialog
 import com.example.frontend.presentation.components.mapBeerColor
-import com.example.frontend.presentation.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -50,15 +49,18 @@ import org.koin.androidx.compose.koinViewModel
 fun ModifyBiere(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
-    drinkId : Int,
+    drinkId: Int,
+    barId: Int,
+    volume: Float,
 ) {
     val viewModel = koinViewModel<ModifyBiereViewModel>()
     val drinkState by viewModel.selectedBeer.collectAsState()
 
     val updateState by viewModel.modifyBiereState.collectAsState()
-    val deleteState by viewModel.deleteBiereState.collectAsState()
-    var showPopup by remember { mutableStateOf(false) }
-    var showPopupDelete by remember { mutableStateOf(false) }
+    val deleteBarDrinkResult by viewModel.deleteBarDrinkResult.collectAsState()
+
+    var showUpdateSuccess by remember { mutableStateOf(false) }
+    var showDeleteSuccess by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf(false) }
 
     LaunchedEffect(drinkId) {
@@ -67,17 +69,17 @@ fun ModifyBiere(
 
     LaunchedEffect(updateState.success) {
         if (updateState.success) {
-            showPopup = true
+            showUpdateSuccess = true
         }
     }
 
-    LaunchedEffect(deleteState) {
-        when (deleteState) {
+    LaunchedEffect(deleteBarDrinkResult) {
+        when (deleteBarDrinkResult) {
             is Resource.Success -> {
-                showPopupDelete = true
+                showDeleteSuccess = true
             }
             is Resource.Error -> {
-                showPopupDelete = true
+                showError = true
             }
             else -> {}
         }
@@ -101,21 +103,21 @@ fun ModifyBiere(
     val (prix, setPrix) = remember { mutableStateOf("") }
     val (brand, setBrand) = remember { mutableStateOf(drink.brand) }
 
-
-
     Scaffold(
-        modifier = Modifier.fillMaxSize().background(mapBeerColor(type)),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(mapBeerColor(type)),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
-                    ),
+                ),
                 title = {
                     Text("Modifier La boisson")
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navHostController.navigate(Screen.ListBiere.route)
+                        navHostController.popBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -124,13 +126,20 @@ fun ModifyBiere(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.deleteBiere(drink.id) }) {
+                    // Bouton de suppression direct sans confirmation
+                    IconButton(onClick = {
+                        viewModel.deleteBarDrinkLink(
+                            idBar = barId,
+                            idDrink = drinkId,
+                            volume = volume.toInt()
+                        )
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = "Supprimer",
+                            contentDescription = "Supprimer le lien"
                         )
                     }
-                },
+                }
             )
         },
     ) { paddingValues ->
@@ -141,18 +150,14 @@ fun ModifyBiere(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Section de modification de la boisson
             MeetMyBarTextField(
                 value = name,
                 onTextFieldValueChange = setName,
                 label = "Nom de la bière",
                 modifier = Modifier.fillMaxWidth()
             )
-            /*OutlinedTextField(
-                value = name,
-                onValueChange = setName,
-                label = { Text(text = "Nom de la bière") },
-                modifier = Modifier.fillMaxWidth()
-            )*/
+
             OutlinedTextField(
                 value = alcoholDegree,
                 onValueChange = setAlcoholDegree,
@@ -160,6 +165,7 @@ fun ModifyBiere(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+
             ColorPicker(
                 selectedColor = type,
                 onColorSelected = setType
@@ -187,7 +193,8 @@ fun ModifyBiere(
 
             Button(
                 onClick = {
-                    viewModel.updateBeer(id = drink.id,
+                    viewModel.updateBeer(
+                        id = drink.id,
                         name = name,
                         alcoholDegree = alcoholDegree,
                         brand = brand,
@@ -200,22 +207,34 @@ fun ModifyBiere(
                 Text("Modifier")
             }
 
-            if (showPopup) {
-                Popup(onDismiss = {
-                    showPopup = false
-                    navHostController.navigate(Screen.ListBiere.route)
-                },"Modification réussie","La bière a été mise à jour avec succès !")
-
+            // Dialogues pour les résultats
+            if (showUpdateSuccess) {
+                SuccessDialog(
+                    successMessage = "La bière a été mise à jour avec succès !",
+                    onDismissDialog = {
+                        showUpdateSuccess = false
+                        navHostController.popBackStack()
+                    }
+                )
             }
-            if (showPopupDelete) {
-                Popup(onDismiss = {
-                    showPopup = false
-                    navHostController.navigate(Screen.ListBiere.route)
-                }, "Suppression réussie", "La bière a été supprimée avec succès !")
+
+            if (showDeleteSuccess) {
+                SuccessDialog(
+                    successMessage = "Cette bière à été supprimer du bar !",
+                    onDismissDialog = {
+                        showDeleteSuccess = false
+                        viewModel.resetDeleteBarDrinkLinkState()
+                        navHostController.popBackStack()
+                    }
+                )
             }
 
             if (showError) {
-                Popup(onDismiss = { showError = false }, "Erreur", "Échec de la suppression.")
+                ErrorDialog(
+                    onDismissDialog = {
+                        showError = false
+                    }
+                )
             }
         }
     }
