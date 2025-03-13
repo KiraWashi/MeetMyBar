@@ -3,9 +3,11 @@ package com.example.frontend.data.repository.bar
 import com.example.frontend.data.repository.toModel
 import com.example.frontend.data.repository.toVo
 import com.example.frontend.data.vo.BarVo
+import com.example.frontend.data.vo.BasicBarVo
 import com.example.frontend.data.vo.ScheduleDayVo
 import com.example.frontend.data.vo.SimpleBarVo
 import com.example.frontend.domain.model.BarModel
+import com.example.frontend.domain.model.BasicBarModel
 import com.example.frontend.domain.model.ScheduleDayModel
 import com.example.frontend.domain.model.SimpleBarModel
 
@@ -58,4 +60,13 @@ fun ScheduleDayModel.toVo() = ScheduleDayVo(
     opening = opening,
     closing = closing,
     day = day
+)
+
+fun BasicBarModel.toVo() = BasicBarVo(
+    id = id,
+    address = address,
+    name = name,
+    capacity = capacity,
+    city = city,
+    postalCode = postalCode,
 )

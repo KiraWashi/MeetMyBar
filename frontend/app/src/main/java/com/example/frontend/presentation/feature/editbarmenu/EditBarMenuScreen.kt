@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -75,6 +76,13 @@ fun EditBarMenuScreen(
                 screen = Screen.AddBarScreen,
                 onClick = { navHostController.navigate(Screen.DeleteBarScreen.route) }
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            EditBarMenuItem(
+                title = stringResource(id = R.string.delete_biere_type_title),
+                icon = Icons.Filled.Delete,
+                screen = Screen.AddBarScreen,
+                onClick = { navHostController.navigate(Screen.DeleteTypeBiereScreen.route) }
+            )
         }
     }
 }
@@ -87,7 +95,8 @@ fun EditBarMenuItem(
     onClick: () -> Unit,
 ) {
     Card(
-        onClick = { onClick() }
+        onClick = { onClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier

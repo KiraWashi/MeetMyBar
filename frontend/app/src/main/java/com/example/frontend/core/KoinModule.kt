@@ -20,7 +20,9 @@ import com.example.frontend.presentation.feature.adddrink.AddDrinkViewModel
 import com.example.frontend.presentation.feature.bar.BarScreenViewModel
 import com.example.frontend.presentation.feature.listebiere.ListBiereViewModel
 import com.example.frontend.presentation.feature.deletebar.DeleteBarViewModel
+import com.example.frontend.presentation.feature.deletetypebiere.DeleteTypeBiereViewModel
 import com.example.frontend.presentation.feature.home.HomeViewModel
+import com.example.frontend.presentation.feature.modifybar.ModifyBarViewModel
 import com.example.frontend.presentation.feature.modifybiere.ModifyBiereViewModel
 import com.example.frontend.presentation.feature.photo.PhotoViewModel
 import com.example.frontend.presentation.feature.settings.SettingsViewModel
@@ -33,6 +35,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -61,13 +64,15 @@ val appModule = module {
     viewModel { HomeViewModel(get(), get()) }
     viewModel { ListBiereViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
-    viewModel { AddBarViewModel(get()) }
+    viewModel { AddBarViewModel(get(), androidContext()) }
     viewModel { BarScreenViewModel(get()) }
     viewModel { PhotoViewModel(get()) }
     viewModel { DeleteBarViewModel(get()) }
     viewModel { AddBiereViewModel(get()) }
     viewModel { ModifyBiereViewModel(get()) }
     viewModel { AddDrinkViewModel(get()) }
+    viewModel { ModifyBarViewModel(get()) }
+    viewModel { DeleteTypeBiereViewModel(get()) }
 }
 
 fun createJson() = Json { isLenient = true; ignoreUnknownKeys = true }

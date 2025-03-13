@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -86,10 +87,16 @@ fun PageBar(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        navHostController.navigate(
+                            Screen.ModifyBar.createRoute(
+                                homeViewModelState.value.bar?.id ?: -1
+                            )
+                        )
+                    }) {
                         Icon(
-                            imageVector = Icons.Filled.FavoriteBorder,
-                            contentDescription = "Add a beer",
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Modify bar",
                         )
                     }
                 },

@@ -3,6 +3,7 @@ package com.example.frontend.data.api
 import android.util.Log
 import com.example.frontend.data.repository.photo.BarPhoto
 import com.example.frontend.data.vo.BarVo
+import com.example.frontend.data.vo.BasicBarVo
 import com.example.frontend.data.vo.DrinkTypeVo
 import com.example.frontend.data.vo.SimpleBarVo
 import io.ktor.client.HttpClient
@@ -106,7 +107,7 @@ class MeetMyBarAPI(
         }.body<ByteArray>()
     }
 
-    suspend fun addDrinkToBar(idBar: Int, idDrink: Int, volume: String, price: String): HttpResponse {
+    suspend fun addDrinkToBar(idBar: Int, idDrink: Int, volume: Double, price: Double): HttpResponse {
         return client.post("$baseUrl/drink/bar?idBar=$idBar&idDrink=$idDrink&volume=$volume&price=$price") {
             contentType(ContentType.Application.Json)
         }.body<HttpResponse>()
@@ -118,6 +119,13 @@ class MeetMyBarAPI(
     suspend fun deleteBarDrinkLink(idBar: Int, idDrink: Int, volume: Int): HttpResponse {
         return client.delete("$baseUrl/drink/bar?idBar=$idBar&idDrink=$idDrink&volume=$volume") {
             contentType(ContentType.Application.Json)
+        }.body<HttpResponse>()
+    }
+
+    suspend fun modifyBar(bar: BasicBarVo): HttpResponse {
+        return client.patch("$baseUrl/bar") {
+            contentType(ContentType.Application.Json)
+            setBody(bar)
         }.body<HttpResponse>()
     }
 }

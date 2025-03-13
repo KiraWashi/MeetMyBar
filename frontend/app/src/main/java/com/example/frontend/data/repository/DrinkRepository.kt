@@ -68,8 +68,8 @@ class DrinkRepository(
     override suspend fun addDrinkToBar(
         idBar: Int,
         idDrink: Int,
-        volume: String,
-        price: String
+        volume: Double,
+        price: Double
     ): Flow<Resource<Unit>> = flow {
         emit(Loading())
         try {

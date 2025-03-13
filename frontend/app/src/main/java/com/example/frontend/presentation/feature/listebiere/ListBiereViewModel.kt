@@ -34,7 +34,7 @@ class ListBiereViewModel(
                 }
 
                 // Récupérer les données du repository
-                barRepository.getBarsById(barId).collect { resource ->
+                barRepository.getBarById(barId).collect { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
                             if (resource.data != null) {

@@ -1,7 +1,9 @@
 package com.example.frontend.presentation.feature.addbar
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.frontend.R
 import com.example.frontend.data.utils.Status
 import com.example.frontend.domain.model.ScheduleDayModel
 import com.example.frontend.domain.model.SimpleBarModel
@@ -17,18 +19,30 @@ enum class AddBarScreenStatus {
     SUCCES
 }
 
+data class FieldError(
+    val hasError: Boolean = false,
+    val errorMessage: String = ""
+)
+
 data class AddBarViewModelState(
     var nameTextFieldValue: String = "",
+    var nameFieldError: FieldError = FieldError(),
     var capacityTextFieldValue: String = "",
+    var capacityFieldError: FieldError = FieldError(),
     var addressTextFieldValue: String = "",
+    var addressFieldError: FieldError = FieldError(),
     var cityTextFieldValue: String = "",
+    var cityFieldError: FieldError = FieldError(),
     var postalCodeTextFieldValue: String = "",
+    var postalCodeFieldError: FieldError = FieldError(),
     var planning: List<ScheduleDayModel> = listOf(),
+    var planningError: FieldError = FieldError(),
     var status: AddBarScreenStatus = AddBarScreenStatus.NO_STATUS,
 )
 
 class AddBarViewModel(
     private val barRepository: BarRepositoryInterface,
+    private val context: Context
 ): ViewModel() {
 
     private val _addBarViewModelState = MutableStateFlow(AddBarViewModelState())
@@ -37,7 +51,8 @@ class AddBarViewModel(
     fun onNameTextFieldValueChange(newValue: String) {
         _addBarViewModelState.update {
             it.copy(
-                nameTextFieldValue = newValue
+                nameTextFieldValue = newValue,
+                nameFieldError = FieldError() // Réinitialiser l'erreur lorsque l'utilisateur modifie le champ
             )
         }
     }
@@ -45,7 +60,8 @@ class AddBarViewModel(
     fun onCapacityTextFieldValueChange(newValue: String) {
         _addBarViewModelState.update {
             it.copy(
-                capacityTextFieldValue = newValue
+                capacityTextFieldValue = newValue,
+                capacityFieldError = FieldError() // Réinitialiser l'erreur
             )
         }
     }
@@ -53,7 +69,8 @@ class AddBarViewModel(
     fun onAddressTextFieldValueChange(newValue: String) {
         _addBarViewModelState.update {
             it.copy(
-                addressTextFieldValue = newValue
+                addressTextFieldValue = newValue,
+                addressFieldError = FieldError() // Réinitialiser l'erreur
             )
         }
     }
@@ -61,7 +78,8 @@ class AddBarViewModel(
     fun onCityTextFieldValueChange(newValue: String) {
         _addBarViewModelState.update {
             it.copy(
-                cityTextFieldValue = newValue
+                cityTextFieldValue = newValue,
+                cityFieldError = FieldError() // Réinitialiser l'erreur
             )
         }
     }
@@ -69,7 +87,8 @@ class AddBarViewModel(
     fun onPostalCodeTextFieldValueChange(newValue: String) {
         _addBarViewModelState.update {
             it.copy(
-                postalCodeTextFieldValue = newValue
+                postalCodeTextFieldValue = newValue,
+                postalCodeFieldError = FieldError() // Réinitialiser l'erreur
             )
         }
     }
@@ -86,7 +105,8 @@ class AddBarViewModel(
         )
         _addBarViewModelState.update {
             it.copy(
-                planning = _addBarViewModelState.value.planning.plus(newScheduleDay)
+                planning = _addBarViewModelState.value.planning.plus(newScheduleDay),
+                planningError = FieldError() // Réinitialiser l'erreur du planning
             )
         }
     }
@@ -117,7 +137,138 @@ class AddBarViewModel(
         }
     }
 
+    /**
+     * Vérifie si tous les champs obligatoires sont remplis correctement
+     * @return true si tous les champs sont valides, false sinon
+     */
+    fun validateFields(): Boolean {
+        var isValid = true
+
+        // Validation du nom
+        if (_addBarViewModelState.value.nameTextFieldValue.isBlank()) {
+            _addBarViewModelState.update {
+                it.copy(
+                    nameFieldError = FieldError(
+                        hasError = true,
+                        errorMessage = context.getString(R.string.error_name_required)
+                    )
+                )
+            }
+            isValid = false
+        }
+
+        // Validation de la capacité
+        if (_addBarViewModelState.value.capacityTextFieldValue.isBlank()) {
+            _addBarViewModelState.update {
+                it.copy(
+                    capacityFieldError = FieldError(
+                        hasError = true,
+                        errorMessage = context.getString(R.string.error_capacity_required)
+                    )
+                )
+            }
+            isValid = false
+        } else {
+            try {
+                val capacity = _addBarViewModelState.value.capacityTextFieldValue.toInt()
+                if (capacity <= 0) {
+                    _addBarViewModelState.update {
+                        it.copy(
+                            capacityFieldError = FieldError(
+                                hasError = true,
+                                errorMessage = context.getString(R.string.error_capacity_positive)
+                            )
+                        )
+                    }
+                    isValid = false
+                }
+            } catch (e: NumberFormatException) {
+                _addBarViewModelState.update {
+                    it.copy(
+                        capacityFieldError = FieldError(
+                            hasError = true,
+                            errorMessage = context.getString(R.string.error_capacity_number)
+                        )
+                    )
+                }
+                isValid = false
+            }
+        }
+
+        // Validation de l'adresse
+        if (_addBarViewModelState.value.addressTextFieldValue.isBlank()) {
+            _addBarViewModelState.update {
+                it.copy(
+                    addressFieldError = FieldError(
+                        hasError = true,
+                        errorMessage = context.getString(R.string.error_address_required)
+                    )
+                )
+            }
+            isValid = false
+        }
+
+        // Validation de la ville
+        if (_addBarViewModelState.value.cityTextFieldValue.isBlank()) {
+            _addBarViewModelState.update {
+                it.copy(
+                    cityFieldError = FieldError(
+                        hasError = true,
+                        errorMessage = context.getString(R.string.error_city_required)
+                    )
+                )
+            }
+            isValid = false
+        }
+
+        // Validation du code postal
+        if (_addBarViewModelState.value.postalCodeTextFieldValue.isBlank()) {
+            _addBarViewModelState.update {
+                it.copy(
+                    postalCodeFieldError = FieldError(
+                        hasError = true,
+                        errorMessage = context.getString(R.string.error_postal_code_required)
+                    )
+                )
+            }
+            isValid = false
+        } else {
+            val postalCodeRegex = Regex("^\\d{5}$") // Regex pour valider un code postal français (5 chiffres)
+            if (!postalCodeRegex.matches(_addBarViewModelState.value.postalCodeTextFieldValue)) {
+                _addBarViewModelState.update {
+                    it.copy(
+                        postalCodeFieldError = FieldError(
+                            hasError = true,
+                            errorMessage = context.getString(R.string.error_postal_code_format)
+                        )
+                    )
+                }
+                isValid = false
+            }
+        }
+
+        // Validation des horaires (optionnelle)
+        if (_addBarViewModelState.value.planning.isEmpty()) {
+            _addBarViewModelState.update {
+                it.copy(
+                    planningError = FieldError(
+                        hasError = true,
+                        errorMessage = context.getString(R.string.error_schedule_required)
+                    )
+                )
+            }
+            isValid = false
+        }
+
+        return isValid
+    }
+
     fun onClickAdd() {
+        // Vérifier si tous les champs sont valides avant d'ajouter le bar
+        if (!validateFields()) {
+            return
+        }
+
         viewModelScope.launch {
             val bar = SimpleBarModel(
                 name = _addBarViewModelState.value.nameTextFieldValue,
@@ -142,6 +293,17 @@ class AddBarViewModel(
                     }
                 }
             }
+        }
+    }
+
+    fun removeScheduleDay(scheduleDay: ScheduleDayModel) {
+        val currentPlanning = _addBarViewModelState.value.planning.toMutableList()
+        currentPlanning.remove(scheduleDay)
+
+        _addBarViewModelState.update {
+            it.copy(
+                planning = currentPlanning
+            )
         }
     }
 }

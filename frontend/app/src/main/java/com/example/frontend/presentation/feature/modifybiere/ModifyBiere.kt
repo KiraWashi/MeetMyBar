@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.frontend.data.utils.Resource
@@ -154,7 +155,6 @@ fun ModifyBiere(
                 value = name,
                 onTextFieldValueChange = { },
                 label = "Nom de la bière",
-                modifier = Modifier.fillMaxWidth(),
                 enabled = false,
             )
 
@@ -185,6 +185,7 @@ fun ModifyBiere(
                 value = quantity,
                 onTextFieldValueChange = setQuantity,
                 label = "Quantité (en litres)",
+                keyboardType = KeyboardType.Number,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -192,6 +193,7 @@ fun ModifyBiere(
                 value = prix,
                 onTextFieldValueChange = setPrix,
                 label = "Prix (€)",
+                keyboardType = KeyboardType.Number,
                 modifier = Modifier.fillMaxWidth()
             )
 /*

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.Locale
 import android.content.Context
+import com.example.frontend.domain.model.BasicBarModel
 
 class BarRepository(
     private val meetMyBarAPI: MeetMyBarAPI,
@@ -48,7 +49,7 @@ class BarRepository(
         }
     }
 
-    override suspend fun getBarsById(barId: Int): Flow<Resource<BarModel>> = flow {
+    override suspend fun getBarById(barId: Int): Flow<Resource<BarModel>> = flow {
         emit(Resource.Loading())
         try {
             val barModel = meetMyBarAPI.getBarById(barId).toModel()
@@ -92,6 +93,17 @@ class BarRepository(
         } catch (e: Exception) {
             Log.e("Geocoding", "Erreur lors de la conversion de l'adresse", e)
             null
+        }
+    }
+
+    override suspend fun modifyBar(bar: BasicBarModel): Flow<Resource<HttpResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = meetMyBarAPI.modifyBar(bar = bar.toVo())
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e))
+            Log.e("Erreur Appel Api", e.toString())
         }
     }
 }

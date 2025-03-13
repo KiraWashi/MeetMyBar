@@ -16,9 +16,11 @@ import com.example.frontend.presentation.feature.modifybiere.ModifyBiere
 import com.example.frontend.presentation.feature.addbar.AddBarScreen
 import com.example.frontend.presentation.feature.adddrink.AddDrinkScreen
 import com.example.frontend.presentation.feature.deletebar.DeleteBarScreen
+import com.example.frontend.presentation.feature.deletetypebiere.DeleteTypeBiereScreen
 import com.example.frontend.presentation.feature.splashscreen.SplashScreenBeer
 import com.example.frontend.presentation.feature.home.HomeScreen
 import com.example.frontend.presentation.feature.editbarmenu.EditBarMenuScreen
+import com.example.frontend.presentation.feature.modifybar.ModifyBarScreen
 import com.example.frontend.presentation.feature.settings.SettingsScreen
 
 @ExperimentalAnimationApi
@@ -144,6 +146,26 @@ fun SetupNavGraph(
                 navHostController = navHostController
             )
         }
+
+        composable(
+            route = Screen.ModifyBar.route,
+            arguments = listOf(navArgument("barId") { type = NavType.IntType })
+        ) { backStackEntry ->
+
+            val barId = backStackEntry.arguments?.getInt("barId") ?: -1
+            ModifyBarScreen(
+                navHostController = navHostController,
+                barId = barId
+            )
+        }
+
+        composable(
+            route = Screen.DeleteTypeBiereScreen.route
+        ) {
+            DeleteTypeBiereScreen(
+                navHostController = navHostController
+            )
+        }
     }
 }
 
@@ -152,21 +174,28 @@ sealed class Screen(val route: String) {
     object PageBar : Screen("PageBar/{barId}") {
         fun createRoute(barId: Int) = "PageBar/$barId"
     }
+
     object HomeScreen : Screen("HomeScreen")
-    object ListBiere : Screen("ListBiere/{barId}"){
+    object ListBiere : Screen("ListBiere/{barId}") {
         fun createRoute(barId: Int) = "ListBiere/$barId"
     }
+
     object AddBiere : Screen("AddBiere")
     object ModifyBiere : Screen("modifyBiere/{drinkId}/{barId}/{volume}/{price}") {
         fun createRoute(drinkId: Int, barId: Int, volume: Double,price: Double): String {
             return "modifyBiere/$drinkId/$barId/$volume/$price"
         }
     }
+
     object AddBarScreen : Screen("AddBarScreen")
     object SettingsScreen : Screen("SettingsScreen")
     object EditBarMenuScreen : Screen("EditBarMenuScreen")
     object DeleteBarScreen : Screen("DeleteBarScreen")
-    object AddDrinkScreen : Screen("AddDrinkScreen/{barId}"){
+    object AddDrinkScreen : Screen("AddDrinkScreen/{barId}") {
         fun createRoute(barId: Int) = "AddDrinkScreen/$barId"
     }
+    object ModifyBar : Screen("ModifyBar/{barId}") {
+        fun createRoute(barId: Int) = "ModifyBar/$barId"
+    }
+    object DeleteTypeBiereScreen : Screen("DeleteTypeBiereScreen")
 }

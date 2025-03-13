@@ -113,24 +113,45 @@ class AddDrinkViewModel(
 
     fun addDrinkToBar(barId: Int) {
         viewModelScope.launch {
-            drinkRepository.addDrinkToBar(
-                idBar = barId,
-                idDrink = _addDrinkViewModelState.value.selectedDrink?.id ?: -1,
-                price = _addDrinkViewModelState.value.priceTextField,
-                volume = _addDrinkViewModelState.value.volumeTextField
-            ).collect { resource ->
-                if (resource.status == Status.SUCCESS) {
+            try {
+                // Conversion des chaînes en Double avec gestion des erreurs
+                val price = _addDrinkViewModelState.value.priceTextField.replace(",", ".").toDoubleOrNull()
+                val volume = _addDrinkViewModelState.value.volumeTextField.replace(",", ".").toDoubleOrNull()
+
+                if (price == null || volume == null) {
                     _addDrinkViewModelState.update {
                         it.copy(
-                            addDrinkStatus = HomeStatus.SUCCESS
+                            addDrinkStatus = HomeStatus.ERROR,
                         )
                     }
-                } else if (resource.status == Status.ERROR) {
-                    _addDrinkViewModelState.update {
-                        it.copy(
-                            addDrinkStatus = HomeStatus.ERROR
-                        )
+                    return@launch
+                }
+
+                drinkRepository.addDrinkToBar(
+                    idBar = barId,
+                    idDrink = _addDrinkViewModelState.value.selectedDrink?.id ?: -1,
+                    price = price,
+                    volume = volume
+                ).collect { resource ->
+                    if (resource.status == Status.SUCCESS) {
+                        _addDrinkViewModelState.update {
+                            it.copy(
+                                addDrinkStatus = HomeStatus.SUCCESS
+                            )
+                        }
+                    } else if (resource.status == Status.ERROR) {
+                        _addDrinkViewModelState.update {
+                            it.copy(
+                                addDrinkStatus = HomeStatus.ERROR
+                            )
+                        }
                     }
+                }
+            } catch (e: Exception) {
+                _addDrinkViewModelState.update {
+                    it.copy(
+                        addDrinkStatus = HomeStatus.ERROR,
+                    )
                 }
             }
         }
