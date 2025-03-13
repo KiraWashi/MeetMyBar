@@ -131,4 +131,28 @@ class ModifyBiereViewModel (
         _deleteBarDrinkLinkState.value = DeleteBarDrinkLinkState()
         _deleteBarDrinkResult.value = Resource.Loading()
     }
+
+    fun updateDrinkPrice(idBar: Int, idDrink: Int, volume: String, newPrice: String) {
+        viewModelScope.launch {
+            try {
+                // Conversion de String en Float
+                val volumeFloat = volume.toFloatOrNull() ?: throw IllegalArgumentException("Volume invalide")
+                val priceFloat = newPrice.toFloatOrNull() ?: throw IllegalArgumentException("Prix invalide")
+
+                drinkRepository.updateDrinkPrice(idBar, idDrink, volumeFloat, priceFloat).collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            _modifyBiereState.value = ModifyBiereState(success = true)
+                        }
+                        is Resource.Error -> {
+                            _modifyBiereState.value = ModifyBiereState(error = result.error?.message ?: "Une erreur est survenue")
+                        }
+                        else -> {}
+                    }
+                }
+            } catch (e: IllegalArgumentException) {
+                _modifyBiereState.value = ModifyBiereState(error = e.message ?: "Valeur invalide")
+            }
+        }
+    }
 }

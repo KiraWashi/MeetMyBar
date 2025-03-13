@@ -112,7 +112,7 @@ fun AddBiere(navHostController: NavHostController, modifier: Modifier = Modifier
             OutlinedTextField(
                 value = quantity,
                 onValueChange = setQuantity,
-                label = { Text("Quantité (en litres)") },
+                label = { Text("Quantité (en cl)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )

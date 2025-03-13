@@ -184,9 +184,10 @@ fun ModifyBiere(
             MeetMyBarTextField(
                 value = quantity,
                 onTextFieldValueChange = setQuantity,
-                label = "Quantité (en litres)",
+                label = "Quantité (en cl)",
                 keyboardType = KeyboardType.Number,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = false,
             )
 
             MeetMyBarTextField(
@@ -196,28 +197,16 @@ fun ModifyBiere(
                 keyboardType = KeyboardType.Number,
                 modifier = Modifier.fillMaxWidth()
             )
-/*
-remplacer par MeetMyBarButton(
-                text = "Mettre à jour"
+
+            MeetMyBarButton(
+                text = "Mettre à jour",
+                modifier = Modifier.align(Alignment.End)
             ) {
                 viewModel.updateDrinkPrice(
                     idBar = barId,
                     idDrink = drinkId,
                     volume = quantity,
                     newPrice = prix
-                )
-            }
- */
-            MeetMyBarButton(
-                text ="Modifier",
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                viewModel.updateBeer( //pas le bon appel
-                    id = drink.id,
-                    name = name,
-                    alcoholDegree = alcoholDegree,
-                    brand = brand,
-                    type = type,
                 )
             }
 

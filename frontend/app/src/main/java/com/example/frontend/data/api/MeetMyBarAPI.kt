@@ -128,4 +128,10 @@ class MeetMyBarAPI(
             setBody(bar)
         }.body<HttpResponse>()
     }
+
+    suspend fun updateDrinkPrice(idBar: Int, idDrink: Int, volume: String, newPrice: String): HttpResponse {
+        return client.patch("$baseUrl/drink/bar?idBar=$idBar&idDrink=$idDrink&volume=$volume&newPrice=$newPrice") {
+            contentType(ContentType.Application.Json)
+        }.body<HttpResponse>()
+    }
 }

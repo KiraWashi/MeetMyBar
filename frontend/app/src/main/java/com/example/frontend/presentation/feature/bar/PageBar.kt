@@ -208,7 +208,7 @@ fun PageBar(
                             Text(text = firstDrink.alcoholDegree + "°")
                             Column {
                                 Text(text = firstDrink.price.toString() + " €")
-                                Text(text = firstDrink.volume.toString() + "L")
+                                Text(text = firstDrink.volume.toString() + "cl")
                             }
                         }
                     }

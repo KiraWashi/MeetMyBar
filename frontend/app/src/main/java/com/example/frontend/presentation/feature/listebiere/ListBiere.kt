@@ -179,7 +179,7 @@ fun ListBiere(
 
                                     Column {
                                         Text(text = beer.price.toString() + " €")
-                                        Text(text = beer.volume.toString() + "L")
+                                        Text(text = beer.volume.toString() + "cl")
                                     }
                                 }
                             }
