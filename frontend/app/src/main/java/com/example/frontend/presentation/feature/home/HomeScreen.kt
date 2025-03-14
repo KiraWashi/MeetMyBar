@@ -140,7 +140,7 @@ fun HomeScreen(
                         )
                     }
                 },
-                actions = {
+                /*actions = {
                     // TODO
                     IconButton(onClick = {}) {
                         Icon(
@@ -149,7 +149,7 @@ fun HomeScreen(
                             tint = MaterialTheme.colorScheme.inversePrimary,
                         )
                     }
-                },
+                },*/
             )
         },
     ) { innerPadding ->

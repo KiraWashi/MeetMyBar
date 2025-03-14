@@ -224,7 +224,7 @@ fun AddExixtingBeerScreen(
         )
 
         MeetMyBarTextField(
-            label = "Volume ( en litre )",
+            label = "Volume ( en cl )",
             value = state.value.volumeTextField,
             onTextFieldValueChange = { newVolume ->
                 viewModel.onVolumeTextFieldChange(newVolume)

@@ -77,7 +77,10 @@ fun HorraireOuverture(
                 Spacer(modifier = Modifier.width(70.dp))
 
                 Text(
-                    text = (currentSchedule?.opening?.formatTime() + "-" + currentSchedule?.closing?.formatTime()) ?: "",
+                    text = if (currentSchedule != null && currentSchedule.opening != null && currentSchedule.closing != null)
+                        "${currentSchedule.opening.formatTime()}-${currentSchedule.closing.formatTime()}"
+                    else
+                        "Fermé",
                     style = TextStyle(
                         fontSize = 16.sp,
                     )
@@ -119,7 +122,10 @@ fun HorraireOuverture(
                                 )
                             )
                             Text(
-                                text = (currentSchedule?.opening?.formatTime() + "-" + currentSchedule?.closing?.formatTime()) ?: "",
+                                text = if (schedule.opening != null && schedule.closing != null)
+                                    "${schedule.opening.formatTime()}-${schedule.closing.formatTime()}"
+                                else
+                                    "Fermé",
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                 )
@@ -132,7 +138,10 @@ fun HorraireOuverture(
     }
 }
 
-fun String.formatTime(): String {
+fun String?.formatTime(): String {
+    // Si la valeur est null, retournez une chaîne vide
+    if (this == null) return ""
+
     return if (this.contains(":")) {
         val parts = this.split(":")
         if (parts.size >= 2) {

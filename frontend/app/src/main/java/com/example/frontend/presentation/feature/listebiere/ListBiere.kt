@@ -159,13 +159,13 @@ fun ListBiere(
                                         Text(text = mapNameBeer(beer.type))
                                     }
 
-                                    IconButton(onClick = {}) {
+                                    /*IconButton(onClick = {}) {
                                         Icon(
                                             imageVector = Icons.Filled.FavoriteBorder,
                                             contentDescription = "Add a beer",
                                             tint = mapFontOverBeer(beer.type),
                                         )
-                                    }
+                                    }*/
                                     Text(
                                         text = beer.alcoholDegree + "°",
                                         modifier = Modifier.padding(12.dp)
