@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.secrets)
+    id("kotlinx-serialization")
 }
 
 android {
@@ -76,4 +77,30 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.test)
     implementation(libs.koin.androidx.compose)
+
+    /// Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.serialization.kotlinx)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.client.log)
+    implementation(libs.ktor.client.json)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negociation)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // GSON
+    implementation(libs.android.gson)
+
+    // Data Store
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android.v180)
+
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
+    // Lottie animation
+    implementation(libs.android.lottie.compose)
+
 }

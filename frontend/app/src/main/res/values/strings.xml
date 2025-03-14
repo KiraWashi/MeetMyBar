@@ -9,5 +9,72 @@
     <string name="home_activate_localisation">Activer la localisation.</string>
     <string name="home_position">Ma position</string>
     <string name="home_search">Recherche</string>
+    <string name="home_error_description">Un erreur inconnue est survenue, veuillez réessayer.</string>
+    <string name="home_dismiss_dialog_error_button">Ok</string>
+    <string name="home_see_more_button">Voir plus</string>
+    <string name="home_open">Ouvert</string>
+    <string name="home_close">Fermé</string>
+
+    <!-- ADD BAR Screen -->
+    <string name="add_bar_title">Ajouter un bar</string>
+    <string name="add_bar_label_text_field_name">Nom</string>
+    <string name="add_bar_label_text_field_capacity">Capacité</string>
+    <string name="add_bar_label_text_field_address">Adresse</string>
+    <string name="add_bar_label_text_field_city">Ville</string>
+    <string name="add_bar_label_text_field_postal_code">Code Postal</string>
+    <string name="add_bar_label_button_label">Ajouter</string>
+    <string name="add_bar_success_message">Le bar a été ajouté avec succès.</string>
+    <string name="opening_hours">Horaires d\'ouverture</string>
+    <string name="no_schedule_defined">Aucun horaire défini</string>
+    <string name="add_schedule">Ajouter un horaire</string>
+    <string name="delete_schedule">Supprimer l\'horaire</string>
+    <string name="delete_schedule_confirmation_title">Supprimer l\'horaire ?</string>
+    <string name="delete_schedule_confirmation_message">Êtes-vous sûr de vouloir supprimer l\'horaire du %1$s (%2$s - %3$s) ?</string>
+    <string name="add_schedule_title">Ajouter un horaire</string>
+    <string name="day_colon">Jour: %1$s</string>
+    <string name="select_day">Sélectionner jour</string>
+    <string name="opening_time">Heure d\'ouverture: </string>
+    <string name="closing_time">Heure de fermeture: </string>
+    <string name="add">Ajouter</string>
+    <string name="ok">OK</string>
+    <string name="error_name_required">Le nom du bar est obligatoire</string>
+    <string name="error_capacity_required">La capacité est obligatoire</string>
+    <string name="error_capacity_positive">La capacité doit être supérieure à 0</string>
+    <string name="error_capacity_number">La capacité doit être un nombre entier</string>
+    <string name="error_address_required">L\'adresse est obligatoire</string>
+    <string name="error_city_required">La ville est obligatoire</string>
+    <string name="error_postal_code_required">Le code postal est obligatoire</string>
+    <string name="error_postal_code_format">Le code postal doit contenir 5 chiffres</string>
+    <string name="error_schedule_required">Veuillez ajouter au moins un horaire d\'ouverture</string>
+
+    <!-- DELETE BAR Screen -->
+    <string name="delete_bar_title">Supprimer un bar</string>
+
+    <!-- MODIFY BAR Screen -->
+    <string name="modify_bar_title">Modifier le bar</string>
+    <string name="modify_bar_label_button_label">Modifier</string>
+    <string name="modify_bar_success_message">Le bar a été modifié avec succès.</string>
+
+    <!-- DELETE BIERE TYPE Screen -->
+    <string name="delete_biere_type_title">Supprimer un type de bière</string>
+    <string name="back">Retour</string>
+    <string name="no_biere_type_available">Aucun type de bière disponible</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
+    <string name="delete_confirmation_title">Confirmation de suppression</string>
+    <string name="delete_confirmation_message">Êtes-vous sûr de vouloir supprimer le type de bière \'%1$s\' ?</string>
+    <string name="alcohol_degree">%1$s°</string>
+    <string name="delete_item_description">Supprimer %1$s</string>
+
+    <!-- SETTINGS Screen -->
+    <string name="settings_title">Paramétres</string>
+    <string name="settings_theme_preference_title">Theme Mode</string>
+
+    <!-- EDIT BAR MENU Screen -->
+    <string name="edit_bar_menu_title">Edition</string>
+    <string name="edit_bar_menu_add">Ajouter un bar</string>
+    <string name="edit_bar_menu_delete">Supprimer un bar</string>
+    <string name="edit_bar_menu_delete_type_biere">Supprimer un type de biere</string>
+    <string name="edit_bar_menu_add_drink_type">Ajouter un type de boisson</string>
 
 </resources>

@@ -1,54 +1,56 @@
 package com.example.frontend.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import com.example.frontend.data.datastore.ThemeMode
+import com.example.frontend.presentation.feature.settings.SettingsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = InversePrimaryLight,
+    inversePrimary = InversePrimaryDark,
+    secondary = SpritzColorDark,
+    tertiary = Spritz2ColorDark,
+    secondaryContainer = SecondaryContainerDark,
+    surface = SurfaceDark,
+    onSurface = OnSurfaceDark,
+    error = ErrorDark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = InversePrimaryDark,
+    inversePrimary = InversePrimaryLight,
+    secondary = SpritzColorLight,
+    tertiary = Spritz2ColorLight,
+    secondaryContainer = SecondaryContainerLight,
+    surface = SurfaceLight,
+    onSurface = OnSurfaceLight,
+    error = ErrorLight
 )
 
 @Composable
 fun FrontendTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val viewModel = koinViewModel<SettingsViewModel>()
+    val settingsViewModelState = viewModel.settingsViewModelState.collectAsState()
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    LaunchedEffect(Unit) {
+        viewModel.getThemeMode()
     }
+
+    val isDarkTheme = when (settingsViewModelState.value.themeMode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.AUTO -> isSystemInDarkTheme()
+    }
+
+    val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
